@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dipstick Clique</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --bg4: #222222;
+    --border: #2a2a2a;
+    --border2: #333333;
+    --gold: #c9a84c;
+    --gold2: #e8c76a;
+    --red: #c0392b;
+    --green: #27ae60;
+    --text: #e8e8e8;
+    --text2: #aaaaaa;
+    --text3: #666666;
+    --accent: #c9a84c;
+    --bottom-nav-h: 64px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(180deg, #000 0%, var(--bg2) 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo { display: flex; align-items: center; gap: 12px; }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--gold); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: 2px;
+    color: var(--gold); line-height: 1;
+  }
+
+  .logo-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 3px;
+    color: var(--text3); text-transform: uppercase;
+  }
+
+  /* Desktop nav */
+  nav.desktop-nav { display: flex; gap: 0; }
+
+  nav.desktop-nav button {
+    background: none; border: none;
+    color: var(--text2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0 1rem; height: 64px; cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s;
+  }
+  nav.desktop-nav button:hover { color: var(--text); border-bottom-color: var(--border2); }
+  nav.desktop-nav button.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── BOTTOM TAB BAR (mobile) ── */
+  .bottom-nav {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--bottom-nav-h);
+    background: linear-gradient(180deg, var(--bg2) 0%, #000 100%);
+    border-top: 1px solid var(--gold);
+    z-index: 300;
+    padding: 0 0.25rem;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .bottom-nav-inner {
+    display: flex;
+    height: 100%;
+    align-items: stretch;
+  }
+
+  .bottom-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.15s;
+    padding: 0;
+    border-top: 2px solid transparent;
+    margin-top: -1px;
+  }
+
+  .bottom-nav-btn .bnav-icon { font-size: 1.3rem; line-height: 1; }
+  .bottom-nav-btn.active { color: var(--gold); border-top-color: var(--gold); }
+  .bottom-nav-btn:active { background: var(--bg3); }
+
+  /* ── MAIN ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Fade-in animation for sections */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section.active { animation: fadeSlideIn 0.3s ease forwards; }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 2rem;
+    border-left: 3px solid var(--gold);
+    padding-left: 1rem;
+  }
+  .page-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; letter-spacing: 2px;
+    color: var(--text); line-height: 1;
+  }
+  .page-header p {
+    color: var(--text3); font-size: 0.85rem;
+    letter-spacing: 1px; text-transform: uppercase; margin-top: 4px;
+  }
+
+  /* ── LOADING / SKELETON ── */
+  .loading {
+    text-align: center; padding: 4rem;
+    color: var(--text3);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Skeleton shimmer */
+  @keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position:  600px 0; }
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 4px;
+  }
+
+  .skeleton-row {
+    height: 52px; margin-bottom: 1px;
+    background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  .skeleton-card {
+    height: 120px; border-radius: 6px; margin-bottom: 1rem;
+    background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  .error-msg {
+    background: #1a0a0a; border: 1px solid var(--red);
+    border-radius: 4px; padding: 1rem 1.5rem;
+    color: #e88; font-size: 0.9rem; margin: 1rem 0;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden;
+  }
+
+  /* Card entrance animation via IntersectionObserver */
+  .card-animate {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .card-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-header {
+    background: var(--bg3); border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.25rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  /* ── GRIDS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+
+  /* ── STANDINGS TABLE ── */
+  .standings-table { width: 100%; border-collapse: collapse; }
+
+  .standings-table th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); padding: 0.6rem 1rem;
+    text-align: left; border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+  }
+  .standings-table th.right { text-align: right; }
+
+  .standings-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem; vertical-align: middle;
+  }
+  .standings-table tr:last-child td { border-bottom: none; }
+  .standings-table tr:hover td { background: var(--bg3); transition: background 0.15s; }
+
+  .rank-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; color: var(--text3); width: 30px;
+  }
+  .rank-num.gold { color: var(--gold); }
+  .rank-num.silver { color: #aaa; }
+  .rank-num.bronze { color: #cd7f32; }
+
+  .team-name-cell { font-weight: 600; color: var(--text); }
+  .owner-name { font-size: 0.75rem; color: var(--text3); }
+
+  .record {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 1rem;
+  }
+  .win-pct { color: var(--text3); font-size: 0.8rem; text-align: right; }
+  .pts { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; text-align: right; }
+
+  .streak-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+  }
+  .streak-w { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .streak-l { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+
+  .playoff-line td { border-top: 2px dashed var(--gold) !important; }
+
+  /* ── MATCHUP CARDS ── */
+  .matchup-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden;
+  }
+  .matchup-week-label {
+    background: var(--bg3); border-bottom: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); text-align: center;
+  }
+  .matchup-teams {
+    padding: 1rem; display: flex; align-items: center; gap: 0.75rem;
+  }
+  .matchup-team { flex: 1; text-align: center; }
+  .matchup-team.winner .team-score { color: var(--gold); }
+
+  .team-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--bg3); border: 2px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; margin: 0 auto 0.4rem;
+  }
+  .team-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; line-height: 1; color: var(--text);
+  }
+  .team-score-name {
+    font-size: 0.75rem; color: var(--text3); margin-top: 2px;
+    font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px;
+  }
+  .vs-divider {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; color: var(--text3); letter-spacing: 1px;
+  }
+  .matchup-status {
+    text-align: center; padding: 0.4rem 1rem 0.75rem;
+    font-size: 0.7rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .status-live { color: var(--red); animation: pulse 1.5s ease-in-out infinite; }
+  .status-final { color: var(--text3); }
+  .status-upcoming { color: var(--gold); }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  /* ── WEEK SELECTOR (scrollable row on mobile) ── */
+  .week-selector {
+    display: flex; align-items: center;
+    gap: 0.5rem; margin-bottom: 1.5rem;
+    overflow-x: auto; white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .week-selector::-webkit-scrollbar { display: none; }
+
+  .week-selector button {
+    background: var(--bg2); border: 1px solid var(--border);
+    color: var(--text2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;
+    padding: 0.4rem 0.8rem; cursor: pointer;
+    border-radius: 3px; transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .week-selector button:hover { border-color: var(--border2); color: var(--text); }
+  .week-selector button.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+  .week-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); margin-right: 0.5rem; flex-shrink: 0;
+  }
+
+  /* ── STAT BOXES ── */
+  .stat-box {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1.25rem;
+  }
+  .stat-box-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 0.5rem;
+  }
+  .stat-box-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; color: var(--gold); line-height: 1;
+  }
+  .stat-box-sub { font-size: 0.8rem; color: var(--text3); margin-top: 4px; }
+
+  /* ── RECORDS ── */
+  .record-row {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border); gap: 1rem;
+  }
+  .record-row:last-child { border-bottom: none; }
+  .record-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text3); flex: 0 0 160px;
+  }
+  .record-holder { font-size: 0.9rem; color: var(--text); }
+  .record-holder small { display: block; color: var(--text3); font-size: 0.75rem; }
+  .record-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; color: var(--gold); flex-shrink: 0;
+  }
+
+  /* ── COMMISSIONER BOARD ── */
+  .post-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; margin-bottom: 1rem; overflow: hidden;
+  }
+  .post-header {
+    background: var(--bg3); border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.25rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .post-type-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .badge-announcement { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .badge-trash { background: rgba(192,57,43,0.2); color: #e88; border: 1px solid rgba(192,57,43,0.3); }
+  .badge-fine { background: rgba(155,89,182,0.2); color: #c8a; border: 1px solid rgba(155,89,182,0.3); }
+  .badge-news { background: rgba(52,152,219,0.2); color: #8cf; border: 1px solid rgba(52,152,219,0.3); }
+  .post-date { font-size: 0.75rem; color: var(--text3); font-family: 'Barlow Condensed', sans-serif; }
+  .post-body { padding: 1.25rem; }
+  .post-body h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .post-body p { font-size: 0.9rem; color: var(--text2); line-height: 1.6; }
+
+  .delete-btn {
+    background: none; border: 1px solid rgba(192,57,43,0.3);
+    color: var(--red); padding: 2px 8px; border-radius: 3px;
+    font-size: 0.7rem; cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; transition: all 0.15s;
+  }
+  .delete-btn:hover { background: rgba(192,57,43,0.1); }
+
+  /* ── COMM FORM ── */
+  .comm-login {
+    max-width: 400px; margin: 3rem auto;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2rem; text-align: center;
+  }
+  .comm-login h2 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+    letter-spacing: 2px; color: var(--gold); margin-bottom: 0.25rem;
+  }
+  .comm-login p { font-size: 0.8rem; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1.5rem; font-family: 'Barlow Condensed', sans-serif; }
+
+  input[type="password"], input[type="text"], textarea, select {
+    background: var(--bg3); border: 1px solid var(--border2);
+    color: var(--text); padding: 0.6rem 0.875rem; border-radius: 4px;
+    font-family: 'Barlow', sans-serif; font-size: 0.9rem;
+    width: 100%; outline: none; transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+  textarea { resize: vertical; min-height: 100px; }
+  .form-row { margin-bottom: 1rem; }
+  .form-label {
+    display: block; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 0.4rem;
+  }
+
+  .btn {
+    background: var(--gold); color: #000; border: none;
+    padding: 0.6rem 1.5rem; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn:hover { background: var(--gold2); }
+  .btn:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; }
+
+  .btn-outline {
+    background: none; border: 1px solid var(--border2);
+    color: var(--text2); padding: 0.5rem 1rem; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── HISTORY BAR CHARTS ── */
+  .history-bar-wrap {
+    display: flex; align-items: center;
+    gap: 0.75rem; padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .history-bar-wrap:last-child { border-bottom: none; }
+  .history-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600; color: var(--text);
+    flex: 0 0 120px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .history-bar-track {
+    flex: 1; height: 18px; background: var(--bg3);
+    border-radius: 3px; overflow: hidden;
+  }
+  .history-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold2) 100%);
+    border-radius: 3px;
+    /* animated in JS via width — starts at 0 for entrance effect */
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    display: flex; align-items: center;
+    padding-left: 6px; min-width: 30px;
+  }
+  .history-bar-fill.animated { width: var(--bar-target-width) !important; }
+  .history-bar-pct {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700; color: #000; white-space: nowrap;
+  }
+  .history-wins {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; color: var(--text3);
+    flex: 0 0 60px; text-align: right;
+  }
+
+  /* ── HERO BANNER ── */
+  .hero {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1200 50%, #0a0a0a 100%);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 2.5rem 2rem; margin-bottom: 2rem;
+    position: relative; overflow: hidden; text-align: center;
+  }
+  .hero::before {
+    content: '🏈';
+    position: absolute; font-size: 10rem; opacity: 0.04;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%); pointer-events: none;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem; letter-spacing: 6px; color: var(--gold);
+    line-height: 1; text-shadow: 0 0 40px rgba(201,168,76,0.3);
+  }
+  .hero p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--text3); margin-top: 0.5rem;
+  }
+  .hero-stats {
+    display: flex; justify-content: center;
+    gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; color: var(--text); line-height: 1;
+  }
+  .hero-stat-lbl {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text3); margin-top: 2px;
+  }
+  .divider { width: 1px; background: var(--border); align-self: stretch; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    overflow-x: auto; white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    background: none; border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px; padding: 0.6rem 1.25rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text3); cursor: pointer; transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── H2H TABLE (sticky first column) ── */
+  .h2h-scroll-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 6px;
+  }
+  .h2h-scroll-wrap::-webkit-scrollbar { height: 4px; }
+  .h2h-scroll-wrap::-webkit-scrollbar-track { background: var(--bg3); }
+  .h2h-scroll-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .h2h-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+  .h2h-table th, .h2h-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); }
+  .h2h-table th { background: var(--bg3); font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); }
+
+  /* Sticky name column */
+  .h2h-table .h2h-name-col {
+    position: sticky; left: 0; z-index: 5;
+    background: var(--bg2); border-right: 1px solid var(--border2);
+    font-weight: 600; font-size: 0.85rem; white-space: nowrap;
+  }
+  .h2h-table th.h2h-name-col { background: var(--bg3); z-index: 6; }
+  .h2h-table tr:hover .h2h-name-col { background: var(--bg3); }
+
+  /* H2H tooltip */
+  .h2h-cell { position: relative; cursor: default; }
+  .h2h-tip {
+    display: none;
+    position: absolute; bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg4); border: 1px solid var(--border2);
+    border-radius: 4px; padding: 4px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; color: var(--text);
+    white-space: nowrap; z-index: 50;
+    pointer-events: none;
+  }
+  .h2h-tip::after {
+    content: '';
+    position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--border2);
+  }
+  .h2h-cell:hover .h2h-tip,
+  .h2h-cell:focus .h2h-tip { display: block; }
+
+  /* ── COMM PANEL ── */
+  .comm-panel {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1.5rem; margin-bottom: 1.5rem;
+  }
+  .comm-panel h3 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem;
+    letter-spacing: 2px; color: var(--gold); margin-bottom: 1rem;
+  }
+
+  .flex-between {
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--bg3); border: 1px solid var(--gold);
+    color: var(--text); padding: 0.75rem 1.25rem; border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; letter-spacing: 1px;
+    z-index: 999; opacity: 0; transform: translateY(10px);
+    transition: all 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── MISC ── */
+  .empty-state {
+    text-align: center; padding: 3rem; color: var(--text3);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem;
+  }
+  .empty-state .big-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+  select option { background: var(--bg3); }
+  .form-row-inline { display: flex; gap: 1rem; }
+  .form-row-inline .form-row { flex: 1; }
+  .tag {
+    display: inline-block;
+    background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gold); font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
+    margin-right: 4px; margin-bottom: 4px;
+  }
+
+  /* ── CONFETTI ── */
+  .confetti-canvas {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 9999;
+  }
+
+  /* ── SEARCH FILTER ── */
+  .table-search {
+    background: var(--bg3); border: 1px solid var(--border2);
+    color: var(--text); padding: 0.5rem 0.875rem; border-radius: 4px;
+    font-family: 'Barlow', sans-serif; font-size: 0.85rem;
+    outline: none; transition: border-color 0.15s;
+    width: 200px;
+  }
+  .table-search::placeholder { color: var(--text3); }
+  .table-search:focus { border-color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+
+  /* Tablet */
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    header { padding: 0 1rem; }
+    .logo-text { font-size: 1.2rem; }
+    nav.desktop-nav { display: none; } /* hide desktop nav */
+    .bottom-nav { display: block; }    /* show bottom tab bar */
+
+    main {
+      padding: 1rem;
+      padding-bottom: calc(var(--bottom-nav-h) + 1rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+
+    .hero h1 { font-size: 2.2rem; }
+    .hero-stats { gap: 1rem; }
+    .hero { padding: 1.5rem 1rem; }
+
+    .page-header h1 { font-size: 1.8rem; }
+
+    .record-label { flex: 0 0 120px; font-size: 0.72rem; }
+    .record-holder { font-size: 0.82rem; }
+
+    /* Tables: allow horizontal scroll, min font */
+    .standings-table th { font-size: 0.65rem; padding: 0.5rem 0.6rem; }
+    .standings-table td { font-size: 0.8rem; padding: 0.6rem 0.6rem; }
+
+    /* Matchup cards stack better */
+    .team-score { font-size: 1.5rem; }
+
+    /* History bars: shrink name */
+    .history-name { flex: 0 0 90px; font-size: 0.78rem; }
+
+    /* H2H name column narrower */
+    .h2h-table .h2h-name-col { font-size: 0.75rem; padding: 0.5rem 0.6rem; }
+    .h2h-table th, .h2h-table td { padding: 0.5rem 0.6rem; font-size: 0.75rem; }
+
+    /* Toast stays above bottom nav */
+    .toast { bottom: calc(var(--bottom-nav-h) + 1rem); right: 1rem; }
+
+    /* Confetti below header but full bleed */
+    .confetti-canvas { top: 56px; }
+  }
+
+  @media (max-width: 420px) {
+    .logo-sub { display: none; }
+    .hero h1 { font-size: 1.8rem; letter-spacing: 3px; }
+    .stat-box-value { font-size: 1.5rem; }
+    .history-name { flex: 0 0 75px; font-size: 0.72rem; }
+    .table-search { width: 140px; font-size: 0.78rem; }
+  }
+
+  /* ── SORTABLE TABLE HEADERS ── */
+  th.sortable {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  th.sortable:hover {
+    color: var(--text);
+    background: var(--bg4);
+  }
+  th.sortable::after {
+    content: ' ⇅';
+    font-size: 0.65em;
+    opacity: 0.35;
+    transition: opacity 0.15s;
+  }
+  th.sortable.sort-asc::after  { content: ' ▲'; opacity: 1; color: var(--gold); }
+  th.sortable.sort-desc::after { content: ' ▼'; opacity: 1; color: var(--gold); }
+  th.sortable:hover::after { opacity: 0.7; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon" style="background:#000;border:1.5px solid #333;padding:0;overflow:hidden;width:42px;height:42px;border-radius:5px;flex-shrink:0;">
+      <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABQAFADASIAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAcIAgQGBQMJ/8QAORAAAQMEAQMCAgUKBwAAAAAAAQIDBAAFBhEHEiExCBMUQSI4UWG0CRUjMjZCcnaysxYXKDRxdYH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAEf/aAAwDAQACEQMRAD8Ap5SlKMlK+7cKY5CcnIivrisKCHHg2S2hR8Aq8An7D5qQ2LfiF74Rkv2LGrqvL7I+mReLgZO2TFccWkKS31HYSS0DpKSCd7I3oI+tcCbdLjHtttiPS5klxLTDDKCtbiydBIA7kmvpfbRdLDdpFpvMCTb58dXS9HkNlC0HWxsH7iDXQ8MtXZ/lrFWbJIcjXFy7x0MvIA22S4Nq1rWgN7BGtb7V7Xqdau7HPOXNXuU7JkpuCi244NfoCApkADsAGygdvsoqN6VImPQ8Ot3Dt2umUWC6PXq5yTHx6Y28UNpLaUl1RTsApSVJBOlbKtDRBI4MQpioCp6Yj5iJcDSnw0r2wsjYSVa1vXfW6DXpSlEKUpQdXiuaXa22CVh8q5zRilzfSu4wWSPpEFP6RO/CwUpIHglIB2N1cP0q8EtYwbzkEy/2fJseyK0/CRRFQvpkR3CFKK0qA6d9OunZ1s7Paqd8S4VJ5D5BtmHQ5zMGRcPc6H3kFSE9Da3DsDv4QRVysN4a59w/HY2PY3zHaoVri9XssG1pd6OpRUdKWgq8k/Oiu7469PHGuC5r/iuyQJqpqOr4VEqSXW4nUCCWxre9Ejayo9zqt7lfgzAeSslgX7JIsz4uI2GlGK/7QkNgkhLnYkgbOiCD38+KjjM8c9SmM4hecjkc022Qza4L0xbTdmZCnA2grKQS3oE61WnxtavUjm+C2jK4nMtviMXNj3kMu2ZhS0DZGiQ3r5UV6/qY4Aj5jjeOM4zcrVjUDGWHmi3K6kx0R1BJKuoAkFPt7O/OySRqqWZJlEqJZ5mC4/dn14miZ7/tka+MeSAn3yD3T1dIIQDoDp3sgqNzMn4k9Q2S2CbYb3zRa5NunNFqQyLShvrQfKepCAoA/PRGx2qonO3GM7ijMWcbuN0jXF56EiYl1htSU9KlrTrR+e0Gg4ClKUZKUpQTB6MfrKYn/FL/AAjtWL9ZPMmecZ5bY7fiVwixY8yCt55LsVDpKg50g7UO3aq6ejH6ymJ/xS/wj1SV+Uc/b/Fv+sc/umjSwE6+3LJ/R5cchu7qHZ9ww2TIkLQgJClqjLJIA7DvTgibItvpNslxiKCZEWwPPNKI2AtIcUNj/kV5li+ouf5Fe/Crra4c+pzbf5ak/wBDlBF/pK515F5E5WOP5RcokmALa9ICG4aGj1pUgD6SRv8AeNR3+UL3/njA86/MMf8AvP1BmGZVkWG3f884xdn7XP8AaUz77IHV0KIJHcH7BWWa5dkmaXZF2ym7v3WchkMJfeA6g2CSE9gBraif/aJXh0pSgUpSiJA9OuW23B+aMcyW8dSbfGfWiQtI2W0ONraK9eSE9YJA+QNXF9X3FaOUMFi5djDiZV3tkcuxktK60zYytLKUEHRVrakkb33HzBH59Vbv0R83tw1R+MMplBLTrgTZJLmyQtR/2xPgDfdBPzJT80gFS5Yz/oZUO/7DPfhV1s8OnXo5t38tSf6Ha7Xm1iPG4LzZmM02y0nHp3ShtPSkfoF+APFeP6XWWZHpzw9iQ0h1py29K0LTtKklSgQQfINFUNtnA3LlytUW5wsJmuxJTKXmXC80jqQobSdKWCNjv3FRvIaUw+4wspK21lCulQUNg6OiOxH3irqetfmxi122RxjissfHPgIuz7KiPhmux9kaGiVfvaPZPY/rfRpQe/miFKUohSlKBWcd52O+2+w6tp1tQWhaFEKSQdggjwd/OsKUF4eOeaHOTvTfn1nvq205LascmB9QOvi2jHWA8B8lb7KA7b0e3VoI/MLHFHpJwlcMNv5FcrcUW1lY2hOlnqdWN/qp2O3zJA8bIpNbp0u3vrfhSHGHFsuMqUg66kOIKFpP3FKiD9xrO43KfcRGE2W8+mKwmPHStZIabT4SkfIdye3kknyTRawuk6XdLlJuU99ciXKdU8+6s7UtajtSiftJrXpSiFKUoP/Z" width="42" height="42" style="display:block;object-fit:cover;" alt="DC Logo">
+    </div>
+    <div>
+      <div class="logo-text">The Dipstick Clique</div>
+      <div class="logo-sub">Fantasy Football League</div>
+    </div>
+  </div>
+  <nav class="desktop-nav">
+    <button class="active" onclick="showSection('home')">Home</button>
+    <button onclick="showSection('standings')">Standings</button>
+    <button onclick="showSection('scores')">Scores</button>
+    <button onclick="showSection('records')">Records</button>
+    <button onclick="showSection('history')">History</button>
+    <button onclick="showSection('commish')">Commissioner</button>
+  </nav>
+</header>
+
+<!-- BOTTOM TAB BAR (mobile only) -->
+<div class="bottom-nav" id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bottom-nav-btn active" onclick="showSection('home')" id="bnav-home">
+      <span class="bnav-icon">🏠</span><span>Home</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('standings')" id="bnav-standings">
+      <span class="bnav-icon">📊</span><span>Standings</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('scores')" id="bnav-scores">
+      <span class="bnav-icon">🏈</span><span>Scores</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('records')" id="bnav-records">
+      <span class="bnav-icon">🏆</span><span>Records</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('history')" id="bnav-history">
+      <span class="bnav-icon">📅</span><span>History</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('commish')" id="bnav-commish">
+      <span class="bnav-icon">📢</span><span>Commish</span>
+    </button>
+  </div>
+</div>
+
+<main>
+
+  <!-- HOME -->
+  <div id="section-home" class="section active">
+    <div class="hero">
+      <h1>The Dipstick Clique</h1>
+      <p>2025 Fantasy Football Season</p>
+      <div class="hero-stats" id="hero-stats">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="page-header" style="margin-bottom:1rem;">
+          <h1 style="font-size:1.4rem;">Current Standings</h1>
+        </div>
+        <div class="card" id="home-standings-card">
+          <div class="loading"><div class="spinner"></div>Loading...</div>
+        </div>
+      </div>
+      <div>
+        <div class="page-header" style="margin-bottom:1rem;">
+          <h1 style="font-size:1.4rem;">Latest Scores</h1>
+        </div>
+        <div id="home-scores-wrap">
+          <div class="loading"><div class="spinner"></div>Loading...</div>
+        </div>
+        <div id="commissioner-preview" style="margin-top:1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STANDINGS -->
+  <div id="section-standings" class="section">
+    <div class="page-header">
+      <h1>League Standings</h1>
+      <p>2025 Season</p>
+    </div>
+    <div class="card" id="standings-card">
+      <div id="standings-skeleton">
+        <div class="skeleton-row" style="height:36px;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:1;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.9;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.8;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.7;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.55;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.42;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.3;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.2;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.12;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORES -->
+  <div id="section-scores" class="section">
+    <div class="page-header">
+      <h1>Weekly Scores</h1>
+      <p>Select a week to view matchups</p>
+    </div>
+    <div class="week-selector" id="week-selector">
+      <span class="week-label">Week:</span>
+    </div>
+    <div id="scores-grid" class="grid-auto">
+      <div class="skeleton-card" style="height:130px;opacity:1;"></div>
+      <div class="skeleton-card" style="height:130px;opacity:0.85;"></div>
+      <div class="skeleton-card" style="height:130px;opacity:0.7;"></div>
+      <div class="skeleton-card" style="height:130px;opacity:0.55;"></div>
+      <div class="skeleton-card" style="height:130px;opacity:0.4;"></div>
+    </div>
+  </div>
+
+  <!-- RECORDS -->
+  <div id="section-records" class="section">
+    <div class="page-header">
+      <h1>League Records</h1>
+      <p>All-time achievements</p>
+    </div>
+    <div id="records-content">
+      <div class="skeleton-card" style="height:180px;opacity:1;margin-bottom:1rem;"></div>
+      <div class="skeleton-card" style="height:220px;opacity:0.8;margin-bottom:1rem;"></div>
+      <div class="skeleton-card" style="height:160px;opacity:0.6;"></div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="section-history" class="section">
+    <div class="page-header">
+      <h1>All-Time History</h1>
+      <p>Multi-season records &amp; franchise rankings since inception</p>
+    </div>
+    <div id="history-content">
+      <div class="skeleton-card" style="height:60px;opacity:1;margin-bottom:1rem;"></div>
+      <div class="skeleton-card" style="height:320px;opacity:0.85;margin-bottom:1rem;"></div>
+      <div class="skeleton-card" style="height:200px;opacity:0.6;"></div>
+    </div>
+  </div>
+
+  <!-- COMMISSIONER -->
+  <div id="section-commish" class="section">
+    <div class="page-header">
+      <h1>Commissioner's Corner</h1>
+      <p>League news &amp; announcements</p>
+    </div>
+    <div id="commish-content">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const LEAGUE_ID = '1180169995271028736';
+const SEASON = '2025';
+const BASE = 'https://api.sleeper.app/v1';
+const COMM_PASS = 'dipstick2025'; // Change this!
+
+// Users excluded from all stats, standings, history, and matchups
+const EXCLUDED_USERS = ['scameron1892', 'czurowski32'];
+
+// ---- ESPN HISTORICAL MATCHUPS (2022-2023) ----
+// Format: [season, week, homeOwner, homePts, awayOwner, awayPts] — regular season only (weeks 1-14)
+const ESPN_MATCHUPS = [["2022",1,"gsteuter",149.68,"CodyLenart9",118],["2022",1,"ScuubaSteeve",114.66,"mcpeach",80.26],["2022",1,"slipperynoodleboy",149.52,"jkwon9",116.42],["2022",1,"notchrishanson",129.3,"MikeYambor",121.62],["2022",2,"CodyLenart9",107.08,"bfielding3",146.7],["2022",2,"mcpeach",148.86,"gsteuter",158.58],["2022",2,"MikeYambor",122.46,"ScuubaSteeve",78.9],["2022",2,"swollenArm",123.46,"slipperynoodleboy",112.92],["2022",3,"mcpeach",82.58,"CodyLenart9",95.06],["2022",3,"bfielding3",88.08,"jkwon9",133.46],["2022",3,"gsteuter",122.3,"MikeYambor",111.8],["2022",3,"slipperynoodleboy",106.6,"notchrishanson",124.5],["2022",4,"CodyLenart9",131.36,"jkwon9",109.38],["2022",4,"MikeYambor",106.48,"mcpeach",158.9],["2022",4,"swollenArm",102.78,"bfielding3",123.86],["2022",4,"slipperynoodleboy",112.56,"ScuubaSteeve",136.22],["2022",5,"MikeYambor",104.98,"CodyLenart9",116.54],["2022",5,"jkwon9",135.8,"swollenArm",86.34],["2022",5,"bfielding3",103.78,"notchrishanson",141.34],["2022",5,"gsteuter",159.36,"slipperynoodleboy",130.86],["2022",6,"CodyLenart9",100.48,"swollenArm",118.92],["2022",6,"notchrishanson",117.6,"jkwon9",93.98],["2022",6,"slipperynoodleboy",119.4,"mcpeach",82.46],["2022",6,"ScuubaSteeve",118.6,"bfielding3",97.12],["2022",7,"swollenArm",123.6,"notchrishanson",114.02],["2022",7,"MikeYambor",151.44,"slipperynoodleboy",84.72],["2022",7,"jkwon9",115.86,"ScuubaSteeve",85.86],["2022",7,"bfielding3",122.92,"gsteuter",115.44],["2022",8,"CodyLenart9",139.68,"notchrishanson",128.88],["2022",8,"ScuubaSteeve",97.74,"swollenArm",161.06],["2022",8,"gsteuter",100.92,"jkwon9",143.44],["2022",8,"bfielding3",112.58,"mcpeach",106.84],["2022",9,"slipperynoodleboy",124.92,"CodyLenart9",179.8],["2022",9,"notchrishanson",91.6,"ScuubaSteeve",80.24],["2022",9,"swollenArm",93.1,"gsteuter",112.2],["2022",9,"MikeYambor",147.44,"bfielding3",97.44],["2022",9,"jkwon9",115.6,"mcpeach",128.1],["2022",10,"CodyLenart9",132.4,"ScuubaSteeve",95.64],["2022",10,"gsteuter",124,"notchrishanson",129.28],["2022",10,"mcpeach",81.74,"swollenArm",121.66],["2022",10,"jkwon9",81.62,"MikeYambor",100.2],["2022",11,"ScuubaSteeve",83.4,"gsteuter",119.68],["2022",11,"slipperynoodleboy",122.8,"bfielding3",93.56],["2022",11,"notchrishanson",163.3,"mcpeach",100.5],["2022",11,"swollenArm",99.04,"MikeYambor",109.26],["2022",12,"CodyLenart9",100.1,"gsteuter",149.92],["2022",12,"mcpeach",145.36,"ScuubaSteeve",83.72],["2022",12,"jkwon9",116.74,"slipperynoodleboy",114.42],["2022",12,"MikeYambor",106,"notchrishanson",149.64],["2022",13,"bfielding3",134.22,"CodyLenart9",113.5],["2022",13,"gsteuter",127.32,"mcpeach",132.1],["2022",13,"ScuubaSteeve",89.36,"MikeYambor",89.94],["2022",13,"slipperynoodleboy",157.8,"swollenArm",116.76],["2022",14,"CodyLenart9",104.4,"mcpeach",131.38],["2022",14,"jkwon9",66.66,"bfielding3",84.88],["2022",14,"MikeYambor",129.36,"gsteuter",126.18],["2022",14,"notchrishanson",139.8,"slipperynoodleboy",137.58],["2023",1,"jkwon9",89.38,"gsteuter",121.86],["2023",1,"ScuubaSteeve",122.64,"bfielding3",87.44],["2023",1,"MikeYambor",143.48,"swollenArm",93.62],["2023",1,"slipperynoodleboy",101,"notchrishanson",112.36],["2023",2,"gsteuter",104.56,"mcpeach",90.64],["2023",2,"swollenArm",107.9,"jkwon9",147.64],["2023",2,"notchrishanson",128.7,"ScuubaSteeve",102.24],["2023",2,"slipperynoodleboy",120.32,"MikeYambor",102.48],["2023",3,"CodyLenart9",133.68,"bfielding3",153.98],["2023",3,"mcpeach",147.16,"swollenArm",136.86],["2023",3,"jkwon9",85.64,"slipperynoodleboy",129.28],["2023",3,"ScuubaSteeve",95.16,"MikeYambor",97.7],["2023",4,"swollenArm",93.3,"gsteuter",139.06],["2023",4,"notchrishanson",124.42,"CodyLenart9",94.3],["2023",4,"slipperynoodleboy",113.76,"mcpeach",97.48],["2023",4,"ScuubaSteeve",97.78,"jkwon9",154],["2023",5,"bfielding3",95.54,"notchrishanson",138.94],["2023",5,"gsteuter",108.76,"slipperynoodleboy",122.42],["2023",5,"CodyLenart9",105.24,"MikeYambor",93.74],["2023",5,"mcpeach",163.22,"ScuubaSteeve",138.7],["2023",6,"slipperynoodleboy",81.4,"swollenArm",111.74],["2023",6,"MikeYambor",115.8,"bfielding3",118.4],["2023",6,"ScuubaSteeve",84.04,"gsteuter",127.34],["2023",6,"jkwon9",125.74,"CodyLenart9",143.72],["2023",7,"notchrishanson",125.36,"MikeYambor",101.68],["2023",7,"swollenArm",146.86,"ScuubaSteeve",113.16],["2023",7,"bfielding3",67.34,"jkwon9",117.46],["2023",7,"CodyLenart9",128.28,"mcpeach",105.34],["2023",8,"ScuubaSteeve",115.78,"slipperynoodleboy",125.96],["2023",8,"jkwon9",133.1,"notchrishanson",162.08],["2023",8,"mcpeach",161.16,"bfielding3",146.12],["2023",8,"CodyLenart9",82.08,"gsteuter",116.76],["2023",9,"MikeYambor",123.86,"jkwon9",127.86],["2023",9,"notchrishanson",76.9,"mcpeach",96.54],["2023",9,"swollenArm",118.3,"CodyLenart9",91.68],["2023",9,"bfielding3",140.82,"gsteuter",119.7],["2023",10,"mcpeach",84.1,"MikeYambor",128.46],["2023",10,"CodyLenart9",108.92,"slipperynoodleboy",112.66],["2023",10,"gsteuter",135.48,"notchrishanson",125.32],["2023",10,"bfielding3",110.28,"swollenArm",133.64],["2023",11,"jkwon9",136.46,"mcpeach",109.3],["2023",11,"ScuubaSteeve",146.48,"CodyLenart9",120.86],["2023",11,"MikeYambor",97.76,"gsteuter",103.04],["2023",11,"slipperynoodleboy",117.9,"bfielding3",63.34],["2023",11,"notchrishanson",124.74,"swollenArm",104.38],["2023",12,"gsteuter",120.3,"jkwon9",122.74],["2023",12,"bfielding3",113.66,"ScuubaSteeve",148.26],["2023",12,"swollenArm",126.72,"MikeYambor",140.54],["2023",12,"notchrishanson",129.5,"slipperynoodleboy",141.4],["2023",13,"mcpeach",140.3,"gsteuter",133.68],["2023",13,"jkwon9",114.04,"swollenArm",154.72],["2023",13,"ScuubaSteeve",134.82,"notchrishanson",105.06],["2023",13,"MikeYambor",137.06,"slipperynoodleboy",130.32],["2023",14,"bfielding3",97.76,"CodyLenart9",105.14],["2023",14,"swollenArm",122.04,"mcpeach",141.5],["2023",14,"slipperynoodleboy",121.68,"jkwon9",115.76],["2023",14,"MikeYambor",136.64,"ScuubaSteeve",143.9]];
+
+// ---- ESPN HISTORICAL DATA (2022-2023) ----
+// Sourced directly from ESPN Fantasy API. Regular season only (weeks 1-14).
+// Owner names mapped to Sleeper usernames. clydesdale1413 and czurowski excluded.
+const ESPN_DATA = {
+  "gsteuter":        { "2022": { w:8,  l:6,  pf:1837.56, pa:1673.32, scores:[149.68,158.58,122.30,154.82,159.36,117.16,115.44,100.92,112.20,124.00,119.68,149.92,127.32,126.18] }, "2023": { w:10, l:4,  pf:1658.14, pa:1502.40, scores:[121.86,104.56,146.28,139.06,108.76,127.34,102.16,116.76,119.70,135.48,103.04,120.30,133.68,79.16] } },
+  "CodyLenart9":     { "2022": { w:7,  l:7,  pf:1636.14, pa:1687.84, scores:[118.00,107.08,95.06,131.36,116.54,100.48,88.10,139.68,179.80,132.40,109.64,110.46,112.12,95.42] }, "2023": { w:6,  l:8,  pf:1589.82, pa:1693.10, scores:[97.22,120.70,124.92,98.76,112.38,134.28,118.82,117.68,100.68,119.96,104.62,131.02,97.16,110.62] } },
+  "notchrishanson":  { "2022": { w:9,  l:5,  pf:1717.78, pa:1648.72, scores:[133.32,115.44,126.74,135.58,143.78,106.66,119.62,100.58,130.78,128.28,125.18,130.38,122.40,99.04] }, "2023": { w:9,  l:5,  pf:1650.16, pa:1510.96, scores:[122.46,115.24,130.86,126.56,106.44,137.62,115.02,107.44,108.36,128.78,108.58,127.86,100.64,114.30] } },
+  "slipperynoodleboy": { "2022": { w:5,  l:9,  pf:1764.76, pa:1898.64, scores:[138.84,127.78,139.62,127.00,135.10,145.26,107.32,142.64,125.40,130.46,106.04,110.08,115.72,113.50] }, "2023": { w:10, l:4,  pf:1668.74, pa:1397.58, scores:[106.66,125.08,147.72,126.92,116.54,120.54,117.04,113.28,128.64,138.82,101.64,115.46,100.20,110.20] } },
+  "swollenArm":      { "2022": { w:8,  l:6,  pf:1636.86, pa:1691.54, scores:[132.16,102.02,120.22,111.44,124.82,118.98,92.08,108.12,138.48,120.46,107.90,112.62,133.80,113.76] }, "2023": { w:7,  l:7,  pf:1738.46, pa:1631.30, scores:[115.38,136.94,118.68,144.78,127.76,121.88,125.02,127.64,119.58,117.26,142.16,109.56,120.02,111.80] } },
+  "mcpeach":         { "2022": { w:5,  l:9,  pf:1564.12, pa:1793.54, scores:[100.64,110.76,126.28,91.04,100.50,105.18,109.44,96.68,129.58,108.22,108.96,134.20,107.76,135.88] }, "2023": { w:9,  l:5,  pf:1710.94, pa:1594.10, scores:[110.22,124.18,137.92,130.36,116.14,131.04,139.52,107.38,125.16,124.30,103.46,126.68,108.44,126.14] } },
+  "MikeYambor":      { "2022": { w:8,  l:6,  pf:1641.96, pa:1649.94, scores:[143.70,131.42,98.96,134.46,115.98,103.64,108.22,114.36,115.38,112.26,110.72,124.28,102.56,125.02] }, "2023": { w:6,  l:8,  pf:1628.22, pa:1694.22, scores:[114.04,116.48,131.14,123.56,107.90,115.80,130.44,110.02,133.84,104.14,107.96,108.04,100.22,125.64] } },
+  "bfielding3":      { "2022": { w:6,  l:8,  pf:1580.36, pa:1666.24, scores:[91.14,96.30,112.82,126.46,118.58,115.52,111.90,120.60,125.36,115.62,100.78,109.72,101.54,134.02] }, "2023": { w:6,  l:8,  pf:1641.46, pa:1763.28, scores:[110.16,113.12,101.46,134.16,97.74,117.90,131.12,113.26,121.40,120.48,104.14,116.88,129.06,130.58] } },
+  "jkwon9":          { "2022": { w:6,  l:8,  pf:1604.16, pa:1734.16, scores:[111.08,91.92,115.74,126.84,118.48,117.32,96.84,127.74,108.38,116.62,120.78,112.38,115.62,123.42] }, "2023": { w:7,  l:7,  pf:1662.78, pa:1617.80, scores:[107.14,96.90,138.58,121.92,110.76,108.84,107.34,130.88,116.34,122.06,115.46,143.38,120.94,122.24] } },
+  "ScuubaSteeve":    { "2022": { w:10, l:4,  pf:1837.10, pa:1632.68, scores:[126.88,136.18,135.70,141.36,137.62,151.28,144.30,127.14,131.86,96.78,128.30,124.56,119.12,136.02] }, "2023": { w:7,  l:7,  pf:1626.30, pa:1671.32, scores:[115.64,138.88,115.20,127.52,123.84,100.42,130.10,131.16,97.60,112.60,108.28,117.10,126.44,101.52] } }
+};
+
+function isExcludedUser(displayName) {
+  if (!displayName) return false;
+  return EXCLUDED_USERS.some(u => displayName.toLowerCase() === u.toLowerCase());
+}
+
+function isExcludedRoster(rosterId, usersArr, rostersArr) {
+  // Check both current-season globals and a passed-in rosters/users pair
+  const rArr = rostersArr || rostersData;
+  const uArr = usersArr || usersData;
+  const roster = rArr.find(r => r.roster_id === rosterId);
+  if (!roster) return false;
+  const user = uArr.find(u => u.user_id === roster.owner_id);
+  return isExcludedUser(user?.display_name);
+}
+
+let leagueData = null;
+let rostersData = null;
+let usersData = null;
+let allMatchupsData = {};
+let currentWeek = 1;
+let maxWeek = 18;
+let commLoggedIn = false;
+let _allSeasonsCache = null; // cache so we only load all seasons once
+
+// ---- STORAGE ----
+function getPosts() {
+  try {
+    const raw = localStorage.getItem('dc_posts');
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+
+function savePosts(posts) {
+  try { localStorage.setItem('dc_posts', JSON.stringify(posts)); } catch(e) {}
+}
+
+// ---- TOAST ----
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ---- API ----
+async function api(path) {
+  const res = await fetch(BASE + path);
+  if (!res.ok) throw new Error('API error: ' + res.status);
+  return res.json();
+}
+
+// ---- INIT ----
+async function init() {
+  try {
+    [leagueData, rostersData, usersData] = await Promise.all([
+      api(`/league/${LEAGUE_ID}`),
+      api(`/league/${LEAGUE_ID}/rosters`),
+      api(`/league/${LEAGUE_ID}/users`)
+    ]);
+
+    const nflState = await api('/state/nfl');
+    currentWeek = nflState.week || 1;
+    if (nflState.season !== SEASON) {
+      // Off-season: nflState is already on next year — use last_scored_leg from league data
+      // so completed seasons still load all their matchup data
+      currentWeek = leagueData.settings?.last_scored_leg || 17;
+    }
+    maxWeek = leagueData.settings?.playoff_week_start
+      ? leagueData.settings.playoff_week_start + 3
+      : 17;
+
+    // Pre-load current week matchups
+    const wk = Math.max(1, Math.min(currentWeek, maxWeek));
+    await loadMatchupsForWeek(wk);
+
+    renderHome();
+    renderStandings('standings-card', true);
+    buildWeekSelector();
+    renderScoresForWeek(wk);
+    renderRecords();
+    renderHistory();
+    renderCommish();
+  } catch(e) {
+    console.error(e);
+    showError('home-standings-card', 'Failed to load league data. ' + e.message);
+    showError('standings-card', 'Failed to load standings. ' + e.message);
+  }
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = `<div class="error-msg">⚠ ${msg}</div>`;
+}
+
+// ---- HELPERS ----
+function getUserByRosterId(rosterId) {
+  const roster = rostersData.find(r => r.roster_id === rosterId);
+  if (!roster) return { display_name: 'Unknown', avatar: null };
+  const user = usersData.find(u => u.user_id === roster.owner_id);
+  return user || { display_name: 'Unknown', avatar: null };
+}
+
+function getTeamName(rosterId) {
+  const user = getUserByRosterId(rosterId);
+  return user.metadata?.team_name || user.display_name || `Team ${rosterId}`;
+}
+
+function getOwnerName(rosterId) {
+  const user = getUserByRosterId(rosterId);
+  return user.display_name || `Owner ${rosterId}`;
+}
+
+function avatarUrl(avatarId) {
+  if (!avatarId) return null;
+  return `https://sleepercdn.com/avatars/thumbs/${avatarId}`;
+}
+
+function avatarEl(rosterId, size = 44) {
+  const user = getUserByRosterId(rosterId);
+  if (user.avatar) {
+    return `<img src="${avatarUrl(user.avatar)}" style="width:${size}px;height:${size}px;border-radius:50%;border:2px solid var(--border2);object-fit:cover;" onerror="this.outerHTML='<div class=\'team-avatar\' style=\'width:${size}px;height:${size}px;\''>🏈</div>'">`;
+  }
+  return `<div class="team-avatar" style="width:${size}px;height:${size}px;">🏈</div>`;
+}
+
+function fmtPts(pts) {
+  if (pts == null || pts === 0) return '—';
+  return parseFloat(pts).toFixed(2);
+}
+
+function winPct(w, l, t) {
+  const total = (w || 0) + (l || 0) + (t || 0);
+  if (!total) return '.000';
+  return '.' + Math.round(((w || 0) / total) * 1000).toString().padStart(3, '0');
+}
+
+function formatDate(ts) {
+  return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// Sort rosters by standings (excluding banned users)
+function sortedRosters() {
+  return [...rostersData]
+    .filter(r => !isExcludedRoster(r.roster_id))
+    .sort((a, b) => {
+      const wa = a.settings?.wins || 0, wb = b.settings?.wins || 0;
+      const la = a.settings?.losses || 0, lb = b.settings?.losses || 0;
+      if (wb !== wa) return wb - wa;
+      const pa = a.settings?.fpts + (a.settings?.fpts_decimal || 0) / 100 || 0;
+      const pb = b.settings?.fpts + (b.settings?.fpts_decimal || 0) / 100 || 0;
+      return pb - pa;
+    });
+}
+
+function totalPts(roster) {
+  const fpts = roster.settings?.fpts || 0;
+  const dec = roster.settings?.fpts_decimal || 0;
+  return fpts + dec / 100;
+}
+
+function totalPtsAgainst(roster) {
+  const fpts = roster.settings?.fpts_against || 0;
+  const dec = roster.settings?.fpts_against_decimal || 0;
+  return fpts + dec / 100;
+}
+
+// ---- HOME ----
+function renderHome() {
+  // hero stats
+  const totalTeams = sortedRosters().length; // uses filtered list
+  const topRoster = sortedRosters()[0];
+  const topPts = sortedRosters().reduce((mx, r) => Math.max(mx, totalPts(r)), 0);
+
+  document.getElementById('hero-stats').innerHTML = `
+    <div class="hero-stat">
+      <div class="hero-stat-val">${totalTeams}</div>
+      <div class="hero-stat-lbl">Teams</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">${currentWeek}</div>
+      <div class="hero-stat-lbl">Current Week</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">${getTeamName(topRoster.roster_id).split(' ').slice(0,2).join(' ')}</div>
+      <div class="hero-stat-lbl">League Leader</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">${topPts.toFixed(0)}</div>
+      <div class="hero-stat-lbl">Top Points</div>
+    </div>
+  `;
+
+  // mini standings
+  renderStandings('home-standings-card', false, 6);
+
+  // latest scores
+  renderLatestScores();
+
+  // commissioner preview
+  renderCommishPreview();
+}
+
+function renderLatestScores() {
+  const wk = Math.max(1, Math.min(currentWeek, maxWeek));
+  const matchups = allMatchupsData[wk];
+  const wrap = document.getElementById('home-scores-wrap');
+  if (!matchups || !matchups.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="big-icon">📅</div>No scores yet</div>';
+    return;
+  }
+  wrap.innerHTML = buildMatchupCards(matchups, wk, 4);
+}
+
+// ---- STANDINGS ----
+
+// ── SPARKLINE (mini SVG line chart) ──────────────────────────────
+function buildSparkline(scores, width=72, height=22) {
+  if (!scores || scores.length < 2) return '';
+  const min = Math.min(...scores);
+  const max = Math.max(...scores);
+  const range = max - min || 1;
+  const pad = 2;
+  const pts = scores.map((s, i) => {
+    const x = pad + (i / (scores.length - 1)) * (width - pad * 2);
+    const y = pad + ((1 - (s - min) / range) * (height - pad * 2));
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const lastPt = pts.split(' ').pop().split(',');
+  const lastX = parseFloat(lastPt[0]);
+  const lastY = parseFloat(lastPt[1]);
+  const trend = scores[scores.length-1] >= scores[scores.length-2] ? '#27ae60' : '#c0392b';
+  return `<svg width="${width}" height="${height}" style="display:block;overflow:visible;">
+    <polyline points="${pts}" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1.2" stroke-linejoin="round"/>
+    <circle cx="${lastX}" cy="${lastY}" r="2.5" fill="${trend}"/>
+  </svg>`;
+}
+
+// Get per-roster weekly scores for current season from allMatchupsData
+function getRosterWeeklyScores(rosterId) {
+  const scores = [];
+  const playoffStart = leagueData?.settings?.playoff_week_start || 15;
+  for (let w = 1; w < playoffStart; w++) {
+    const matchups = allMatchupsData[w];
+    if (!matchups) break;
+    const entry = matchups.find(m => m.roster_id === rosterId);
+    if (entry) scores.push(entry.points || 0);
+  }
+  return scores;
+}
+
+function renderStandings(targetId, fullTable = true, limit = null) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  const sorted = sortedRosters();
+  const playoffSpots = leagueData.settings?.playoff_teams || 4;
+  const rows = (limit ? sorted.slice(0, limit) : sorted).map((roster, idx) => {
+    const globalIdx = sorted.indexOf(roster);
+    const w = roster.settings?.wins || 0;
+    const l = roster.settings?.losses || 0;
+    const t = roster.settings?.ties || 0;
+    const pts = totalPts(roster);
+    const ptsA = totalPtsAgainst(roster);
+    const streak = roster.metadata?.streak;
+    const rankClass = globalIdx === 0 ? 'gold' : globalIdx === 1 ? 'silver' : globalIdx === 2 ? 'bronze' : '';
+    const playoffBorderClass = globalIdx === playoffSpots ? 'playoff-line' : '';
+    let streakHtml = '';
+    if (streak) {
+      const sNum = parseInt(streak);
+      const sType = streak.includes('W') ? 'W' : 'L';
+      streakHtml = `<span class="streak-badge streak-${sType.toLowerCase()}">${Math.abs(sNum)}${sType}</span>`;
+    }
+    return `<tr class="${playoffBorderClass}">
+      <td class="rank-num ${rankClass}">${globalIdx + 1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          ${avatarEl(roster.roster_id, 32)}
+          <div>
+            <div class="team-name-cell">${getTeamName(roster.roster_id)}</div>
+            <div class="owner-name">${getOwnerName(roster.roster_id)}</div>
+          </div>
+        </div>
+      </td>
+      <td class="record">${w}-${l}${t > 0 ? '-' + t : ''}</td>
+      ${fullTable ? `<td class="win-pct">${winPct(w, l, t)}</td>` : ''}
+      <td class="pts" style="text-align:right;">${pts.toFixed(2)}</td>
+      ${fullTable ? `<td class="pts" style="text-align:right;color:var(--text3);">${ptsA.toFixed(2)}</td>` : ''}
+      ${fullTable ? `<td style="text-align:center;">${streakHtml}</td>` : ''}
+      ${fullTable ? `<td style="text-align:center;padding:0.5rem 0.75rem;">${buildSparkline(getRosterWeeklyScores(roster.roster_id))}</td>` : ''}
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `<table class="standings-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Team</th>
+        <th>W-L</th>
+        ${fullTable ? '<th class="right">PCT</th>' : ''}
+        <th class="right">PF</th>
+        ${fullTable ? '<th class="right">PA</th>' : ''}
+        ${fullTable ? '<th style="text-align:center;">STK</th>' : ''}
+        ${fullTable ? '<th style="text-align:center;">TREND</th>' : ''}
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>
+  ${fullTable ? `<div style="padding:0.5rem 1rem;font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">--- PLAYOFF LINE (Top ${playoffSpots})</div>` : ''}`;
+}
+
+// ---- SCORES / MATCHUPS ----
+async function loadMatchupsForWeek(week) {
+  if (!allMatchupsData[week]) {
+    try {
+      allMatchupsData[week] = await api(`/league/${LEAGUE_ID}/matchups/${week}`);
+    } catch(e) {
+      allMatchupsData[week] = [];
+    }
+  }
+}
+
+function buildMatchupCards(matchups, week, limit = null) {
+  if (!matchups || !matchups.length) return '<div class="empty-state"><div class="big-icon">📭</div>No matchups found</div>';
+
+  // Group by matchup_id, filtering out excluded users
+  const groups = {};
+  matchups
+    .filter(m => !isExcludedRoster(m.roster_id))
+    .forEach(m => {
+      if (!groups[m.matchup_id]) groups[m.matchup_id] = [];
+      groups[m.matchup_id].push(m);
+    });
+
+  let cards = '';
+  let count = 0;
+  for (const mid of Object.keys(groups)) {
+    if (limit && count >= limit) break;
+    const pair = groups[mid];
+    if (pair.length < 2) continue;
+    const [t1, t2] = pair;
+    const s1 = t1.points || 0;
+    const s2 = t2.points || 0;
+    const isComplete = week < currentWeek;
+    const isLive = week === currentWeek;
+    const w1 = isComplete && s1 > s2;
+    const w2 = isComplete && s2 > s1;
+    let statusHtml = '';
+    if (isComplete) statusHtml = `<div class="matchup-status status-final">Final</div>`;
+    else if (isLive) statusHtml = `<div class="matchup-status status-live">● Live</div>`;
+    else statusHtml = `<div class="matchup-status status-upcoming">Upcoming</div>`;
+
+    cards += `<div class="matchup-card">
+      <div class="matchup-week-label">Week ${week} — Matchup ${mid}</div>
+      <div class="matchup-teams">
+        <div class="matchup-team ${w1 ? 'winner' : ''}">
+          ${avatarEl(t1.roster_id, 44)}
+          <div class="team-score">${isComplete || isLive ? fmtPts(s1) : '—'}</div>
+          <div class="team-score-name">${getTeamName(t1.roster_id)}</div>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="matchup-team ${w2 ? 'winner' : ''}">
+          ${avatarEl(t2.roster_id, 44)}
+          <div class="team-score">${isComplete || isLive ? fmtPts(s2) : '—'}</div>
+          <div class="team-score-name">${getTeamName(t2.roster_id)}</div>
+        </div>
+      </div>
+      ${statusHtml}
+    </div>`;
+    count++;
+  }
+  return cards || '<div class="empty-state"><div class="big-icon">📭</div>No matchups</div>';
+}
+
+function buildWeekSelector() {
+  const el = document.getElementById('week-selector');
+  const wkNow = Math.max(1, Math.min(currentWeek, maxWeek));
+  let html = '<span class="week-label">Week:</span>';
+  for (let w = 1; w <= maxWeek; w++) {
+    html += `<button onclick="selectWeek(${w})" id="wkbtn-${w}" class="${w === wkNow ? 'active' : ''}">${w}</button>`;
+  }
+  el.innerHTML = html;
+}
+
+async function selectWeek(week) {
+  document.querySelectorAll('#week-selector button').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById(`wkbtn-${week}`);
+  if (btn) btn.classList.add('active');
+  await renderScoresForWeek(week);
+}
+
+async function renderScoresForWeek(week) {
+  const grid = document.getElementById('scores-grid');
+  grid.innerHTML = '<div class="skeleton-card" style="height:130px;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:130px;opacity:0.7;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:130px;opacity:0.45;"></div>';
+  await loadMatchupsForWeek(week);
+  grid.innerHTML = buildMatchupCards(allMatchupsData[week], week);
+}
+
+// ---- MULTI-SEASON DATA ----
+// Walk the previous_league_id chain to load all historical seasons.
+// For the CURRENT season we reuse already-loaded global data to avoid redundant fetches.
+async function loadAllSeasons() {
+  if (_allSeasonsCache) return _allSeasonsCache;
+  _allSeasonsCache = await _loadAllSeasonsImpl();
+  return _allSeasonsCache;
+}
+
+async function _loadAllSeasonsImpl() {
+  const seasons = [];
+  const visited = new Set();
+
+  // Seed first pass with already-loaded globals so we do not double-fetch current season
+  let lg = leagueData;
+  let ro = rostersData;
+  let us = usersData;
+  let lid = LEAGUE_ID;
+
+  while (lid && !visited.has(lid)) {
+    visited.add(lid);
+    try {
+      // For seasons beyond the first, fetch fresh data
+      if (lg === null) {
+        [lg, ro, us] = await Promise.all([
+          api(`/league/${lid}`),
+          api(`/league/${lid}/rosters`),
+          api(`/league/${lid}/users`)
+        ]);
+      }
+
+      // Always use the season year directly from the API -- never guess
+      const seasonYear = lg.season || String(parseInt(SEASON) - seasons.length);
+      const playoffStart = lg.settings?.playoff_week_start || 15;
+      const totalWeeks = playoffStart + 3;
+
+      // For the current season load up to currentWeek-1; but if the season is complete load all
+      const isCurrentSeason = lid === LEAGUE_ID;
+      const seasonComplete = lg.status === 'complete';
+      const weeksToLoad = (!isCurrentSeason || seasonComplete)
+        ? totalWeeks
+        : Math.max(0, Math.min(currentWeek - 1, totalWeeks));
+
+      const matchupsByWeek = {};
+      if (weeksToLoad > 0) {
+        const batchSize = 6;
+        for (let w = 1; w <= weeksToLoad; w += batchSize) {
+          const batch = [];
+          for (let bw = w; bw < w + batchSize && bw <= weeksToLoad; bw++) batch.push(bw);
+          const results = await Promise.all(batch.map(bw =>
+            fetch(`${BASE}/league/${lid}/matchups/${bw}`)
+              .then(r => r.ok ? r.json() : [])
+              .catch(() => [])
+          ));
+          batch.forEach((bw, idx) => { matchupsByWeek[bw] = results[idx] || []; });
+        }
+      }
+
+      seasons.unshift({
+        season: seasonYear,
+        leagueId: lid,
+        league: lg,
+        rosters: ro,
+        users: us,
+        matchupsByWeek,
+        isCurrentSeason
+      });
+
+      const prevLid = lg.previous_league_id;
+      // Reset for next iteration so we fetch fresh data for the previous season
+      lg = null; ro = null; us = null;
+      lid = prevLid || null;
+    } catch(e) {
+      console.warn('Failed to load season for league', lid, e);
+      break;
+    }
+  }
+  return seasons;
+}
+
+// Map owner_id -> canonical display name (use current season's name as canonical)
+function buildOwnerMap() {
+  const map = {}; // owner_id -> display_name
+  usersData.forEach(u => { map[u.user_id] = u.display_name; });
+  return map;
+}
+
+// For a given season, get display name by roster
+function getSeasonTeamName(roster, users) {
+  const user = users.find(u => u.user_id === roster.owner_id);
+  return user?.metadata?.team_name || user?.display_name || `Team ${roster.roster_id}`;
+}
+
+function getSeasonOwnerName(roster, users) {
+  const user = users.find(u => u.user_id === roster.owner_id);
+  return user?.display_name || roster._resolvedName || `Roster ${roster.roster_id}`;
+}
+
+// Build per-owner all-time stats across all seasons.
+// PF/PA come exclusively from roster settings (the authoritative Sleeper source).
+// Weekly matchup entries are used only for per-game high/low/avg calculations.
+function buildAllTimeStats(seasons) {
+  const stats = {};
+
+  // Pre-build a cross-season roster_id -> owner_id resolver.
+  // If a roster has no owner in one season, look it up from another season.
+  const rosterOwnerResolver = {}; // roster_id -> { ownerId, name }
+  seasons.forEach(s => {
+    s.rosters.forEach(r => {
+      if (r.owner_id) {
+        const user = s.users.find(u => u.user_id === r.owner_id);
+        rosterOwnerResolver[r.roster_id] = {
+          ownerId: r.owner_id,
+          name: user?.display_name || `Roster ${r.roster_id}`
+        };
+      }
+    });
+  });
+
+  seasons.forEach(s => {
+    // ---- Pass 1: accumulate W/L/PF/PA from roster settings ----
+    s.rosters.forEach(roster => {
+      // Resolve owner — use current owner_id, or fall back to cross-season lookup
+      let ownerId = roster.owner_id;
+      let resolvedName = null;
+      if (!ownerId) {
+        const resolved = rosterOwnerResolver[roster.roster_id];
+        if (resolved) { ownerId = resolved.ownerId; resolvedName = resolved.name; }
+        else return; // truly unresolvable orphan — skip
+      }
+      // Skip excluded users
+      const checkName = resolvedName || s.users.find(u => u.user_id === ownerId)?.display_name || '';
+      if (isExcludedUser(checkName)) return;
+      const name = resolvedName || getSeasonOwnerName(roster, s.users);
+      if (!stats[ownerId]) {
+        stats[ownerId] = {
+          name,
+          wins: 0, losses: 0, ties: 0,
+          pf: 0, pa: 0,
+          weeklyScores: [],
+          highScore: { pts: 0, season: null, week: null },
+          lowScore: { pts: 9999, season: null, week: null },
+          biggestWin: { diff: 0, oppName: '', season: null, week: null },
+          seasons: [],
+          gamesPlayed: 0
+        };
+      }
+      const st = stats[ownerId];
+      // Only update display name if this season has a real owner (not resolved from another season)
+      if (!resolvedName) st.name = name;
+
+      const w = roster.settings?.wins || 0;
+      const l = roster.settings?.losses || 0;
+      const t = roster.settings?.ties || 0;
+      st.wins += w;
+      st.losses += l;
+      st.ties += t;
+
+      // fpts is the integer part; fpts_decimal is the fractional cents (0-99)
+      // IMPORTANT: settings.fpts covers REGULAR SEASON only (weeks 1 to playoff_week_start-1)
+      // gamesPlayed = wins + losses + ties (Sleeper's own count of regular season games)
+      const fpts = (roster.settings?.fpts || 0) + (roster.settings?.fpts_decimal || 0) / 100;
+      const fpta = (roster.settings?.fpts_against || 0) + (roster.settings?.fpts_against_decimal || 0) / 100;
+      st.pf += fpts;
+      st.pa += fpta;
+      st.gamesPlayed += (w + l + t); // regular season games only — matches settings.fpts scope
+
+      st.seasons.push({ season: s.season, wins: w, losses: l, pf: fpts, pa: fpta });
+    });
+
+    // ---- Pass 2: scan weekly matchups for per-game records only ----
+    // (Do NOT add to pf/pa here — roster settings are already the source of truth)
+    s.rosters.forEach(roster => {
+      const ownerId = roster.owner_id || rosterOwnerResolver[roster.roster_id]?.ownerId;
+      if (!ownerId || !stats[ownerId]) return;
+      // Skip excluded users
+      if (!stats[ownerId]) return;
+      const st = stats[ownerId];
+      const rId = roster.roster_id;
+
+      // Pre-group matchups by matchup_id for this season's weeks
+      const weekGroups = {}; // week -> { matchup_id -> [entries] }
+      Object.entries(s.matchupsByWeek).forEach(([wk, matchups]) => {
+        const groups = {};
+        matchups.forEach(m => {
+          if (!groups[m.matchup_id]) groups[m.matchup_id] = [];
+          groups[m.matchup_id].push(m);
+        });
+        weekGroups[wk] = groups;
+      });
+
+      const regularSeasonEnd = (s.league?.settings?.playoff_week_start || 15) - 1;
+      Object.entries(s.matchupsByWeek).forEach(([wk, matchups]) => {
+        // Only use regular season weeks for per-game stats (matches scope of settings.fpts)
+        if (parseInt(wk) > regularSeasonEnd) return;
+        const entry = matchups.find(m => m.roster_id === rId);
+        if (!entry || entry.points == null || entry.points === 0) return;
+        const pts = entry.points;
+
+        st.weeklyScores.push(pts);
+        // Do NOT increment gamesPlayed here — it's already set from wins+losses above
+
+        if (pts > st.highScore.pts)
+          st.highScore = { pts, season: s.season, week: parseInt(wk) };
+        if (pts < st.lowScore.pts)
+          st.lowScore = { pts, season: s.season, week: parseInt(wk) };
+
+        // Biggest single-game win margin for this owner
+        const groups = weekGroups[wk] || {};
+        const pair = groups[entry.matchup_id];
+        if (pair && pair.length === 2) {
+          const opp = pair.find(m => m.roster_id !== rId);
+          if (opp && opp.points) {
+            const diff = pts - opp.points;
+            if (diff > 0 && diff > st.biggestWin.diff) {
+              const oppRoster = s.rosters.find(r => r.roster_id === opp.roster_id);
+              const oppName = oppRoster ? getSeasonOwnerName(oppRoster, s.users) : 'Unknown';
+              st.biggestWin = { diff, oppName, season: s.season, week: parseInt(wk) };
+            }
+          }
+        }
+      });
+    });
+  });
+
+  // ---- Merge ESPN historical data (2022-2023) ----
+  // ESPN_DATA is keyed by Sleeper username. We look up the owner by name match.
+  Object.entries(ESPN_DATA).forEach(([sleeperName, espnSeasons]) => {
+    // Find matching owner in stats by name
+    const ownerEntry = Object.entries(stats).find(([, st]) => st.name === sleeperName);
+    if (!ownerEntry) return;
+    const [, st] = ownerEntry;
+
+    Object.entries(espnSeasons).forEach(([yr, data]) => {
+      st.wins += data.w;
+      st.losses += data.l;
+      st.pf += data.pf;
+      st.pa += data.pa;
+      st.gamesPlayed += (data.w + data.l);
+      st.weeklyScores.push(...data.scores);
+      st.seasons.push({ season: yr, wins: data.w, losses: data.l, pf: data.pf, pa: data.pa });
+
+      // Update high/low score from ESPN weeks
+      data.scores.forEach((pts, i) => {
+        if (pts > st.highScore.pts) st.highScore = { pts, season: yr, week: i + 1 };
+        if (pts < st.lowScore.pts) st.lowScore = { pts, season: yr, week: i + 1 };
+      });
+    });
+  });
+
+  return stats;
+}
+
+// All-time records across all matchups
+function buildAllTimeMatchupRecords(seasons) {
+  let highScore = { pts: 0, ownerName: '', season: null, week: null };
+  let lowScore = { pts: 9999, ownerName: '', season: null, week: null };
+  let biggestWin = { diff: 0, winnerName: '', loserName: '', score1: 0, score2: 0, season: null, week: null };
+  let closestGame = { diff: 9999, winnerName: '', loserName: '', score1: 0, score2: 0, season: null, week: null };
+
+  seasons.forEach(s => {
+    Object.entries(s.matchupsByWeek).forEach(([wk, matchups]) => {
+      // Filter out excluded users from record calculations
+      const filteredMatchups = matchups.filter(m => {
+        const roster = s.rosters.find(r => r.roster_id === m.roster_id);
+        const user = s.users.find(u => u.user_id === roster?.owner_id);
+        return !isExcludedUser(user?.display_name);
+      });
+
+      const groups = {};
+      filteredMatchups.forEach(m => { if (!groups[m.matchup_id]) groups[m.matchup_id] = []; groups[m.matchup_id].push(m); });
+
+      filteredMatchups.forEach(m => {
+        const pts = m.points || 0;
+        const roster = s.rosters.find(r => r.roster_id === m.roster_id);
+        const ownerName = roster ? getSeasonOwnerName(roster, s.users) : 'Unknown';
+        if (pts > highScore.pts) highScore = { pts, ownerName, season: s.season, week: parseInt(wk) };
+        if (pts > 0 && pts < lowScore.pts) lowScore = { pts, ownerName, season: s.season, week: parseInt(wk) };
+      });
+
+      Object.values(groups).forEach(pair => {
+        if (pair.length < 2) return;
+        const [t1, t2] = pair;
+        const s1 = t1.points || 0, s2 = t2.points || 0;
+        if (!s1 || !s2) return;
+        const diff = Math.abs(s1 - s2);
+        const r1 = s.rosters.find(r => r.roster_id === t1.roster_id);
+        const r2 = s.rosters.find(r => r.roster_id === t2.roster_id);
+        const n1 = r1 ? getSeasonOwnerName(r1, s.users) : 'Unknown';
+        const n2 = r2 ? getSeasonOwnerName(r2, s.users) : 'Unknown';
+        const winner = s1 > s2 ? n1 : n2;
+        const loser = s1 > s2 ? n2 : n1;
+        const ws = Math.max(s1, s2), ls = Math.min(s1, s2);
+        if (diff > biggestWin.diff) biggestWin = { diff, winnerName: winner, loserName: loser, score1: ws, score2: ls, season: s.season, week: parseInt(wk) };
+        // Only count as a "closest game" if both teams scored meaningfully (>10 pts, not a forfeit)
+        if (diff < closestGame.diff && ws > 10 && ls > 10) closestGame = { diff, winnerName: winner, loserName: loser, score1: ws, score2: ls, season: s.season, week: parseInt(wk) };
+      });
+    });
+  });
+  // ---- Merge ESPN matchup records ----
+  ESPN_MATCHUPS.forEach(([season, week, home, homePts, away, awayPts]) => {
+    const pts1 = homePts, pts2 = awayPts;
+    const diff = Math.abs(pts1 - pts2);
+    const winner = pts1 > pts2 ? home : away;
+    const loser = pts1 > pts2 ? away : home;
+    const ws = Math.max(pts1, pts2), ls = Math.min(pts1, pts2);
+
+    if (pts1 > highScore.pts) highScore = { pts: pts1, ownerName: home, season, week };
+    if (pts2 > highScore.pts) highScore = { pts: pts2, ownerName: away, season, week };
+    if (pts1 > 0 && pts1 < lowScore.pts) lowScore = { pts: pts1, ownerName: home, season, week };
+    if (pts2 > 0 && pts2 < lowScore.pts) lowScore = { pts: pts2, ownerName: away, season, week };
+    if (diff > biggestWin.diff) biggestWin = { diff, winnerName: winner, loserName: loser, score1: ws, score2: ls, season, week };
+    if (diff < closestGame.diff && ws > 10 && ls > 10) closestGame = { diff, winnerName: winner, loserName: loser, score1: ws, score2: ls, season, week };
+  });
+
+  return { highScore, lowScore, biggestWin, closestGame };
+}
+
+// ---- RECORDS ----
+async function renderRecords() {
+  const el = document.getElementById('records-content');
+  el.innerHTML = '<div class="skeleton-card" style="height:180px;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:220px;opacity:0.75;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:160px;opacity:0.5;"></div>';
+
+  const seasons = await loadAllSeasons();
+  const allTimeStats = buildAllTimeStats(seasons);
+  const matchupRecords = buildAllTimeMatchupRecords(seasons);
+
+  // Sort owners by wins
+  const owners = Object.entries(allTimeStats).sort((a, b) => b[1].wins - a[1].wins);
+  const topOwner = owners[0]?.[1];
+  const topPF = [...owners].sort((a, b) => b[1].pf - a[1].pf)[0]?.[1];
+  const currentSorted = sortedRosters();
+
+  el.innerHTML = `
+    <div class="grid-3" style="margin-bottom:1.5rem;">
+      <div class="stat-box">
+        <div class="stat-box-label">🏆 All-Time Win Leader</div>
+        <div class="stat-box-value" style="font-size:1.3rem;">${topOwner?.name || '—'}</div>
+        <div class="stat-box-sub">${topOwner?.wins || 0}W — ${topOwner?.losses || 0}L all-time</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">📈 All-Time Points Leader</div>
+        <div class="stat-box-value" style="font-size:1.3rem;">${topPF?.name || '—'}</div>
+        <div class="stat-box-sub">${topPF?.pf.toFixed(2) || 0} total points scored</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">🔥 Single Game Record</div>
+        <div class="stat-box-value">${matchupRecords.highScore.pts.toFixed(2)}</div>
+        <div class="stat-box-sub">${matchupRecords.highScore.ownerName} · ${matchupRecords.highScore.season} Wk ${matchupRecords.highScore.week}</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-header">📜 All-Time Matchup Records</div>
+      ${matchupRecords.highScore.ownerName ? `<div class="record-row">
+        <div class="record-label">🔥 Highest Score Ever</div>
+        <div class="record-holder">${matchupRecords.highScore.ownerName}<small>${matchupRecords.highScore.season} Season · Week ${matchupRecords.highScore.week}</small></div>
+        <div class="record-value">${matchupRecords.highScore.pts.toFixed(2)}</div>
+      </div>` : ''}
+      ${matchupRecords.lowScore.pts < 9999 ? `<div class="record-row">
+        <div class="record-label">🥶 Lowest Score Ever</div>
+        <div class="record-holder">${matchupRecords.lowScore.ownerName}<small>${matchupRecords.lowScore.season} Season · Week ${matchupRecords.lowScore.week}</small></div>
+        <div class="record-value">${matchupRecords.lowScore.pts.toFixed(2)}</div>
+      </div>` : ''}
+      ${matchupRecords.biggestWin.winnerName ? `<div class="record-row">
+        <div class="record-label">💥 Biggest Blowout</div>
+        <div class="record-holder">${matchupRecords.biggestWin.winnerName} def. ${matchupRecords.biggestWin.loserName}<small>${matchupRecords.biggestWin.score1.toFixed(2)} – ${matchupRecords.biggestWin.score2.toFixed(2)} · ${matchupRecords.biggestWin.season} Wk ${matchupRecords.biggestWin.week}</small></div>
+        <div class="record-value">+${matchupRecords.biggestWin.diff.toFixed(2)}</div>
+      </div>` : ''}
+      ${matchupRecords.closestGame.diff < 9999 ? `<div class="record-row">
+        <div class="record-label">😬 Closest Game</div>
+        <div class="record-holder">${matchupRecords.closestGame.winnerName} def. ${matchupRecords.closestGame.loserName}<small>${matchupRecords.closestGame.score1.toFixed(2)} – ${matchupRecords.closestGame.score2.toFixed(2)} · ${matchupRecords.closestGame.season} Wk ${matchupRecords.closestGame.week}</small></div>
+        <div class="record-value">${matchupRecords.closestGame.diff.toFixed(2)}</div>
+      </div>` : ''}
+      <div style="padding:0.5rem 1.25rem 0.75rem;font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
+        Includes ESPN 2022–2023 + Sleeper 2024–2025 · Regular season only
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-header">📊 2025 Season — Points Leaderboard</div>
+      <div style="padding:1rem 1.25rem;">
+        ${sortedRosters().sort((a,b) => totalPts(b)-totalPts(a)).map((r, i) => {
+          const _allSeasonPts = sortedRosters().map(rx => totalPts(rx));
+          const pct = scaledPct(totalPts(r), _allSeasonPts);
+          return `<div class="history-bar-wrap">
+            <div class="history-name">${i+1}. ${getTeamName(r.roster_id)}</div>
+            <div class="history-bar-track">
+              <div class="history-bar-fill" style="width:${pct}%">
+                <span class="history-bar-pct">${totalPts(r).toFixed(0)}</span>
+              </div>
+            </div>
+            <div class="history-wins">${r.settings?.wins||0}W-${r.settings?.losses||0}L</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">🏅 Individual All-Time Records</div>
+      ${owners.map(([ownerId, st]) => {
+        const avg = st.gamesPlayed > 0 ? (st.pf / st.gamesPlayed).toFixed(1) : '—';
+        const pct = (st.wins + st.losses) > 0 ? ((st.wins / (st.wins + st.losses)) * 100).toFixed(1) : '0.0';
+        return `<div class="record-row" style="flex-wrap:wrap;gap:0.5rem;">
+          <div class="record-label" style="flex:0 0 auto;">${st.name}</div>
+          <div class="record-holder" style="flex:1;min-width:200px;">
+            <small style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <span>Record: <strong style="color:var(--text)">${st.wins}-${st.losses}</strong></span>
+              <span>Win%: <strong style="color:var(--text)">${pct}%</strong></span>
+              <span>PF: <strong style="color:var(--text)">${st.pf.toFixed(1)}</strong></span>
+              <span>PA: <strong style="color:var(--text)">${st.pa.toFixed(1)}</strong></span>
+              <span>Avg/Wk: <strong style="color:var(--text)">${avg}</strong></span>
+              <span>Best: <strong style="color:var(--gold)">${st.highScore.pts.toFixed(2)}</strong></span>
+            </small>
+          </div>
+          <div class="record-value" style="font-size:1rem;">${pct}%</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ---- HISTORY ----
+async function renderHistory() {
+  const el = document.getElementById('history-content');
+  el.innerHTML = '<div class="skeleton-card" style="height:56px;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:320px;opacity:0.8;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:180px;opacity:0.55;"></div>';
+
+  const seasons = await loadAllSeasons();
+  const allTimeStats = buildAllTimeStats(seasons);
+  const matchupRecords = buildAllTimeMatchupRecords(seasons);
+
+  // Debug: log loaded seasons and per-owner totals to browser console
+  console.log('[DC] Seasons loaded:', seasons.map(s => ({
+    season: s.season,
+    leagueId: s.leagueId,
+    weeksLoaded: Object.keys(s.matchupsByWeek).length,
+    rosters: s.rosters.length
+  })));
+  Object.entries(allTimeStats).forEach(([oid, st]) => {
+    console.log(`[DC] ${st.name}: W${st.wins}-L${st.losses} PF=${st.pf.toFixed(2)} PA=${st.pa.toFixed(2)} games=${st.gamesPlayed}`);
+  });
+
+  const sleeperSeasonLabels = seasons.map(s => s.season);
+  const espnSeasonLabels = Object.values(ESPN_DATA)[0] ? Object.keys(Object.values(ESPN_DATA)[0]).sort() : [];
+  const seasonLabels = [...espnSeasonLabels.filter(y => !sleeperSeasonLabels.includes(y)), ...sleeperSeasonLabels];
+  const owners = Object.entries(allTimeStats).sort((a, b) => b[1].wins - a[1].wins);
+
+  // Win % per owner
+  function winPctVal(st) {
+    const total = st.wins + st.losses + st.ties;
+    return total > 0 ? st.wins / total : 0;
+  }
+
+  // Per-season stats per owner
+  function ownerSeasonStat(ownerId, season, field) {
+    const st = allTimeStats[ownerId];
+    if (!st) return null;
+    return st.seasons.find(s => s.season === season)?.[field] ?? null;
+  }
+
+  // Normalize a value to 0–100% within a dataset range, with a minimum bar width
+// minFloor = minimum % so even last place has a visible bar
+function scaledPct(val, allVals, minFloor = 35) {
+  const min = Math.min(...allVals);
+  const max = Math.max(...allVals);
+  if (max === min) return 95;
+  return minFloor + ((val - min) / (max - min)) * (95 - minFloor);
+}
+
+const maxPF = Math.max(...owners.map(([, st]) => st.pf));
+  const maxPA = Math.max(...owners.map(([, st]) => st.pa));
+  const maxWins = Math.max(...owners.map(([, st]) => st.wins));
+  const maxAvgPts = Math.max(...owners.map(([, st]) => st.gamesPlayed > 0 ? st.pf / st.gamesPlayed : 0));
+
+  function avgPtsOwner(st) {
+    // Use gamesPlayed (= wins+losses from roster settings) to match the scope of settings.fpts
+    // This ensures avg/wk = regular season PF / regular season games — apples to apples
+    return st.gamesPlayed > 0 ? st.pf / st.gamesPlayed : 0;
+  }
+
+  function stdDevOwner(st) {
+    const arr = st.weeklyScores;
+    if (arr.length < 2) return 0;
+    const mean = arr.reduce((s, v) => s + v, 0) / arr.length;
+    const variance = arr.reduce((s, v) => s + (v - mean) ** 2, 0) / arr.length;
+    return Math.sqrt(variance);
+  }
+
+  const maxStdDev = Math.max(...owners.map(([, st]) => stdDevOwner(st)));
+
+  el.innerHTML = `
+    <div class="tabs" id="history-tabs">
+      <button class="tab-btn active" onclick="switchHistTab(this,'htab-franchise')">Franchise Rankings</button>
+      <button class="tab-btn" onclick="switchHistTab(this,'htab-seasons')">Season by Season</button>
+      <button class="tab-btn" onclick="switchHistTab(this,'htab-scoring')">Scoring Trends</button>
+      <button class="tab-btn" onclick="switchHistTab(this,'htab-headtohead')">Head-to-Head</button>
+    </div>
+
+    <!-- FRANCHISE RANKINGS -->
+    <div id="htab-franchise" class="tab-content active">
+      <div style="margin-bottom:1rem;padding:0.6rem 1rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:0.75rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
+        ALL-TIME DATA · ESPN (2022–2023) + SLEEPER (${sleeperSeasonLabels.join(', ')}) COMBINED
+      </div>
+
+      <div class="grid-2" style="margin-bottom:1.5rem;">
+        <div class="card">
+          <div class="card-header">🏆 All-Time Win % Ranking</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => winPctVal(b[1]) - winPctVal(a[1])).map(([, st], i) => {
+              const _allWP = owners.map(([,s]) => winPctVal(s));
+              const pct = scaledPct(winPctVal(st), _allWP);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%">
+                    <span class="history-bar-pct">${pct.toFixed(1)}%</span>
+                  </div>
+                </div>
+                <div class="history-wins">${st.wins}W-${st.losses}L</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">📈 All-Time Points For</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => b[1].pf - a[1].pf).map(([, st], i) => {
+              const _allPF = owners.map(([,s]) => s.pf);
+              const pct = scaledPct(st.pf, _allPF);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%">
+                    <span class="history-bar-pct">${st.pf.toFixed(0)}</span>
+                  </div>
+                </div>
+                <div class="history-wins">${avgPtsOwner(st).toFixed(1)}/wk</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">🛡️ All-Time Points Against</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => b[1].pa - a[1].pa).map(([, st], i) => {
+              const _allPA = owners.map(([,s]) => s.pa);
+              const pct = scaledPct(st.pa, _allPA);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%; background:linear-gradient(90deg,var(--red),#e74c3c)">
+                    <span class="history-bar-pct">${st.pa.toFixed(0)}</span>
+                  </div>
+                </div>
+                <div class="history-wins">${(st.pf - st.pa > 0 ? '+' : '')}${(st.pf - st.pa).toFixed(0)}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">🎯 Avg Points Per Week (All-Time)</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => avgPtsOwner(b[1]) - avgPtsOwner(a[1])).map(([, st], i) => {
+              const avg = avgPtsOwner(st);
+              const _allAvg = owners.map(([,s]) => avgPtsOwner(s));
+              const pct = scaledPct(avg, _allAvg);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%">
+                    <span class="history-bar-pct">${avg.toFixed(1)}</span>
+                  </div>
+                </div>
+                <div class="history-wins">${st.gamesPlayed} wks</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📋 Complete All-Time Franchise Stats Table</div>
+        <div style="overflow-x:auto;">
+          <table class="standings-table" style="min-width:700px;">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Owner</th>
+                <th>W-L-T</th>
+                <th class="right">Win%</th>
+                <th class="right">PF</th>
+                <th class="right">PA</th>
+                <th class="right">PF-PA</th>
+                <th class="right">Avg/Wk</th>
+                <th class="right">Best Wk</th>
+                <th class="right">Worst Wk</th>
+                <th class="right">Games</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${[...owners].sort((a,b) => { const wpDiff = winPctVal(b[1]) - winPctVal(a[1]); return wpDiff !== 0 ? wpDiff : b[1].pf - a[1].pf; }).map(([, st], i) => {
+                const wp = (winPctVal(st) * 100).toFixed(1);
+                const diff = st.pf - st.pa;
+                const avg = avgPtsOwner(st).toFixed(1);
+                const best = st.highScore.pts > 0 ? st.highScore.pts.toFixed(2) : '—';
+                const worst = st.lowScore.pts < 9999 ? st.lowScore.pts.toFixed(2) : '—';
+                const diffColor = diff > 0 ? 'var(--green)' : diff < 0 ? 'var(--red)' : 'var(--text3)';
+                return `<tr>
+                  <td class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</td>
+                  <td><div style="font-weight:600;">${st.name}</div></td>
+                  <td class="record">${st.wins}-${st.losses}${st.ties>0?'-'+st.ties:''}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';font-weight:700;color:${parseFloat(wp)>=50?'var(--green)':'var(--red)'};">${wp}%</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';">${st.pf.toFixed(2)}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';color:var(--text3);">${st.pa.toFixed(2)}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';font-weight:700;color:${diffColor};">${diff>0?'+':''}${diff.toFixed(2)}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';">${avg}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';color:var(--gold);">${best}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';color:var(--red);">${worst}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';color:var(--text3);">${st.gamesPlayed}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PLAYOFF HISTORY TABLE -->
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-header">🏆 Playoff History (All-Time)</div>
+        <div style="overflow-x:auto;">
+          <table class="standings-table" style="min-width:500px;">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Owner</th>
+                <th class="right" title="Playoff Appearances">Playoff Apps</th>
+                <th class="right" title="Championship Game Appearances">'Ship Apps</th>
+                <th class="right" title="Championships Won">'Ships Won</th>
+                <th class="right" title="Poop Bowl Losses (last place)">💩 Poop Bowl</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${[
+                { name: 'notchrishanson',    playoffs: 5, shipApps: 1, ships: 1, poop: 0 },
+                { name: 'gsteuter',          playoffs: 5, shipApps: 1, ships: 1, poop: 0 },
+                { name: 'ScuubaSteeve',      playoffs: 4, shipApps: 0, ships: 0, poop: 0 },
+                { name: 'swollenArm',        playoffs: 4, shipApps: 2, ships: 2, poop: 1 },
+                { name: 'mcpeach',           playoffs: 4, shipApps: 2, ships: 0, poop: 2 },
+                { name: 'CodyLenart9',       playoffs: 4, shipApps: 2, ships: 0, poop: 1 },
+                { name: 'bfielding3',        playoffs: 3, shipApps: 2, ships: 1, poop: 1 },
+                { name: 'slipperynoodleboy', playoffs: 3, shipApps: 0, ships: 0, poop: 0 },
+                { name: 'MikeYambor',        playoffs: 2, shipApps: 1, ships: 1, poop: 0 },
+                { name: 'jkwon9',            playoffs: 1, shipApps: 0, ships: 0, poop: 1 },
+              ].sort((a, b) => b.playoffs - a.playoffs || b.ships - a.ships || b.shipApps - a.shipApps).map((p, i) => {
+                // Resolve display name from owners map
+                const ownerEntry = [...owners].find(([k, v]) => k === p.name || v.name.toLowerCase().includes(p.name.toLowerCase()));
+                const displayName = ownerEntry ? ownerEntry[1].name : p.name;
+                return `<tr>
+                  <td class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</td>
+                  <td><div style="font-weight:600;">${displayName}</div></td>
+                  <td style="text-align:center;font-family:'Barlow Condensed';font-size:1.05rem;font-weight:700;color:${p.playoffs>=4?'var(--gold)':p.playoffs>=2?'var(--text1)':'var(--text3)'};">${p.playoffs}</td>
+                  <td style="text-align:center;font-family:'Barlow Condensed';font-size:1.05rem;font-weight:700;color:${p.shipApps>=2?'var(--gold)':p.shipApps===1?'var(--text1)':'var(--text3)'};">${p.shipApps}</td>
+                  <td style="text-align:center;font-family:'Barlow Condensed';font-size:1.1rem;font-weight:700;color:${p.ships>0?'var(--gold)':'var(--text3)'};">${p.ships > 0 ? '🏆'.repeat(p.ships) : '—'}</td>
+                  <td style="text-align:center;font-family:'Barlow Condensed';font-size:1.05rem;font-weight:700;color:${p.poop>0?'var(--red)':'var(--text3)'};">${p.poop > 0 ? '💩'.repeat(p.poop) : '—'}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SEASON BY SEASON -->
+    <div id="htab-seasons" class="tab-content">
+      ${seasonLabels.map(yr => {
+        const seasonData = seasons.find(s => s.season === yr);
+        const isESPN = !seasonData && espnSeasonLabels.includes(yr);
+
+        // Build rows for this season
+        let rows = [];
+        if (seasonData) {
+          // Sleeper season
+          rows = [...seasonData.rosters].filter(r => {
+            const user = seasonData.users.find(u => u.user_id === r.owner_id);
+            return !isExcludedUser(user?.display_name);
+          }).map(r => {
+            const w = r.settings?.wins || 0, l = r.settings?.losses || 0;
+            const pf = (r.settings?.fpts || 0) + (r.settings?.fpts_decimal || 0) / 100;
+            const pa = (r.settings?.fpts_against || 0) + (r.settings?.fpts_against_decimal || 0) / 100;
+            return { name: getSeasonOwnerName(r, seasonData.users), teamName: getSeasonTeamName(r, seasonData.users), w, l, pf, pa };
+          });
+        } else if (isESPN) {
+          // ESPN season
+          rows = Object.entries(ESPN_DATA)
+            .filter(([, d]) => d[yr])
+            .map(([sleeperName, d]) => {
+              const s = d[yr];
+              return { name: sleeperName, teamName: '—', w: s.w, l: s.l, pf: s.pf, pa: s.pa };
+            });
+        }
+        rows.sort((a, b) => b.w !== a.w ? b.w - a.w : b.pf - a.pf);
+
+        return `<div style="margin-bottom:2rem;">
+          <div style="border-left:3px solid var(--gold);padding-left:1rem;margin-bottom:1rem;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:var(--gold);">${yr} Season${isESPN ? ' <span style="font-size:0.9rem;color:var(--text3);letter-spacing:1px;">ESPN</span>' : ''}</div>
+          </div>
+          <div class="card">
+            <table class="standings-table">
+              <thead>
+                <tr>
+                  <th>#</th><th>Owner</th><th>W-L</th>
+                  <th class="right">Win%</th><th class="right">PF</th><th class="right">PA</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map((row, i) => {
+                  const wp = (row.w + row.l) > 0 ? ((row.w / (row.w + row.l)) * 100).toFixed(1) : '0.0';
+                  return `<tr>
+                    <td class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i===0?'🏆':i===1?'🥈':i===2?'🥉':(i+1)}</td>
+                    <td style="font-weight:600;">${row.name}</td>
+                    <td class="record">${row.w}-${row.l}</td>
+                    <td style="text-align:right;font-family:'Barlow Condensed';color:${parseFloat(wp)>=50?'var(--green)':'var(--red)'};">${wp}%</td>
+                    <td style="text-align:right;font-family:'Barlow Condensed';">${row.pf.toFixed(2)}</td>
+                    <td style="text-align:right;font-family:'Barlow Condensed';color:var(--text3);">${row.pa.toFixed(2)}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- SCORING TRENDS -->
+    <div id="htab-scoring" class="tab-content">
+      <div class="grid-2" style="margin-bottom:1.5rem;">
+        <div class="card">
+          <div class="card-header">🎯 Scoring Consistency (Std Dev — lower = more consistent)</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => stdDevOwner(a[1]) - stdDevOwner(b[1])).map(([, st], i) => {
+              const sd = stdDevOwner(st);
+              const _allSD = owners.map(([,s]) => stdDevOwner(s));
+              const pct = scaledPct(sd, _allSD);
+              const color = pct < 35 ? '#27ae60,#2ecc71' : pct < 65 ? 'var(--gold),var(--gold2)' : 'var(--red),#e74c3c';
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${color})">
+                    <span class="history-bar-pct">${sd.toFixed(1)}</span>
+                  </div>
+                </div>
+                <div class="history-wins">avg ${avgPtsOwner(st).toFixed(1)}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">📊 PF vs PA Differential (All-Time)</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => (b[1].pf - b[1].pa) - (a[1].pf - a[1].pa)).map(([, st], i) => {
+              const diff = st.pf - st.pa;
+              const maxDiff = Math.max(...owners.map(([,s]) => Math.abs(s.pf - s.pa)));
+              const _allDiff = owners.map(([,s]) => Math.abs(s.pf - s.pa));
+              const pct = scaledPct(Math.abs(diff), _allDiff);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${diff>=0?'var(--green),#2ecc71':'var(--red),#e74c3c'})">
+                    <span class="history-bar-pct">${diff>0?'+':''}${diff.toFixed(0)}</span>
+                  </div>
+                </div>
+                <div class="history-wins" style="color:${diff>=0?'var(--green)':'var(--red)'};">${diff>0?'↑':'↓'}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📅 Season-by-Season Points For</div>
+        <div style="overflow-x:auto;">
+          <table class="standings-table" style="min-width:500px;">
+            <thead>
+              <tr>
+                <th>Owner</th>
+                ${seasonLabels.map(yr => `<th class="right">${yr}</th>`).join('')}
+                <th class="right">All-Time</th>
+                <th class="right">Avg/Wk</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${[...owners].sort((a,b) => b[1].pf - a[1].pf).map(([ownerId, st]) => `<tr>
+                <td style="font-weight:600;">${st.name}</td>
+                ${seasonLabels.map(yr => {
+                  const sv = st.seasons.find(s => s.season === yr);
+                  const val = sv ? sv.pf.toFixed(1) : '—';
+                  const maxSeasonPF = Math.max(...owners.map(([,o]) => o.seasons.find(s=>s.season===yr)?.pf || 0));
+                  const isTop = sv && sv.pf === maxSeasonPF;
+                  return `<td style="text-align:right;font-family:'Barlow Condensed';font-size:0.85rem;color:${isTop?'var(--gold)':'var(--text2)'};">${val}</td>`;
+                }).join('')}
+                <td style="text-align:right;font-family:'Barlow Condensed';font-weight:700;">${st.pf.toFixed(1)}</td>
+                <td style="text-align:right;font-family:'Barlow Condensed';color:var(--text3);">${avgPtsOwner(st).toFixed(1)}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEAD TO HEAD -->
+    <div id="htab-headtohead" class="tab-content">
+      <div class="card">
+        <div class="card-header">⚔️ Head-to-Head All-Time Records (Across All Seasons)</div>
+        <div id="h2h-loading" style="padding:1.5rem;text-align:center;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">Building matchup matrix...</div>
+      </div>
+    </div>
+  `;
+
+  // Build H2H matrix
+  buildH2HMatrix(seasons, owners);
+}
+
+function buildH2HMatrix(seasons, owners) {
+  // h2h[ownerA][ownerB] = { wins, losses }
+  const h2h = {};
+  owners.forEach(([oid]) => {
+    h2h[oid] = {};
+    owners.forEach(([oid2]) => { if (oid !== oid2) h2h[oid][oid2] = { wins: 0, losses: 0 }; });
+  });
+
+  // Build cross-season resolver so orphan rosters (null owner_id) are still attributed correctly
+  const rosterOwnerResolver = {};
+  seasons.forEach(s => {
+    s.rosters.forEach(r => {
+      if (r.owner_id) {
+        const user = s.users.find(u => u.user_id === r.owner_id);
+        if (!isExcludedUser(user?.display_name)) {
+          rosterOwnerResolver[r.roster_id] = r.owner_id;
+        }
+      }
+    });
+  });
+
+  seasons.forEach(s => {
+    const uMap = {};
+    s.users.forEach(u => uMap[u.user_id] = u.display_name);
+
+    // Map rosterId -> ownerId for this season — resolve orphans via cross-season lookup
+    const rosterOwner = {};
+    s.rosters.forEach(r => {
+      const oid = r.owner_id || rosterOwnerResolver[r.roster_id];
+      if (!oid) return;
+      const name = r.owner_id ? (uMap[r.owner_id] || '') : '';
+      // Only skip if we know the name and it's excluded; resolved orphans keep their original name
+      if (r.owner_id && isExcludedUser(name)) return;
+      if (!h2h[oid]) return; // not in the owners list — skip
+      rosterOwner[r.roster_id] = oid;
+    });
+
+    const playoffStart = s.league?.settings?.playoff_week_start || 15;
+    Object.entries(s.matchupsByWeek).forEach(([wk, matchups]) => {
+      // H2H only counts regular season matchups (not playoffs)
+      if (parseInt(wk) >= playoffStart) return;
+      const groups = {};
+      matchups.forEach(m => { if (!groups[m.matchup_id]) groups[m.matchup_id] = []; groups[m.matchup_id].push(m); });
+      Object.values(groups).forEach(pair => {
+        if (pair.length < 2) return;
+        const [t1, t2] = pair;
+        const o1 = rosterOwner[t1.roster_id], o2 = rosterOwner[t2.roster_id];
+        if (!o1 || !o2 || o1 === o2) return;
+        const s1 = t1.points || 0, s2 = t2.points || 0;
+        if (!s1 && !s2) return;
+        if (s1 > s2) { if (h2h[o1]?.[o2]) { h2h[o1][o2].wins++; h2h[o2][o1].losses++; } }
+        else if (s2 > s1) { if (h2h[o2]?.[o1]) { h2h[o2][o1].wins++; h2h[o1][o2].losses++; } }
+      });
+    });
+  });
+
+  // ---- Merge ESPN H2H matchups ----
+  ESPN_MATCHUPS.forEach(([season, week, home, homePts, away, awayPts]) => {
+    if (!h2h[home] || !h2h[away]) return;
+    if (homePts > awayPts) { h2h[home][away].wins++; h2h[away][home].losses++; }
+    else if (awayPts > homePts) { h2h[away][home].wins++; h2h[home][away].losses++; }
+  });
+
+  const el = document.getElementById('h2h-loading');
+  if (!el) return;
+
+  // Build matrix table
+  let html = `<div style="overflow-x:auto;"><table class="standings-table" style="min-width:600px;">
+    <thead><tr>
+      <th>vs →</th>
+      ${owners.map(([,st]) => `<th style="text-align:center;max-width:80px;overflow:hidden;text-overflow:ellipsis;font-size:0.65rem;">${st.name.split(' ')[0]}</th>`).join('')}
+      <th class="right">Overall</th>
+    </tr></thead>
+    <tbody>
+    ${owners.map(([oid, st]) => {
+      const totalW = owners.reduce((s, [oid2]) => oid !== oid2 ? s + (h2h[oid]?.[oid2]?.wins || 0) : s, 0);
+      const totalL = owners.reduce((s, [oid2]) => oid !== oid2 ? s + (h2h[oid]?.[oid2]?.losses || 0) : s, 0);
+      return `<tr>
+        <td style="font-weight:600;font-size:0.85rem;white-space:nowrap;">${st.name}</td>
+        ${owners.map(([oid2, st2]) => {
+          if (oid === oid2) return `<td style="background:var(--bg3);text-align:center;color:var(--text3);">—</td>`;
+          const r = h2h[oid]?.[oid2];
+          if (!r) return `<td style="text-align:center;color:var(--text3);">—</td>`;
+          const total = r.wins + r.losses;
+          const wpct = total > 0 ? r.wins / total : 0;
+          const bg = wpct > 0.6 ? 'rgba(39,174,96,0.08)' : wpct < 0.4 ? 'rgba(192,57,43,0.08)' : 'transparent';
+          const color = r.wins > r.losses ? 'var(--green)' : r.wins < r.losses ? 'var(--red)' : 'var(--text2)';
+          return `<td style="text-align:center;background:${bg};font-family:'Barlow Condensed';font-size:0.85rem;font-weight:700;color:${color};">${r.wins}-${r.losses}</td>`;
+        }).join('')}
+        <td style="text-align:right;font-family:'Barlow Condensed';font-weight:700;font-size:0.95rem;color:${totalW>=totalL?'var(--green)':'var(--red)'};">${totalW}-${totalL}</td>
+      </tr>`;
+    }).join('')}
+    </tbody></table></div>
+    <div style="padding:0.75rem 1.25rem;font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
+      Green = winning record · Red = losing record · Read row left-to-right (e.g. row "Alice" shows Alice's record against each opponent) · Includes ESPN 2022–2023 + Sleeper 2024–2025 regular season
+    </div>`;
+
+  el.outerHTML = html;
+}
+
+function switchHistTab(btn, tabId) {
+  document.querySelectorAll('#history-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#history-content .tab-content').forEach(t => t.classList.remove('active'));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+}
+
+function switchTab(btn, tabId) {
+  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const tabContents = btn.closest('div').parentElement.querySelectorAll('.tab-content');
+  tabContents.forEach(t => t.classList.remove('active'));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+}
+
+// ---- COMMISSIONER ----
+function renderCommishPreview() {
+  const posts = getPosts().slice(0, 2);
+  const el = document.getElementById('commissioner-preview');
+  if (!el) return;
+  if (!posts.length) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="card-header" style="background:var(--bg3);border:1px solid var(--border);border-bottom:none;border-radius:6px 6px 0 0;padding:.6rem 1.25rem;">Commissioner's Corner</div>
+    ${posts.map(p => `<div class="post-card" style="border-radius:${posts.indexOf(p)===posts.length-1?'0 0 6px 6px':'0'}; border-top:none;">
+      <div class="post-body" style="padding:0.75rem 1.25rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <span class="post-type-badge badge-${p.type}">${p.type}</span>
+            <strong style="margin-left:0.5rem;font-size:0.9rem;">${p.title}</strong>
+          </div>
+          <span style="font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;flex-shrink:0;margin-left:1rem;">${formatDate(p.ts)}</span>
+        </div>
+        <p style="margin-top:0.4rem;font-size:0.85rem;">${p.body.substring(0, 120)}${p.body.length > 120 ? '...' : ''}</p>
+      </div>
+    </div>`).join('')}`;
+}
+
+function renderCommish() {
+  const el = document.getElementById('commish-content');
+  const posts = getPosts();
+
+  let postsHtml = posts.length
+    ? posts.map(p => `
+        <div class="post-card">
+          <div class="post-header">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <span class="post-type-badge badge-${p.type}">${p.type}</span>
+              <span style="font-size:0.85rem;font-weight:600;">${p.title}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <span class="post-date">${formatDate(p.ts)}</span>
+              ${commLoggedIn ? `<button class="delete-btn" onclick="deletePost('${p.id}')">✕ Delete</button>` : ''}
+            </div>
+          </div>
+          <div class="post-body">
+            <p>${p.body.replace(/\n/g, '<br>')}</p>
+          </div>
+        </div>`)
+      .join('')
+    : `<div class="empty-state"><div class="big-icon">📋</div>No posts yet. Commissioner can add announcements below.</div>`;
+
+  let commPanel = '';
+  if (!commLoggedIn) {
+    commPanel = `
+      <div class="comm-login">
+        <h2>Commissioner Login</h2>
+        <p>Enter password to post</p>
+        <div class="form-row">
+          <input type="password" id="comm-pass-input" placeholder="Password" onkeydown="if(event.key==='Enter')commLogin()">
+        </div>
+        <button class="btn" onclick="commLogin()">Enter</button>
+        <div id="comm-pass-err" style="color:var(--red);font-size:0.8rem;margin-top:0.75rem;"></div>
+      </div>`;
+  } else {
+    commPanel = `
+      <div class="comm-panel">
+        <div class="flex-between" style="margin-bottom:1rem;">
+          <h3>📣 Post a Message</h3>
+          <button class="btn-outline" onclick="commLogout()">Logout</button>
+        </div>
+        <div class="form-row-inline">
+          <div class="form-row">
+            <label class="form-label">Post Type</label>
+            <select id="post-type">
+              <option value="announcement">Announcement</option>
+              <option value="trash">Trash Talk</option>
+              <option value="fine">Fine</option>
+              <option value="news">News</option>
+            </select>
+          </div>
+          <div class="form-row" style="flex:3;">
+            <label class="form-label">Title</label>
+            <input type="text" id="post-title" placeholder="Post title...">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Message</label>
+          <textarea id="post-body" placeholder="Write your message..."></textarea>
+        </div>
+        <button class="btn" onclick="submitPost()">📤 Post to League Board</button>
+      </div>`;
+  }
+
+  el.innerHTML = commPanel + `<div id="posts-list">${postsHtml}</div>`;
+}
+
+function commLogin() {
+  const val = document.getElementById('comm-pass-input').value;
+  if (val === COMM_PASS) {
+    commLoggedIn = true;
+    toast('✓ Welcome back, Commissioner!');
+    renderCommish();
+  } else {
+    document.getElementById('comm-pass-err').textContent = 'Incorrect password.';
+  }
+}
+
+function commLogout() {
+  commLoggedIn = false;
+  renderCommish();
+}
+
+function submitPost() {
+  const title = document.getElementById('post-title').value.trim();
+  const body = document.getElementById('post-body').value.trim();
+  const type = document.getElementById('post-type').value;
+  if (!title || !body) { toast('⚠ Please fill in title and message.'); return; }
+  const posts = getPosts();
+  posts.unshift({ id: Date.now().toString(), title, body, type, ts: Date.now() });
+  savePosts(posts);
+  toast('✓ Post published!');
+  renderCommish();
+  renderCommishPreview();
+}
+
+function deletePost(id) {
+  if (!confirm('Delete this post?')) return;
+  const posts = getPosts().filter(p => p.id !== id);
+  savePosts(posts);
+  toast('Post deleted.');
+  renderCommish();
+  renderCommishPreview();
+}
+
+// ---- NAV ----
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  // Update desktop nav
+  document.querySelectorAll('nav.desktop-nav button').forEach(b => b.classList.remove('active'));
+  const desktopBtn = document.querySelector(`nav.desktop-nav button[onclick="showSection('${name}')"]`);
+  if (desktopBtn) desktopBtn.classList.add('active');
+  // Update bottom nav
+  document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+  const bnavBtn = document.getElementById(`bnav-${name}`);
+  if (bnavBtn) bnavBtn.classList.add('active');
+
+  document.getElementById(`section-${name}`).classList.add('active');
+  window.location.hash = name;
+
+  // Scroll to top of content
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (name === 'standings') renderStandings('standings-card', true);
+  if (name === 'commish') renderCommish();
+
+  // Trigger card animations for newly visible section
+  setTimeout(initCardAnimations, 100);
+  setTimeout(initBarAnimations, 200);
+}
+
+// ── HASH ROUTING ──────────────────────────────────────────────────
+function initHashRouting() {
+  const hash = window.location.hash.replace('#', '');
+  const valid = ['home','standings','scores','records','history','commish'];
+  if (hash && valid.includes(hash)) {
+    // Simulate click without scroll
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav.desktop-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+    const desktopBtn = document.querySelector(`nav.desktop-nav button[onclick="showSection('${hash}')"]`);
+    if (desktopBtn) desktopBtn.classList.add('active');
+    const bnavBtn = document.getElementById(`bnav-${hash}`);
+    if (bnavBtn) bnavBtn.classList.add('active');
+    document.getElementById(`section-${hash}`).classList.add('active');
+    if (hash === 'standings') renderStandings('standings-card', true);
+    if (hash === 'commish') renderCommish();
+  }
+}
+
+// ── CARD ENTRANCE ANIMATIONS (IntersectionObserver) ───────────────
+function initCardAnimations() {
+  if (!('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.card:not(.card-animate), .stat-box:not(.card-animate), .matchup-card:not(.card-animate)').forEach(el => {
+    el.classList.add('card-animate');
+    observer.observe(el);
+  });
+}
+
+// ── BAR CHART ENTRANCE ANIMATIONS ────────────────────────────────
+function initBarAnimations() {
+  // Store target widths as data attributes so they survive resets
+  document.querySelectorAll('.history-bar-fill').forEach(fill => {
+    if (!fill.dataset.targetWidth) {
+      const w = fill.style.width || '50%';
+      fill.dataset.targetWidth = w;
+      fill.style.width = '0%';
+    }
+  });
+
+  if (!('IntersectionObserver' in window)) {
+    // Fallback: just show all bars immediately
+    document.querySelectorAll('.history-bar-fill').forEach(fill => {
+      fill.style.width = fill.dataset.targetWidth || '50%';
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fills = entry.target.querySelectorAll('.history-bar-fill');
+        fills.forEach((fill, i) => {
+          const target = fill.dataset.targetWidth || '50%';
+          fill.style.setProperty('--bar-target-width', target);
+          fill.style.width = '0%';
+          setTimeout(() => fill.classList.add('animated'), i * 60);
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.card').forEach(card => {
+    if (card.querySelector('.history-bar-fill')) observer.observe(card);
+  });
+}
+
+// ── ANIMATED NUMBER COUNTER ───────────────────────────────────────
+function animateCounter(el, target, duration = 800, decimals = 0) {
+  const start = performance.now();
+  const startVal = 0;
+  const update = (now) => {
+    const elapsed = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - elapsed, 3); // ease-out cubic
+    const current = startVal + (target - startVal) * ease;
+    el.textContent = decimals > 0 ? current.toFixed(decimals) : Math.round(current).toLocaleString();
+    if (elapsed < 1) requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+}
+
+// Apply to all .stat-box-value elements when they appear
+function initCounterAnimations() {
+  if (!('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const raw = el.textContent.replace(/[^0-9.]/g, '');
+        const val = parseFloat(raw);
+        if (!isNaN(val) && val > 0) {
+          const decimals = el.textContent.includes('.') ? 2 : 0;
+          animateCounter(el, val, 900, decimals);
+        }
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-box-value, .hero-stat-val').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+// ── SKELETON LOADERS ─────────────────────────────────────────────
+function skeletonTable(rows = 8, cols = 6) {
+  const colWidths = ['30px','1fr','80px','60px','70px','70px'];
+  let html = '<div style="overflow:hidden;border-radius:0 0 6px 6px;">';
+  // Header skeleton
+  html += '<div class="skeleton-row" style="height:36px;margin-bottom:1px;"></div>';
+  for (let i = 0; i < rows; i++) {
+    html += `<div class="skeleton-row" style="height:50px;opacity:${1 - i * 0.08};"></div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function skeletonCards(n = 5) {
+  return Array(n).fill(0).map((_, i) =>
+    `<div class="skeleton-card" style="opacity:${1 - i * 0.12};"></div>`
+  ).join('');
+}
+
+// ── TABLE SEARCH FILTER ───────────────────────────────────────────
+function addTableSearch(containerId, tableSelector) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  // Don't add twice
+  if (container.querySelector('.table-search')) return;
+
+  const header = container.querySelector('.card-header');
+  if (!header) return;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = '🔍 Filter...';
+  input.className = 'table-search';
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    const table = container.querySelector(tableSelector || 'table');
+    if (!table) return;
+    table.querySelectorAll('tbody tr').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = q === '' || text.includes(q) ? '' : 'none';
+    });
+  });
+  header.appendChild(input);
+}
+
+// ── CONFETTI (champion banner) ────────────────────────────────────
+function launchConfetti() {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'confetti-canvas';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const COLORS = ['#c9a84c','#e8c76a','#fff','#27ae60','#c0392b','#3498db'];
+  const pieces = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * -canvas.height,
+    w: 6 + Math.random() * 8,
+    h: 3 + Math.random() * 5,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    vx: (Math.random() - 0.5) * 3,
+    vy: 2 + Math.random() * 4,
+    rot: Math.random() * Math.PI * 2,
+    vr: (Math.random() - 0.5) * 0.2,
+  }));
+
+  let frame = 0;
+  const MAX_FRAMES = 220;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, 1 - frame / MAX_FRAMES);
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+    });
+    frame++;
+    if (frame < MAX_FRAMES) requestAnimationFrame(draw);
+    else canvas.remove();
+  }
+  requestAnimationFrame(draw);
+}
+
+// ── H2H WRAPPER UPGRADE (sticky col + scroll + tooltip) ──────────
+function upgradeH2HTable() {
+  // Correct tab id is htab-headtohead
+  const h2hTab = document.getElementById('htab-headtohead');
+  if (!h2hTab) return;
+  const table = h2hTab.querySelector('table');
+  if (!table) return;
+  if (table.closest('.h2h-scroll-wrap')) return; // already upgraded
+
+  // Add h2h-table class
+  table.classList.add('h2h-table');
+
+  // Add sticky class to first cell in every row
+  table.querySelectorAll('tr').forEach(row => {
+    const first = row.cells[0];
+    if (first) first.classList.add('h2h-name-col');
+  });
+
+  // Add tooltips to data cells (hover/tap)
+  const headerCells = Array.from(table.querySelectorAll('thead tr th'));
+  table.querySelectorAll('tbody tr').forEach(row => {
+    const rowName = row.cells[0]?.textContent?.trim();
+    Array.from(row.cells).forEach((cell, ci) => {
+      if (ci === 0) return; // skip name col
+      const colName = headerCells[ci]?.textContent?.trim();
+      const val = cell.textContent.trim();
+      if (!rowName || !colName || rowName === colName || val === '—' || val === '') return;
+      cell.classList.add('h2h-cell');
+      // Parse W-L
+      const parts = val.split('-');
+      const w = parseInt(parts[0]) || 0;
+      const l = parseInt(parts[1]) || 0;
+      const tip = document.createElement('div');
+      tip.className = 'h2h-tip';
+      tip.textContent = `${rowName} beat ${colName} ${w}×, lost ${l}×`;
+      cell.appendChild(tip);
+    });
+  });
+
+  // Wrap table in horizontal scroll container
+  const wrapper = document.createElement('div');
+  wrapper.className = 'h2h-scroll-wrap';
+  table.parentNode.insertBefore(wrapper, table);
+  wrapper.appendChild(table);
+}
+
+// ── PULL-TO-REFRESH (scores page) ────────────────────────────────
+function initPullToRefresh() {
+  let startY = 0, pulling = false;
+  const indicator = document.createElement('div');
+  indicator.id = 'ptr-indicator';
+  indicator.style.cssText = `
+    position:fixed;top:64px;left:50%;transform:translateX(-50%) translateY(-70px);
+    background:var(--bg3);border:1px solid var(--gold);color:var(--gold);
+    padding:8px 20px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;
+    font-size:0.8rem;letter-spacing:1px;z-index:150;transition:transform 0.25s ease;
+    pointer-events:none;white-space:nowrap;
+  `;
+  indicator.textContent = '↓ Pull to refresh';
+  document.body.appendChild(indicator);
+
+  document.addEventListener('touchstart', e => {
+    if (window.scrollY === 0) { startY = e.touches[0].clientY; pulling = true; }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (!pulling) return;
+    const dy = e.touches[0].clientY - startY;
+    const scoresActive = document.getElementById('section-scores')?.classList.contains('active');
+    if (dy > 20 && scoresActive) {
+      const travel = Math.min(dy - 20, 52);
+      indicator.style.transform = `translateX(-50%) translateY(${travel}px)`;
+      indicator.textContent = dy > 80 ? '↑ Release to refresh' : '↓ Pull to refresh';
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    if (!pulling) return;
+    pulling = false;
+    const dy = (e.changedTouches[0]?.clientY || 0) - startY;
+    indicator.style.transform = 'translateX(-50%) translateY(-70px)';
+    indicator.textContent = '↓ Pull to refresh';
+    const scoresActive = document.getElementById('section-scores')?.classList.contains('active');
+    if (dy > 80 && scoresActive) {
+      indicator.textContent = '↻ Refreshing...';
+      indicator.style.transform = 'translateX(-50%) translateY(8px)';
+      // Re-render current week
+      const activeWeekBtn = document.querySelector('.week-selector button.active');
+      const week = activeWeekBtn ? parseInt(activeWeekBtn.textContent) : null;
+      const refreshDone = week
+        ? renderScoresForWeek(week)
+        : Promise.resolve();
+      refreshDone.finally(() => {
+        setTimeout(() => {
+          indicator.textContent = '↓ Pull to refresh';
+          indicator.style.transform = 'translateX(-50%) translateY(-70px)';
+        }, 700);
+      });
+    }
+  });
+}
+
+
+// ── SORTABLE TABLES ──────────────────────────────────────────────
+function makeTableSortable(table) {
+  if (!table || table.dataset.sortable) return;
+  table.dataset.sortable = '1';
+
+  const headers = table.querySelectorAll('thead th');
+  let sortCol = -1, sortDir = 1;
+
+  headers.forEach((th, colIdx) => {
+    // Skip rank (#) column, sparkline/trend column, and streak column
+    const text = th.textContent.trim();
+    if (text === '#' || text === 'TREND' || text === 'STK') return;
+
+    th.classList.add('sortable');
+
+    th.addEventListener('click', () => {
+      // Toggle direction if same col, else start desc
+      if (sortCol === colIdx) {
+        sortDir = -sortDir;
+      } else {
+        sortCol = colIdx;
+        sortDir = -1; // default: descending first
+      }
+
+      // Update header indicators
+      headers.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+      th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+
+      const tbody = table.querySelector('tbody');
+      if (!tbody) return;
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+
+      rows.sort((a, b) => {
+        const aCell = a.cells[colIdx];
+        const bCell = b.cells[colIdx];
+        if (!aCell || !bCell) return 0;
+
+        // Get raw text, strip % signs, commas, trophy emojis
+        const rawA = aCell.textContent.replace(/[,%🏆🥈🥉]/g, '').trim();
+        const rawB = bCell.textContent.replace(/[,%🏆🥈🥉]/g, '').trim();
+
+        // Handle W-L-T and W-L records (sort by wins)
+        const wlA = rawA.match(/^(\d+)-(\d+)/);
+        const wlB = rawB.match(/^(\d+)-(\d+)/);
+        if (wlA && wlB) {
+          const winsA = parseInt(wlA[1]);
+          const winsB = parseInt(wlB[1]);
+          if (winsA !== winsB) return (winsA - winsB) * sortDir;
+          // tiebreak by losses (fewer = better)
+          return (parseInt(wlB[2]) - parseInt(wlA[2])) * sortDir;
+        }
+
+        // Em dash / missing data always goes last
+        if (rawA === '—' || rawA === '') return 1;
+        if (rawB === '—' || rawB === '') return -1;
+
+        // Try numeric
+        const numA = parseFloat(rawA.replace(/[^0-9.-]/g, ''));
+        const numB = parseFloat(rawB.replace(/[^0-9.-]/g, ''));
+        if (!isNaN(numA) && !isNaN(numB)) return (numA - numB) * sortDir;
+
+        // Fallback: string compare
+        return rawA.localeCompare(rawB) * sortDir;
+      });
+
+      rows.forEach(r => tbody.appendChild(r));
+    });
+  });
+}
+
+// Wire up all standings-table and h2h-table instances
+function initSortableTables() {
+  document.querySelectorAll('table.standings-table, table.h2h-table').forEach(t => {
+    makeTableSortable(t);
+  });
+}
+
+// ── BOOT ─────────────────────────────────────────────────────────
+init();
+initHashRouting();
+initPullToRefresh();
+
+// MutationObserver — throttled, watches for dynamically rendered content
+let _moTimer = null;
+const _uiObserver = new MutationObserver(() => {
+  clearTimeout(_moTimer);
+  _moTimer = setTimeout(() => {
+    initCardAnimations();
+    initCounterAnimations();
+    initBarAnimations();
+    upgradeH2HTable();
+    initSortableTables();
+    // Add search filter to standings card
+    addTableSearch('standings-card');
+    // Add search to franchise stats table in history
+    const histEl = document.getElementById('history-content');
+    if (histEl) {
+      histEl.querySelectorAll('.card').forEach(card => {
+        if (card.querySelector('.table-search')) return; // already has it
+        const hdr = card.querySelector('.card-header');
+        if (!hdr || !hdr.textContent.includes('Franchise')) return;
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.placeholder = '🔍 Filter...';
+        inp.className = 'table-search';
+        inp.addEventListener('input', () => {
+          const q = inp.value.toLowerCase();
+          card.querySelectorAll('tbody tr').forEach(r => {
+            r.style.display = !q || r.textContent.toLowerCase().includes(q) ? '' : 'none';
+          });
+        });
+        hdr.appendChild(inp);
+      });
+    }
+  }, 120);
+});
+_uiObserver.observe(document.body, { childList: true, subtree: true });
+
+// Confetti fires once on load — only in offseason when champ is shown
+setTimeout(() => {
+  // Only fire if the hero section is showing a completed season champion
+  const heroEl = document.querySelector('.hero h1');
+  const heroSub = document.querySelector('.hero p');
+  if (heroEl && heroSub && heroSub.textContent.includes('2025')) {
+    launchConfetti();
+  }
+}, 1800);
+</script>
+</body>
+</html>
