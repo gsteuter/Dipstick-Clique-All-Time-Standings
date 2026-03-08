@@ -2253,10 +2253,28 @@ function buildH2HMatrix(seasons, owners) {
   });
 
   // ---- Merge ESPN H2H matchups ----
+  // ESPN_MATCHUPS uses display_name strings but h2h is keyed by Sleeper user_id (UUID).
+  // Build a displayName -> ownerId reverse map from the owners list.
+  const nameToOwnerId = {};
+  owners.forEach(([oid, st]) => {
+    // Map the display name (lowercased for safety) back to the owner UUID
+    nameToOwnerId[st.name.toLowerCase()] = oid;
+  });
+
+  // Also build from ESPN_DATA keys (which are Sleeper display_names) -> ownerId via owners
+  const espnNameToOwnerId = {};
+  owners.forEach(([oid, st]) => {
+    espnNameToOwnerId[st.name] = oid;
+  });
+
   ESPN_MATCHUPS.forEach(([season, week, home, homePts, away, awayPts]) => {
-    if (!h2h[home] || !h2h[away]) return;
-    if (homePts > awayPts) { h2h[home][away].wins++; h2h[away][home].losses++; }
-    else if (awayPts > homePts) { h2h[away][home].wins++; h2h[home][away].losses++; }
+    // Resolve ESPN display names to Sleeper owner IDs
+    const homeId = espnNameToOwnerId[home] || nameToOwnerId[home.toLowerCase()];
+    const awayId = espnNameToOwnerId[away] || nameToOwnerId[away.toLowerCase()];
+    if (!homeId || !awayId) return; // couldn't resolve — skip
+    if (!h2h[homeId] || !h2h[awayId]) return;
+    if (homePts > awayPts) { h2h[homeId][awayId].wins++; h2h[awayId][homeId].losses++; }
+    else if (awayPts > homePts) { h2h[awayId][homeId].wins++; h2h[homeId][awayId].losses++; }
   });
 
   const el = document.getElementById('h2h-loading');
@@ -2290,7 +2308,7 @@ function buildH2HMatrix(seasons, owners) {
     }).join('')}
     </tbody></table></div>
     <div style="padding:0.75rem 1.25rem;font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
-      Green = winning record · Red = losing record · Read row left-to-right (e.g. row "Alice" shows Alice's record against each opponent) · Includes ESPN 2022–2023 + Sleeper 2024–2025 regular season
+      Green = winning record · Red = losing record · Read row left-to-right (e.g. row "Alice" shows Alice's record against each opponent) · Includes all seasons: ESPN 2022–2023 + Sleeper 2024–2025 · Regular season only
     </div>`;
 
   el.outerHTML = html;
