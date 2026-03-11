@@ -1,0 +1,3023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dipstick Clique</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --bg4: #222222;
+    --border: #2a2a2a;
+    --border2: #333333;
+    --gold: #c9a84c;
+    --gold2: #e8c76a;
+    --red: #c0392b;
+    --green: #27ae60;
+    --text: #e8e8e8;
+    --text2: #aaaaaa;
+    --text3: #666666;
+    --accent: #c9a84c;
+    --bottom-nav-h: 64px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(180deg, #000 0%, var(--bg2) 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo { display: flex; align-items: center; gap: 12px; }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--gold); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: 2px;
+    color: var(--gold); line-height: 1;
+  }
+
+  .logo-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 3px;
+    color: var(--text3); text-transform: uppercase;
+  }
+
+  /* Desktop nav */
+  nav.desktop-nav { display: flex; gap: 0; }
+
+  nav.desktop-nav button {
+    background: none; border: none;
+    color: var(--text2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0 1rem; height: 64px; cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s;
+  }
+  nav.desktop-nav button:hover { color: var(--text); border-bottom-color: var(--border2); }
+  nav.desktop-nav button.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── BOTTOM TAB BAR (mobile) ── */
+  .bottom-nav {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--bottom-nav-h);
+    background: linear-gradient(180deg, var(--bg2) 0%, #000 100%);
+    border-top: 1px solid var(--gold);
+    z-index: 300;
+    padding: 0 0.25rem;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .bottom-nav-inner {
+    display: flex;
+    height: 100%;
+    align-items: stretch;
+  }
+
+  .bottom-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.15s;
+    padding: 0;
+    border-top: 2px solid transparent;
+    margin-top: -1px;
+  }
+
+  .bottom-nav-btn .bnav-icon { font-size: 1.3rem; line-height: 1; }
+  .bottom-nav-btn.active { color: var(--gold); border-top-color: var(--gold); }
+  .bottom-nav-btn:active { background: var(--bg3); }
+
+  /* ── MAIN ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Fade-in animation for sections */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section.active { animation: fadeSlideIn 0.3s ease forwards; }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 2rem;
+    border-left: 3px solid var(--gold);
+    padding-left: 1rem;
+  }
+  .page-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; letter-spacing: 2px;
+    color: var(--text); line-height: 1;
+  }
+  .page-header p {
+    color: var(--text3); font-size: 0.85rem;
+    letter-spacing: 1px; text-transform: uppercase; margin-top: 4px;
+  }
+
+  /* ── LOADING / SKELETON ── */
+  .loading {
+    text-align: center; padding: 4rem;
+    color: var(--text3);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Skeleton shimmer */
+  @keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position:  600px 0; }
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 4px;
+  }
+
+  .skeleton-row {
+    height: 52px; margin-bottom: 1px;
+    background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  .skeleton-card {
+    height: 120px; border-radius: 6px; margin-bottom: 1rem;
+    background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  .error-msg {
+    background: #1a0a0a; border: 1px solid var(--red);
+    border-radius: 4px; padding: 1rem 1.5rem;
+    color: #e88; font-size: 0.9rem; margin: 1rem 0;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden;
+  }
+
+  /* Card entrance animation via IntersectionObserver */
+  .card-animate {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .card-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-header {
+    background: var(--bg3); border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.25rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  /* ── GRIDS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+
+  /* ── STANDINGS TABLE ── */
+  .standings-table { width: 100%; border-collapse: collapse; }
+
+  .standings-table th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); padding: 0.6rem 1rem;
+    text-align: left; border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+  }
+  .standings-table th.right { text-align: right; }
+
+  .standings-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem; vertical-align: middle;
+  }
+  .standings-table tr:last-child td { border-bottom: none; }
+  .standings-table tr:hover td { background: var(--bg3); transition: background 0.15s; }
+
+  .rank-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; color: var(--text3); width: 30px;
+  }
+  .rank-num.gold { color: var(--gold); }
+  .rank-num.silver { color: #aaa; }
+  .rank-num.bronze { color: #cd7f32; }
+
+  .team-name-cell { font-weight: 600; color: var(--text); }
+  .owner-name { font-size: 0.75rem; color: var(--text3); }
+
+  .record {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 1rem;
+  }
+  .win-pct { color: var(--text3); font-size: 0.8rem; text-align: right; }
+  .pts { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; text-align: right; }
+
+  .streak-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+  }
+  .streak-w { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .streak-l { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+
+  .playoff-line td { border-top: 2px dashed var(--gold) !important; }
+
+  /* ── MATCHUP CARDS ── */
+  .matchup-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden;
+  }
+  .matchup-week-label {
+    background: var(--bg3); border-bottom: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); text-align: center;
+  }
+  .matchup-teams {
+    padding: 1rem; display: flex; align-items: center; gap: 0.75rem;
+  }
+  .matchup-team { flex: 1; text-align: center; }
+  .matchup-team.winner .team-score { color: var(--gold); }
+
+  .team-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--bg3); border: 2px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; margin: 0 auto 0.4rem;
+  }
+  .team-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; line-height: 1; color: var(--text);
+  }
+  .team-score-name {
+    font-size: 0.75rem; color: var(--text3); margin-top: 2px;
+    font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px;
+  }
+  .vs-divider {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; color: var(--text3); letter-spacing: 1px;
+  }
+  .matchup-status {
+    text-align: center; padding: 0.4rem 1rem 0.75rem;
+    font-size: 0.7rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .status-live { color: var(--red); animation: pulse 1.5s ease-in-out infinite; }
+  .status-final { color: var(--text3); }
+  .status-upcoming { color: var(--gold); }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  /* ── WEEK SELECTOR (scrollable row on mobile) ── */
+  .week-selector {
+    display: flex; align-items: center;
+    gap: 0.5rem; margin-bottom: 1.5rem;
+    overflow-x: auto; white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .week-selector::-webkit-scrollbar { display: none; }
+
+  .week-selector button {
+    background: var(--bg2); border: 1px solid var(--border);
+    color: var(--text2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;
+    padding: 0.4rem 0.8rem; cursor: pointer;
+    border-radius: 3px; transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .week-selector button:hover { border-color: var(--border2); color: var(--text); }
+  .week-selector button.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+  .week-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); margin-right: 0.5rem; flex-shrink: 0;
+  }
+
+  /* ── STAT BOXES ── */
+  .stat-box {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1.25rem;
+  }
+  .stat-box-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 0.5rem;
+  }
+  .stat-box-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; color: var(--gold); line-height: 1;
+  }
+  .stat-box-sub { font-size: 0.8rem; color: var(--text3); margin-top: 4px; }
+
+  /* ── RECORDS ── */
+  .record-row {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border); gap: 1rem;
+  }
+  .record-row:last-child { border-bottom: none; }
+  .record-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text3); flex: 0 0 160px;
+  }
+  .record-holder { font-size: 0.9rem; color: var(--text); }
+  .record-holder small { display: block; color: var(--text3); font-size: 0.75rem; }
+  .record-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; color: var(--gold); flex-shrink: 0;
+  }
+
+  /* ── COMMISSIONER BOARD ── */
+  .post-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; margin-bottom: 1rem; overflow: hidden;
+  }
+  .post-header {
+    background: var(--bg3); border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.25rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .post-type-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .badge-announcement { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .badge-trash { background: rgba(192,57,43,0.2); color: #e88; border: 1px solid rgba(192,57,43,0.3); }
+  .badge-fine { background: rgba(155,89,182,0.2); color: #c8a; border: 1px solid rgba(155,89,182,0.3); }
+  .badge-news { background: rgba(52,152,219,0.2); color: #8cf; border: 1px solid rgba(52,152,219,0.3); }
+  .post-date { font-size: 0.75rem; color: var(--text3); font-family: 'Barlow Condensed', sans-serif; }
+  .post-body { padding: 1.25rem; }
+  .post-body h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .post-body p { font-size: 0.9rem; color: var(--text2); line-height: 1.6; }
+
+  .delete-btn {
+    background: none; border: 1px solid rgba(192,57,43,0.3);
+    color: var(--red); padding: 2px 8px; border-radius: 3px;
+    font-size: 0.7rem; cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; transition: all 0.15s;
+  }
+  .delete-btn:hover { background: rgba(192,57,43,0.1); }
+
+  /* ── COMM FORM ── */
+  .comm-login {
+    max-width: 400px; margin: 3rem auto;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2rem; text-align: center;
+  }
+  .comm-login h2 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+    letter-spacing: 2px; color: var(--gold); margin-bottom: 0.25rem;
+  }
+  .comm-login p { font-size: 0.8rem; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1.5rem; font-family: 'Barlow Condensed', sans-serif; }
+
+  input[type="password"], input[type="text"], textarea, select {
+    background: var(--bg3); border: 1px solid var(--border2);
+    color: var(--text); padding: 0.6rem 0.875rem; border-radius: 4px;
+    font-family: 'Barlow', sans-serif; font-size: 0.9rem;
+    width: 100%; outline: none; transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+  textarea { resize: vertical; min-height: 100px; }
+  .form-row { margin-bottom: 1rem; }
+  .form-label {
+    display: block; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 0.4rem;
+  }
+
+  .btn {
+    background: var(--gold); color: #000; border: none;
+    padding: 0.6rem 1.5rem; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn:hover { background: var(--gold2); }
+  .btn:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; }
+
+  .btn-outline {
+    background: none; border: 1px solid var(--border2);
+    color: var(--text2); padding: 0.5rem 1rem; border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── HISTORY BAR CHARTS ── */
+  .history-bar-wrap {
+    display: flex; align-items: center;
+    gap: 0.75rem; padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .history-bar-wrap:last-child { border-bottom: none; }
+  .history-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600; color: var(--text);
+    flex: 0 0 120px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .history-bar-track {
+    flex: 1; height: 18px; background: var(--bg3);
+    border-radius: 3px; overflow: hidden;
+  }
+  .history-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold2) 100%);
+    border-radius: 3px;
+    /* animated in JS via width — starts at 0 for entrance effect */
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    display: flex; align-items: center;
+    padding-left: 6px; min-width: 30px;
+  }
+  .history-bar-fill.animated { width: var(--bar-target-width) !important; }
+  .history-bar-pct {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700; color: #000; white-space: nowrap;
+  }
+  .history-wins {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; color: var(--text3);
+    flex: 0 0 60px; text-align: right;
+  }
+
+  /* ── HERO BANNER ── */
+  .hero {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1200 50%, #0a0a0a 100%);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 2.5rem 2rem; margin-bottom: 2rem;
+    position: relative; overflow: hidden; text-align: center;
+  }
+  .hero::before {
+    content: '🏈';
+    position: absolute; font-size: 10rem; opacity: 0.04;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%); pointer-events: none;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem; letter-spacing: 6px; color: var(--gold);
+    line-height: 1; text-shadow: 0 0 40px rgba(201,168,76,0.3);
+  }
+  .hero p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--text3); margin-top: 0.5rem;
+  }
+  .hero-stats {
+    display: flex; justify-content: center;
+    gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; color: var(--text); line-height: 1;
+  }
+  .hero-stat-lbl {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text3); margin-top: 2px;
+  }
+  .divider { width: 1px; background: var(--border); align-self: stretch; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    overflow-x: auto; white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    background: none; border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px; padding: 0.6rem 1.25rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text3); cursor: pointer; transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── H2H TABLE (sticky first column) ── */
+  .h2h-scroll-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 6px;
+  }
+  .h2h-scroll-wrap::-webkit-scrollbar { height: 4px; }
+  .h2h-scroll-wrap::-webkit-scrollbar-track { background: var(--bg3); }
+  .h2h-scroll-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .h2h-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+  .h2h-table th, .h2h-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); }
+  .h2h-table th { background: var(--bg3); font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); }
+
+  /* Sticky name column */
+  .h2h-table .h2h-name-col {
+    position: sticky; left: 0; z-index: 5;
+    background: var(--bg2); border-right: 1px solid var(--border2);
+    font-weight: 600; font-size: 0.85rem; white-space: nowrap;
+  }
+  .h2h-table th.h2h-name-col { background: var(--bg3); z-index: 6; }
+  .h2h-table tr:hover .h2h-name-col { background: var(--bg3); }
+
+  /* H2H tooltip */
+  .h2h-cell { position: relative; cursor: default; }
+  .h2h-tip {
+    display: none;
+    position: absolute; bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg4); border: 1px solid var(--border2);
+    border-radius: 4px; padding: 4px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; color: var(--text);
+    white-space: nowrap; z-index: 50;
+    pointer-events: none;
+  }
+  .h2h-tip::after {
+    content: '';
+    position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--border2);
+  }
+  .h2h-cell:hover .h2h-tip,
+  .h2h-cell:focus .h2h-tip { display: block; }
+
+  /* ── COMM PANEL ── */
+  .comm-panel {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1.5rem; margin-bottom: 1.5rem;
+  }
+  .comm-panel h3 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem;
+    letter-spacing: 2px; color: var(--gold); margin-bottom: 1rem;
+  }
+
+  .flex-between {
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--bg3); border: 1px solid var(--gold);
+    color: var(--text); padding: 0.75rem 1.25rem; border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; letter-spacing: 1px;
+    z-index: 999; opacity: 0; transform: translateY(10px);
+    transition: all 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── MISC ── */
+  .empty-state {
+    text-align: center; padding: 3rem; color: var(--text3);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem;
+  }
+  .empty-state .big-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+  select option { background: var(--bg3); }
+  .form-row-inline { display: flex; gap: 1rem; }
+  .form-row-inline .form-row { flex: 1; }
+  .tag {
+    display: inline-block;
+    background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gold); font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
+    margin-right: 4px; margin-bottom: 4px;
+  }
+
+  /* ── SEARCH FILTER ── */
+  .table-search {
+    background: var(--bg3); border: 1px solid var(--border2);
+    color: var(--text); padding: 0.5rem 0.875rem; border-radius: 4px;
+    font-family: 'Barlow', sans-serif; font-size: 0.85rem;
+    outline: none; transition: border-color 0.15s;
+    width: 200px;
+  }
+  .table-search::placeholder { color: var(--text3); }
+  .table-search:focus { border-color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+
+  /* Tablet */
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    header { padding: 0 1rem; }
+    .logo-text { font-size: 1.2rem; }
+    nav.desktop-nav { display: none; } /* hide desktop nav */
+    .bottom-nav { display: block; }    /* show bottom tab bar */
+
+    main {
+      padding: 1rem;
+      padding-bottom: calc(var(--bottom-nav-h) + 1rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+
+    .hero h1 { font-size: 2.2rem; }
+    .hero-stats { gap: 1rem; }
+    .hero { padding: 1.5rem 1rem; }
+
+    .page-header h1 { font-size: 1.8rem; }
+
+    .record-label { flex: 0 0 120px; font-size: 0.72rem; }
+    .record-holder { font-size: 0.82rem; }
+
+    /* Tables: allow horizontal scroll, min font */
+    .standings-table th { font-size: 0.65rem; padding: 0.5rem 0.6rem; }
+    .standings-table td { font-size: 0.8rem; padding: 0.6rem 0.6rem; }
+
+    /* Matchup cards stack better */
+    .team-score { font-size: 1.5rem; }
+
+    /* History bars: shrink name */
+    .history-name { flex: 0 0 90px; font-size: 0.78rem; }
+
+    /* H2H name column narrower */
+    .h2h-table .h2h-name-col { font-size: 0.75rem; padding: 0.5rem 0.6rem; }
+    .h2h-table th, .h2h-table td { padding: 0.5rem 0.6rem; font-size: 0.75rem; }
+
+    /* Toast stays above bottom nav */
+    .toast { bottom: calc(var(--bottom-nav-h) + 1rem); right: 1rem; }
+
+  }
+
+  @media (max-width: 420px) {
+    .logo-sub { display: none; }
+    .hero h1 { font-size: 1.8rem; letter-spacing: 3px; }
+    .stat-box-value { font-size: 1.5rem; }
+    .history-name { flex: 0 0 75px; font-size: 0.72rem; }
+    .table-search { width: 140px; font-size: 0.78rem; }
+  }
+
+  /* ── SORTABLE TABLE HEADERS ── */
+  th.sortable {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  th.sortable:hover {
+    color: var(--text);
+    background: var(--bg4);
+  }
+  th.sortable::after {
+    content: ' ⇅';
+    font-size: 0.65em;
+    opacity: 0.35;
+    transition: opacity 0.15s;
+  }
+  th.sortable.sort-asc::after  { content: ' ▲'; opacity: 1; color: var(--gold); }
+  th.sortable.sort-desc::after { content: ' ▼'; opacity: 1; color: var(--gold); }
+  th.sortable:hover::after { opacity: 0.7; }
+
+
+  /* ── FROZEN FIRST COLUMN — Franchise Stats Table ── */
+  .franchise-stats-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .franchise-stats-table th:first-child,
+  .franchise-stats-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--bg3);
+  }
+  .franchise-stats-table th:nth-child(2),
+  .franchise-stats-table td:nth-child(2) {
+    position: sticky;
+    left: 38px;
+    z-index: 2;
+    background: var(--bg3);
+    border-right: 1px solid var(--border2);
+  }
+  .franchise-stats-table thead th:first-child,
+  .franchise-stats-table thead th:nth-child(2) {
+    z-index: 3;
+    background: var(--bg3);
+  }
+  .franchise-stats-table tbody tr:hover td:first-child,
+  .franchise-stats-table tbody tr:hover td:nth-child(2) {
+    background: var(--bg4);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon" style="background:#000;border:1.5px solid #333;padding:0;overflow:hidden;width:42px;height:42px;border-radius:5px;flex-shrink:0;">
+      <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABQAFADASIAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAcIAgQGBQMJ/8QAORAAAQMEAQMCAgUKBwAAAAAAAQIDBAAFBhEHEiExCBMUQSI4UWG0CRUjMjZCcnaysxYXKDRxdYH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAEf/aAAwDAQACEQMRAD8Ap5SlKMlK+7cKY5CcnIivrisKCHHg2S2hR8Aq8An7D5qQ2LfiF74Rkv2LGrqvL7I+mReLgZO2TFccWkKS31HYSS0DpKSCd7I3oI+tcCbdLjHtttiPS5klxLTDDKCtbiydBIA7kmvpfbRdLDdpFpvMCTb58dXS9HkNlC0HWxsH7iDXQ8MtXZ/lrFWbJIcjXFy7x0MvIA22S4Nq1rWgN7BGtb7V7Xqdau7HPOXNXuU7JkpuCi244NfoCApkADsAGygdvsoqN6VImPQ8Ot3Dt2umUWC6PXq5yTHx6Y28UNpLaUl1RTsApSVJBOlbKtDRBI4MQpioCp6Yj5iJcDSnw0r2wsjYSVa1vXfW6DXpSlEKUpQdXiuaXa22CVh8q5zRilzfSu4wWSPpEFP6RO/CwUpIHglIB2N1cP0q8EtYwbzkEy/2fJseyK0/CRRFQvpkR3CFKK0qA6d9OunZ1s7Paqd8S4VJ5D5BtmHQ5zMGRcPc6H3kFSE9Da3DsDv4QRVysN4a59w/HY2PY3zHaoVri9XssG1pd6OpRUdKWgq8k/Oiu7469PHGuC5r/iuyQJqpqOr4VEqSXW4nUCCWxre9Ejayo9zqt7lfgzAeSslgX7JIsz4uI2GlGK/7QkNgkhLnYkgbOiCD38+KjjM8c9SmM4hecjkc022Qza4L0xbTdmZCnA2grKQS3oE61WnxtavUjm+C2jK4nMtviMXNj3kMu2ZhS0DZGiQ3r5UV6/qY4Aj5jjeOM4zcrVjUDGWHmi3K6kx0R1BJKuoAkFPt7O/OySRqqWZJlEqJZ5mC4/dn14miZ7/tka+MeSAn3yD3T1dIIQDoDp3sgqNzMn4k9Q2S2CbYb3zRa5NunNFqQyLShvrQfKepCAoA/PRGx2qonO3GM7ijMWcbuN0jXF56EiYl1htSU9KlrTrR+e0Gg4ClKUZKUpQTB6MfrKYn/FL/AAjtWL9ZPMmecZ5bY7fiVwixY8yCt55LsVDpKg50g7UO3aq6ejH6ymJ/xS/wj1SV+Uc/b/Fv+sc/umjSwE6+3LJ/R5cchu7qHZ9ww2TIkLQgJClqjLJIA7DvTgibItvpNslxiKCZEWwPPNKI2AtIcUNj/kV5li+ouf5Fe/Crra4c+pzbf5ak/wBDlBF/pK515F5E5WOP5RcokmALa9ICG4aGj1pUgD6SRv8AeNR3+UL3/njA86/MMf8AvP1BmGZVkWG3f884xdn7XP8AaUz77IHV0KIJHcH7BWWa5dkmaXZF2ym7v3WchkMJfeA6g2CSE9gBraif/aJXh0pSgUpSiJA9OuW23B+aMcyW8dSbfGfWiQtI2W0ONraK9eSE9YJA+QNXF9X3FaOUMFi5djDiZV3tkcuxktK60zYytLKUEHRVrakkb33HzBH59Vbv0R83tw1R+MMplBLTrgTZJLmyQtR/2xPgDfdBPzJT80gFS5Yz/oZUO/7DPfhV1s8OnXo5t38tSf6Ha7Xm1iPG4LzZmM02y0nHp3ShtPSkfoF+APFeP6XWWZHpzw9iQ0h1py29K0LTtKklSgQQfINFUNtnA3LlytUW5wsJmuxJTKXmXC80jqQobSdKWCNjv3FRvIaUw+4wspK21lCulQUNg6OiOxH3irqetfmxi122RxjissfHPgIuz7KiPhmux9kaGiVfvaPZPY/rfRpQe/miFKUohSlKBWcd52O+2+w6tp1tQWhaFEKSQdggjwd/OsKUF4eOeaHOTvTfn1nvq205LascmB9QOvi2jHWA8B8lb7KA7b0e3VoI/MLHFHpJwlcMNv5FcrcUW1lY2hOlnqdWN/qp2O3zJA8bIpNbp0u3vrfhSHGHFsuMqUg66kOIKFpP3FKiD9xrO43KfcRGE2W8+mKwmPHStZIabT4SkfIdye3kknyTRawuk6XdLlJuU99ciXKdU8+6s7UtajtSiftJrXpSiFKUoP/Z" width="42" height="42" style="display:block;object-fit:cover;" alt="DC Logo">
+    </div>
+    <div>
+      <div class="logo-text">The Dipstick Clique</div>
+      <div class="logo-sub">Fantasy Football League</div>
+    </div>
+  </div>
+  <nav class="desktop-nav">
+    <button class="active" onclick="showSection('home')">Home</button>
+    <button onclick="showSection('standings')">Standings</button>
+    <button onclick="showSection('scores')">Scores</button>
+    <button onclick="showSection('records')">Records</button>
+    <button onclick="showSection('history')">History</button>
+    <button onclick="showSection('commish')">Commissioner</button>
+  </nav>
+</header>
+
+<!-- BOTTOM TAB BAR (mobile only) -->
+<div class="bottom-nav" id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bottom-nav-btn active" onclick="showSection('home')" id="bnav-home">
+      <span class="bnav-icon">🏠</span><span>Home</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('standings')" id="bnav-standings">
+      <span class="bnav-icon">📊</span><span>Standings</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('scores')" id="bnav-scores">
+      <span class="bnav-icon">🏈</span><span>Scores</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('records')" id="bnav-records">
+      <span class="bnav-icon">🏆</span><span>Records</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('history')" id="bnav-history">
+      <span class="bnav-icon">📅</span><span>History</span>
+    </button>
+    <button class="bottom-nav-btn" onclick="showSection('commish')" id="bnav-commish">
+      <span class="bnav-icon">📢</span><span>Commish</span>
+    </button>
+  </div>
+</div>
+
+<main>
+
+  <!-- HOME -->
+  <div id="section-home" class="section active">
+    <div class="hero">
+      <h1>The Dipstick Clique</h1>
+      <p>2025 Fantasy Football Season</p>
+      <div class="hero-stats" id="hero-stats">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="page-header" style="margin-bottom:1rem;">
+          <h1 style="font-size:1.4rem;">Current Standings</h1>
+        </div>
+        <div class="card" id="home-standings-card">
+          <div class="loading"><div class="spinner"></div>Loading...</div>
+        </div>
+      </div>
+      <div>
+        <div class="page-header" style="margin-bottom:1rem;">
+          <h1 style="font-size:1.4rem;">Latest Scores</h1>
+        </div>
+        <div id="home-scores-wrap">
+          <div class="loading"><div class="spinner"></div>Loading...</div>
+        </div>
+        <div id="commissioner-preview" style="margin-top:1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STANDINGS -->
+  <div id="section-standings" class="section">
+    <div class="page-header">
+      <h1>League Standings</h1>
+      <p>2025 Season</p>
+    </div>
+    <div class="card" id="standings-card">
+      <div id="standings-skeleton">
+        <div class="skeleton-row" style="height:36px;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:1;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.9;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.8;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.7;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.55;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.42;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.3;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.2;"></div>
+        <div class="skeleton-row" style="height:52px;opacity:0.12;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORES -->
+  <div id="section-scores" class="section">
+    <div class="page-header">
+      <h1>Weekly Scores</h1>
+      <p>Select a season and week to view matchups</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+      <select id="season-selector" onchange="onSeasonChange()" style="background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:6px;padding:0.45rem 0.75rem;font-family:'Barlow',sans-serif;font-size:0.9rem;cursor:pointer;"></select>
+    </div>
+    <div class="week-selector" id="week-selector">
+      <span class="week-label">Week:</span>
+    </div>
+    <div id="scores-grid" class="grid-auto">
+      <div class="skeleton-card" style="height:130px;opacity:1;"></div>
+      <div class="skeleton-card" style="height:130px;opacity:0.85;"></div>
+      <div class="skeleton-card" style="height:130px;opacity:0.7;"></div>
+      <div class="skeleton-card" style="height:130px;opacity:0.55;"></div>
+      <div class="skeleton-card" style="height:130px;opacity:0.4;"></div>
+    </div>
+  </div>
+
+  <!-- RECORDS -->
+  <div id="section-records" class="section">
+    <div class="page-header">
+      <h1>League Records</h1>
+      <p>All-time achievements</p>
+    </div>
+    <div id="records-content">
+      <div class="skeleton-card" style="height:180px;opacity:1;margin-bottom:1rem;"></div>
+      <div class="skeleton-card" style="height:220px;opacity:0.8;margin-bottom:1rem;"></div>
+      <div class="skeleton-card" style="height:160px;opacity:0.6;"></div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="section-history" class="section">
+    <div class="page-header">
+      <h1>All-Time History</h1>
+      <p>Multi-season records &amp; franchise rankings since inception</p>
+    </div>
+    <div id="history-content">
+      <div class="skeleton-card" style="height:60px;opacity:1;margin-bottom:1rem;"></div>
+      <div class="skeleton-card" style="height:320px;opacity:0.85;margin-bottom:1rem;"></div>
+      <div class="skeleton-card" style="height:200px;opacity:0.6;"></div>
+    </div>
+  </div>
+
+  <!-- COMMISSIONER -->
+  <div id="section-commish" class="section">
+    <div class="page-header">
+      <h1>Commissioner's Corner</h1>
+      <p>League news &amp; announcements</p>
+    </div>
+    <div id="commish-content">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const LEAGUE_ID = '1180169995271028736';
+const SEASON = '2025';
+const BASE = 'https://api.sleeper.app/v1';
+const COMM_PASS = 'dipstick2025'; // Change this!
+
+// Users excluded from all stats, standings, history, and matchups
+const EXCLUDED_USERS = ['scameron1892', 'czurowski32'];
+
+// ---- ESPN HISTORICAL MATCHUPS (2018-2023) ----
+// Format: [season, week, homeOwner, homePts, awayOwner, awayPts] — regular season only
+// 2018-2021: fetched via ESPN Fantasy API (lm-api-reads). Deduplicated & bye-week-corrected. 2022-2023: sourced directly from ESPN Fantasy API.
+// Excluded: clydesdale1413, czurowski/dukemaniack101, ns103909 (Nathan Schaefer, left before 2019), connorkunz/Znuk4 (left after 2019).
+// gsteuter = Greg Steuterman (ESPN: IMtheBOSS22/Gsteuterman). mcpeach = nego jovanovich (ESPN: negojovanovich/nego). swollenArm = ESPN: ESPNFAN7467538451.
+const ESPN_MATCHUPS = [
+// 2018
+["2018",1,"jkwon9",124.26,"gsteuter",95.04],["2018",1,"CodyLenart9",147.18,"notchrishanson",213.08],["2018",1,"slipperynoodleboy",106.24,"MikeYambor",129.26],["2018",2,"notchrishanson",104.04,"jkwon9",84.54],["2018",2,"CodyLenart9",92.06,"gsteuter",129.38],["2018",2,"MikeYambor",114.92,"ScuubaSteeve",120.74],["2018",3,"notchrishanson",121.8,"CodyLenart9",96.72],["2018",3,"jkwon9",114.34,"gsteuter",117.14],["2018",3,"MikeYambor",166.44,"bfielding3",82.78],["2018",4,"gsteuter",134.88,"notchrishanson",151.92],["2018",4,"jkwon9",137.6,"mcpeach",113.46],["2018",4,"ScuubaSteeve",100.72,"bfielding3",118.68],["2018",5,"gsteuter",122.82,"CodyLenart9",163.74],["2018",5,"notchrishanson",124.2,"mcpeach",136.88],["2018",5,"slipperynoodleboy",126.28,"ScuubaSteeve",132.68],["2018",5,"MikeYambor",133.2,"bfielding3",129.92],["2018",6,"jkwon9",110.08,"ScuubaSteeve",160.7],["2018",6,"mcpeach",97.12,"bfielding3",80.58],["2018",6,"notchrishanson",150.72,"MikeYambor",110.9],["2018",6,"CodyLenart9",154.1,"slipperynoodleboy",143.8],["2018",7,"ScuubaSteeve",121.96,"mcpeach",117.14],["2018",7,"bfielding3",125.72,"notchrishanson",125.92],["2018",7,"MikeYambor",117.86,"CodyLenart9",114.78],["2018",7,"slipperynoodleboy",149.5,"gsteuter",95.38],["2018",8,"notchrishanson",152.06,"ScuubaSteeve",163.64],["2018",8,"CodyLenart9",109.16,"bfielding3",100.32],["2018",8,"gsteuter",109.6,"MikeYambor",90.4],["2018",9,"ScuubaSteeve",114.56,"CodyLenart9",102.36],["2018",9,"bfielding3",144.9,"gsteuter",151.26],["2018",9,"MikeYambor",103.2,"mcpeach",131.82],["2018",9,"slipperynoodleboy",163.24,"jkwon9",103.22],["2018",10,"gsteuter",121.34,"ScuubaSteeve",112.66],["2018",10,"mcpeach",191.62,"slipperynoodleboy",164.92],["2018",11,"ScuubaSteeve",91.08,"mcpeach",112.92],["2018",11,"bfielding3",79.5,"jkwon9",94.04],["2018",11,"slipperynoodleboy",126.02,"notchrishanson",181.98],["2018",12,"ScuubaSteeve",128.82,"jkwon9",99.56],["2018",12,"bfielding3",99.66,"mcpeach",175.68],["2018",12,"MikeYambor",118.38,"notchrishanson",123.84],["2018",12,"slipperynoodleboy",108.46,"CodyLenart9",131.82],["2018",13,"jkwon9",88.96,"notchrishanson",112.8],["2018",13,"mcpeach",145.94,"ScuubaSteeve",125.9],["2018",13,"CodyLenart9",121.54,"MikeYambor",118.88],["2018",13,"gsteuter",102.18,"slipperynoodleboy",76.78],
+// 2019
+["2019",1,"ScuubaSteeve",105.06,"notchrishanson",138.82],["2019",1,"mcpeach",144.52,"CodyLenart9",88.48],["2019",1,"bfielding3",112.62,"slipperynoodleboy",121.06],["2019",1,"gsteuter",121,"MikeYambor",115.5],["2019",2,"notchrishanson",91.74,"swollenArm",159.96],["2019",2,"CodyLenart9",124.16,"ScuubaSteeve",125.08],["2019",2,"MikeYambor",149.6,"gsteuter",99.12],["2019",2,"jkwon9",124.5,"bfielding3",105.86],["2019",3,"CodyLenart9",116.54,"notchrishanson",150.96],["2019",3,"swollenArm",141.64,"slipperynoodleboy",151.56],["2019",3,"ScuubaSteeve",102.88,"mcpeach",163.16],["2019",3,"bfielding3",126.8,"gsteuter",141.14],["2019",4,"notchrishanson",106.7,"slipperynoodleboy",78.9],["2019",4,"jkwon9",76.58,"swollenArm",123.02],["2019",4,"MikeYambor",124.78,"ScuubaSteeve",135.98],["2019",4,"bfielding3",143.98,"mcpeach",146.4],["2019",5,"gsteuter",174.62,"swollenArm",134.62],["2019",5,"CodyLenart9",130.12,"MikeYambor",102.4],["2019",5,"ScuubaSteeve",65.24,"bfielding3",108.92],["2019",6,"notchrishanson",113.84,"jkwon9",100.9],["2019",6,"gsteuter",140.8,"slipperynoodleboy",95.12],["2019",6,"bfielding3",107.62,"CodyLenart9",104.46],["2019",6,"mcpeach",132.04,"swollenArm",120.72],["2019",7,"MikeYambor",137.46,"notchrishanson",95.74],["2019",7,"jkwon9",98.92,"gsteuter",116.54],["2019",7,"swollenArm",92.76,"ScuubaSteeve",100.52],["2019",8,"notchrishanson",106.98,"gsteuter",146.78],["2019",8,"bfielding3",121.6,"MikeYambor",157.18],["2019",8,"swollenArm",172.54,"CodyLenart9",90.96],["2019",9,"bfielding3",147.24,"notchrishanson",143.46],["2019",9,"gsteuter",157.52,"mcpeach",117.36],["2019",9,"jkwon9",128.1,"ScuubaSteeve",136.32],["2019",9,"slipperynoodleboy",79.76,"CodyLenart9",57],["2019",10,"notchrishanson",143.84,"mcpeach",126.28],["2019",10,"ScuubaSteeve",143.32,"gsteuter",103.48],["2019",10,"swollenArm",101.78,"MikeYambor",105.78],["2019",10,"CodyLenart9",108.56,"jkwon9",117.62],["2019",11,"mcpeach",116.34,"ScuubaSteeve",124.28],["2019",11,"bfielding3",100.82,"swollenArm",128.76],["2019",11,"gsteuter",111.74,"CodyLenart9",61.84],["2019",11,"MikeYambor",99.82,"slipperynoodleboy",112.34],["2019",12,"notchrishanson",99.26,"ScuubaSteeve",117.46],["2019",12,"CodyLenart9",112.58,"mcpeach",137.84],["2019",12,"slipperynoodleboy",119.58,"bfielding3",120.06],["2019",12,"jkwon9",83.82,"MikeYambor",126.94],["2019",13,"swollenArm",143.6,"notchrishanson",86.38],["2019",13,"ScuubaSteeve",95.9,"CodyLenart9",88.94],["2019",13,"bfielding3",145.62,"jkwon9",79.12],["2019",13,"gsteuter",111.2,"MikeYambor",100.98],
+// 2020
+["2020",1,"ScuubaSteeve",146.4,"notchrishanson",138.18],["2020",1,"mcpeach",121.2,"CodyLenart9",83.24],["2020",1,"bfielding3",82.46,"slipperynoodleboy",132.78],["2020",1,"gsteuter",148.1,"MikeYambor",89.76],["2020",2,"notchrishanson",162.52,"swollenArm",113.78],["2020",2,"CodyLenart9",159.4,"ScuubaSteeve",119.66],["2020",2,"MikeYambor",112.14,"gsteuter",142.02],["2020",3,"CodyLenart9",151.18,"notchrishanson",195.1],["2020",3,"swollenArm",98.8,"slipperynoodleboy",112.44],["2020",3,"ScuubaSteeve",79.18,"mcpeach",177.2],["2020",3,"bfielding3",89.58,"gsteuter",106.08],["2020",4,"notchrishanson",108.5,"slipperynoodleboy",133.62],["2020",4,"jkwon9",117.82,"swollenArm",181.84],["2020",4,"MikeYambor",101.8,"ScuubaSteeve",83.62],["2020",4,"bfielding3",81.84,"mcpeach",121.72],["2020",5,"slipperynoodleboy",100.52,"jkwon9",158.32],["2020",5,"CodyLenart9",95.94,"MikeYambor",77.56],["2020",5,"swollenArm",108.74,"gsteuter",152.14],["2020",5,"ScuubaSteeve",83.4,"bfielding3",134.06],["2020",6,"notchrishanson",115.84,"jkwon9",66.32],["2020",6,"MikeYambor",116.24,"mcpeach",74.9],["2020",6,"gsteuter",126.98,"slipperynoodleboy",113.08],["2020",6,"bfielding3",131.5,"CodyLenart9",99.34],["2020",7,"MikeYambor",145.36,"notchrishanson",189.62],["2020",7,"jkwon9",152.6,"gsteuter",96.32],["2020",7,"slipperynoodleboy",118.48,"mcpeach",113.6],["2020",7,"swollenArm",90.62,"ScuubaSteeve",111.76],["2020",8,"notchrishanson",123.24,"gsteuter",121.54],["2020",8,"bfielding3",92.38,"MikeYambor",90.74],["2020",8,"mcpeach",99.46,"jkwon9",100.42],["2020",8,"ScuubaSteeve",92.72,"slipperynoodleboy",76.16],["2020",8,"swollenArm",102,"CodyLenart9",116.56],["2020",9,"bfielding3",108.54,"notchrishanson",110.5],["2020",9,"gsteuter",127.86,"mcpeach",124.72],["2020",9,"jkwon9",90.64,"ScuubaSteeve",118.5],["2020",9,"slipperynoodleboy",83.3,"CodyLenart9",86.64],["2020",10,"notchrishanson",117.52,"mcpeach",113.1],["2020",10,"ScuubaSteeve",120.76,"gsteuter",120.14],["2020",10,"swollenArm",94.94,"MikeYambor",89.28],["2020",10,"CodyLenart9",89.78,"jkwon9",89.32],["2020",11,"mcpeach",131.52,"ScuubaSteeve",110.36],["2020",11,"bfielding3",144.96,"swollenArm",88.82],["2020",11,"gsteuter",95.28,"CodyLenart9",85.34],["2020",11,"MikeYambor",136.56,"slipperynoodleboy",143.74],["2020",12,"notchrishanson",160.42,"ScuubaSteeve",81.5],["2020",12,"CodyLenart9",83.04,"mcpeach",160.4],["2020",12,"slipperynoodleboy",129.48,"bfielding3",153.12],["2020",12,"gsteuter",118.2,"MikeYambor",103.84],["2020",13,"swollenArm",95.38,"notchrishanson",130.02],["2020",13,"ScuubaSteeve",107.38,"CodyLenart9",104.36],["2020",13,"bfielding3",190.34,"jkwon9",127.66],["2020",13,"gsteuter",91.32,"MikeYambor",103.84],
+// 2021
+["2021",1,"mcpeach",153.18,"swollenArm",104.16],["2021",1,"slipperynoodleboy",75.5,"ScuubaSteeve",115.56],["2021",1,"MikeYambor",155.08,"jkwon9",95.78],["2021",1,"gsteuter",130.92,"notchrishanson",144.6],["2021",2,"ScuubaSteeve",129.64,"mcpeach",122.32],["2021",2,"CodyLenart9",100.82,"bfielding3",100.82],["2021",2,"jkwon9",98.92,"slipperynoodleboy",109.96],["2021",2,"gsteuter",101.08,"MikeYambor",160.42],["2021",3,"ScuubaSteeve",129.08,"swollenArm",117.12],["2021",3,"mcpeach",94.5,"jkwon9",142.32],["2021",3,"bfielding3",121.52,"notchrishanson",113.18],["2021",3,"slipperynoodleboy",163.42,"gsteuter",114.52],["2021",4,"swollenArm",129.84,"CodyLenart9",118.48],["2021",4,"jkwon9",104.92,"ScuubaSteeve",142.56],["2021",4,"gsteuter",101.7,"mcpeach",129.22],["2021",4,"MikeYambor",119.6,"bfielding3",118.66],["2021",5,"jkwon9",107.5,"swollenArm",114.68],["2021",5,"CodyLenart9",140.82,"notchrishanson",178.28],["2021",5,"ScuubaSteeve",122.04,"gsteuter",162.9],["2021",5,"mcpeach",136.68,"bfielding3",147.88],["2021",6,"swollenArm",156.74,"notchrishanson",121.08],["2021",6,"gsteuter",111.32,"jkwon9",131.72],["2021",6,"MikeYambor",149,"CodyLenart9",115.5],["2021",6,"bfielding3",136.54,"mcpeach",102.88],["2021",7,"gsteuter",147.64,"swollenArm",120.34],["2021",7,"notchrishanson",115.28,"MikeYambor",96.36],["2021",7,"jkwon9",102.08,"CodyLenart9",184.14],["2021",7,"ScuubaSteeve",88.34,"bfielding3",147.16],["2021",8,"swollenArm",105.32,"MikeYambor",110.56],["2021",8,"slipperynoodleboy",105.12,"notchrishanson",91.98],["2021",8,"bfielding3",120.5,"jkwon9",114.76],["2021",8,"mcpeach",92.8,"CodyLenart9",140.62],["2021",9,"MikeYambor",100.92,"slipperynoodleboy",93.98],["2021",9,"gsteuter",85.56,"bfielding3",97.66],["2021",9,"notchrishanson",117.04,"mcpeach",81.24],["2021",9,"CodyLenart9",126.24,"ScuubaSteeve",101.3],["2021",10,"swollenArm",159.04,"slipperynoodleboy",61.1],["2021",10,"bfielding3",116.72,"mcpeach",167.34],["2021",10,"ScuubaSteeve",81.9,"notchrishanson",88.68],["2021",10,"CodyLenart9",74.3,"jkwon9",90.58],["2021",11,"bfielding3",96.98,"swollenArm",100.24],["2021",11,"slipperynoodleboy",114.62,"mcpeach",123.1],["2021",11,"MikeYambor",93.22,"ScuubaSteeve",110.88],["2021",11,"gsteuter",114.96,"CodyLenart9",143.58],["2021",11,"notchrishanson",121.54,"jkwon9",128.8],["2021",12,"swollenArm",107.36,"mcpeach",98.42],["2021",12,"ScuubaSteeve",113.04,"slipperynoodleboy",120],["2021",12,"CodyLenart9",79.72,"jkwon9",111.28],["2021",12,"notchrishanson",113.8,"gsteuter",83.2],["2021",13,"mcpeach",116.46,"ScuubaSteeve",158.42],["2021",13,"bfielding3",127.1,"CodyLenart9",134.28],["2021",13,"slipperynoodleboy",90.1,"jkwon9",97.56],["2021",13,"MikeYambor",86.8,"gsteuter",165.7],["2021",14,"swollenArm",137.94,"ScuubaSteeve",140.42],["2021",14,"jkwon9",117.64,"mcpeach",84.02],["2021",14,"notchrishanson",90.98,"bfielding3",139.68],["2021",14,"gsteuter",167.92,"slipperynoodleboy",164.32],["2021",14,"MikeYambor",128.34,"CodyLenart9",108.72],
+// 2022
+["2022",1,"gsteuter",149.68,"CodyLenart9",118],["2022",1,"ScuubaSteeve",114.66,"mcpeach",80.26],["2022",1,"slipperynoodleboy",149.52,"jkwon9",116.42],["2022",1,"notchrishanson",129.3,"MikeYambor",121.62],["2022",2,"CodyLenart9",107.08,"bfielding3",146.7],["2022",2,"mcpeach",148.86,"gsteuter",158.58],["2022",2,"MikeYambor",122.46,"ScuubaSteeve",78.9],["2022",2,"swollenArm",123.46,"slipperynoodleboy",112.92],["2022",3,"mcpeach",82.58,"CodyLenart9",95.06],["2022",3,"bfielding3",88.08,"jkwon9",133.46],["2022",3,"gsteuter",122.3,"MikeYambor",111.8],["2022",3,"slipperynoodleboy",106.6,"notchrishanson",124.5],["2022",4,"CodyLenart9",131.36,"jkwon9",109.38],["2022",4,"MikeYambor",106.48,"mcpeach",158.9],["2022",4,"swollenArm",102.78,"bfielding3",123.86],["2022",4,"slipperynoodleboy",112.56,"ScuubaSteeve",136.22],["2022",5,"MikeYambor",104.98,"CodyLenart9",116.54],["2022",5,"jkwon9",135.8,"swollenArm",86.34],["2022",5,"bfielding3",103.78,"notchrishanson",141.34],["2022",5,"gsteuter",159.36,"slipperynoodleboy",130.86],["2022",6,"CodyLenart9",100.48,"swollenArm",118.92],["2022",6,"notchrishanson",117.6,"jkwon9",93.98],["2022",6,"slipperynoodleboy",119.4,"mcpeach",82.46],["2022",6,"ScuubaSteeve",118.6,"bfielding3",97.12],["2022",7,"swollenArm",123.6,"notchrishanson",114.02],["2022",7,"MikeYambor",151.44,"slipperynoodleboy",84.72],["2022",7,"jkwon9",115.86,"ScuubaSteeve",85.86],["2022",7,"bfielding3",122.92,"gsteuter",115.44],["2022",8,"CodyLenart9",139.68,"notchrishanson",128.88],["2022",8,"ScuubaSteeve",97.74,"swollenArm",161.06],["2022",8,"gsteuter",100.92,"jkwon9",143.44],["2022",8,"bfielding3",112.58,"mcpeach",106.84],["2022",9,"slipperynoodleboy",124.92,"CodyLenart9",179.8],["2022",9,"notchrishanson",91.6,"ScuubaSteeve",80.24],["2022",9,"swollenArm",93.1,"gsteuter",112.2],["2022",9,"MikeYambor",147.44,"bfielding3",97.44],["2022",9,"jkwon9",115.6,"mcpeach",128.1],["2022",10,"CodyLenart9",132.4,"ScuubaSteeve",95.64],["2022",10,"gsteuter",124,"notchrishanson",129.28],["2022",10,"mcpeach",81.74,"swollenArm",121.66],["2022",10,"jkwon9",81.62,"MikeYambor",100.2],["2022",11,"ScuubaSteeve",83.4,"gsteuter",119.68],["2022",11,"slipperynoodleboy",122.8,"bfielding3",93.56],["2022",11,"notchrishanson",163.3,"mcpeach",100.5],["2022",11,"swollenArm",99.04,"MikeYambor",109.26],["2022",12,"CodyLenart9",100.1,"gsteuter",149.92],["2022",12,"mcpeach",145.36,"ScuubaSteeve",83.72],["2022",12,"jkwon9",116.74,"slipperynoodleboy",114.42],["2022",12,"MikeYambor",106,"notchrishanson",149.64],["2022",13,"bfielding3",134.22,"CodyLenart9",113.5],["2022",13,"gsteuter",127.32,"mcpeach",132.1],["2022",13,"ScuubaSteeve",89.36,"MikeYambor",89.94],["2022",13,"slipperynoodleboy",157.8,"swollenArm",116.76],["2022",14,"CodyLenart9",104.4,"mcpeach",131.38],["2022",14,"jkwon9",66.66,"bfielding3",84.88],["2022",14,"MikeYambor",129.36,"gsteuter",126.18],["2022",14,"notchrishanson",139.8,"slipperynoodleboy",137.58],
+// 2023
+["2023",1,"jkwon9",89.38,"gsteuter",121.86],["2023",1,"ScuubaSteeve",122.64,"bfielding3",87.44],["2023",1,"MikeYambor",143.48,"swollenArm",93.62],["2023",1,"slipperynoodleboy",101,"notchrishanson",112.36],["2023",2,"gsteuter",104.56,"mcpeach",90.64],["2023",2,"swollenArm",107.9,"jkwon9",147.64],["2023",2,"notchrishanson",128.7,"ScuubaSteeve",102.24],["2023",2,"slipperynoodleboy",120.32,"MikeYambor",102.48],["2023",3,"CodyLenart9",133.68,"bfielding3",153.98],["2023",3,"mcpeach",147.16,"swollenArm",136.86],["2023",3,"jkwon9",85.64,"slipperynoodleboy",129.28],["2023",3,"ScuubaSteeve",95.16,"MikeYambor",97.7],["2023",4,"swollenArm",93.3,"gsteuter",139.06],["2023",4,"notchrishanson",124.42,"CodyLenart9",94.3],["2023",4,"slipperynoodleboy",113.76,"mcpeach",97.48],["2023",4,"ScuubaSteeve",97.78,"jkwon9",154],["2023",5,"bfielding3",95.54,"notchrishanson",138.94],["2023",5,"gsteuter",108.76,"slipperynoodleboy",122.42],["2023",5,"CodyLenart9",105.24,"MikeYambor",93.74],["2023",5,"mcpeach",163.22,"ScuubaSteeve",138.7],["2023",6,"slipperynoodleboy",81.4,"swollenArm",111.74],["2023",6,"MikeYambor",115.8,"bfielding3",118.4],["2023",6,"ScuubaSteeve",84.04,"gsteuter",127.34],["2023",6,"jkwon9",125.74,"CodyLenart9",143.72],["2023",7,"notchrishanson",125.36,"MikeYambor",101.68],["2023",7,"swollenArm",146.86,"ScuubaSteeve",113.16],["2023",7,"bfielding3",67.34,"jkwon9",117.46],["2023",7,"CodyLenart9",128.28,"mcpeach",105.34],["2023",8,"ScuubaSteeve",115.78,"slipperynoodleboy",125.96],["2023",8,"jkwon9",133.1,"notchrishanson",162.08],["2023",8,"mcpeach",161.16,"bfielding3",146.12],["2023",8,"CodyLenart9",82.08,"gsteuter",116.76],["2023",9,"MikeYambor",123.86,"jkwon9",127.86],["2023",9,"notchrishanson",76.9,"mcpeach",96.54],["2023",9,"swollenArm",118.3,"CodyLenart9",91.68],["2023",9,"bfielding3",140.82,"gsteuter",119.7],["2023",10,"mcpeach",84.1,"MikeYambor",128.46],["2023",10,"CodyLenart9",108.92,"slipperynoodleboy",112.66],["2023",10,"gsteuter",135.48,"notchrishanson",125.32],["2023",10,"bfielding3",110.28,"swollenArm",133.64],["2023",11,"jkwon9",136.46,"mcpeach",109.3],["2023",11,"ScuubaSteeve",146.48,"CodyLenart9",120.86],["2023",11,"MikeYambor",97.76,"gsteuter",103.04],["2023",11,"slipperynoodleboy",117.9,"bfielding3",63.34],["2023",11,"notchrishanson",124.74,"swollenArm",104.38],["2023",12,"gsteuter",120.3,"jkwon9",122.74],["2023",12,"bfielding3",113.66,"ScuubaSteeve",148.26],["2023",12,"swollenArm",126.72,"MikeYambor",140.54],["2023",12,"notchrishanson",129.5,"slipperynoodleboy",141.4],["2023",13,"mcpeach",140.3,"gsteuter",133.68],["2023",13,"jkwon9",114.04,"swollenArm",154.72],["2023",13,"ScuubaSteeve",134.82,"notchrishanson",105.06],["2023",13,"MikeYambor",137.06,"slipperynoodleboy",130.32],["2023",14,"bfielding3",97.76,"CodyLenart9",105.14],["2023",14,"swollenArm",122.04,"mcpeach",141.5],["2023",14,"slipperynoodleboy",121.68,"jkwon9",115.76],["2023",14,"MikeYambor",136.64,"ScuubaSteeve",143.9]
+];
+
+// ---- ESPN HISTORICAL DATA (2018-2023) ----
+// Sourced via ESPN Fantasy API. Regular season only.
+// Keys use Sleeper display_names for cross-era matching.
+// gsteuter = Greg Steuterman. mcpeach = nego jovanovich. swollenArm = ESPNFAN7467538451 (joined 2019).
+// ns103909 (Nathan Schaefer, 2018 only) and connorkunz/Znuk4 (2018-2019 only) excluded — left before Sleeper era.
+const ESPN_DATA = {
+  "gsteuter": { "2018": { w:8, l:5, pf:1566.38, pa:1605.24, scores:[95.04,129.38,117.14,134.88,122.82,143.42,95.38,109.6,151.26,121.34,91.5,152.44,102.18] }, "2019": { w:9, l:4, pf:1642.54, pa:1497.08, scores:[121,99.12,141.14,121.2,174.62,140.8,116.54,146.78,157.52,103.48,111.74,97.4,111.2] }, "2020": { w:7, l:6, pf:1548.08, pa:1501.54, scores:[148.1,142.02,106.08,102.1,152.14,126.98,96.32,121.54,127.86,120.14,95.28,118.2,91.32] },
+              "2021": { w:5, l:9, pf:1712.62, pa:1803.10, scores:[130.92,101.08,114.52,101.7,162.9,111.32,147.64,116.46,85.56,108.74,114.96,83.2,165.7,167.92] }, "2022": { w:8, l:6, pf:1837.56, pa:1673.32, scores:[149.68,158.58,122.3,154.82,159.36,117.16,115.44,100.92,112.2,124,119.68,149.92,127.32,126.18] }, "2023": { w:10, l:4, pf:1658.14, pa:1502.40, scores:[121.86,104.56,146.28,139.06,108.76,127.34,102.16,116.76,119.7,135.48,103.04,120.3,133.68,79.16] } },
+  "CodyLenart9": { "2018": { w:6, l:7, pf:1581.38, pa:1638.10, scores:[147.18,92.06,96.72,123.96,163.74,154.1,114.78,109.16,102.36,116.56,107.4,131.82,121.54] }, "2019": { w:3, l:10, pf:1287.00, pa:1523.92, scores:[88.48,124.16,116.54,106.5,130.12,104.46,96.86,90.96,57,108.56,61.84,112.58,88.94] }, "2020": { w:7, l:6, pf:1451.30, pa:1519.78, scores:[83.24,159.4,151.18,175.48,95.94,99.34,121,116.56,86.64,89.78,85.34,83.04,104.36] },
+              "2021": { w:8, l:5, t:1, pf:1740.12, pa:1701.86, scores:[143.78,100.82,104.74,118.48,140.82,115.5,184.14,140.62,126.24,74.3,143.58,79.72,134.28,133.1] }, "2022": { w:7, l:7, pf:1636.14, pa:1687.84, scores:[118,107.08,95.06,131.36,116.54,100.48,88.1,139.68,179.8,132.4,109.64,110.46,112.12,95.42] }, "2023": { w:6, l:8, pf:1580.04, pa:1608.36, scores:[97.22,120.7,124.92,98.76,112.38,134.28,118.82,117.68,100.68,119.96,104.62,131.02,97.16,110.62] } },
+  "notchrishanson": { "2018": { w:5, l:8, pf:1369.30, pa:1572.26, scores:[124.26,84.54,114.34,137.6,81.76,110.08,125.14,89.98,103.22,115.82,94.04,99.56,88.96] }, "2019": { w:4, l:9, pf:1387.40, pa:1575.14, scores:[127.26,124.5,122.9,76.58,119.86,100.9,98.92,122.1,128.1,117.62,85.72,83.82,79.12] }, "2020": { w:5, l:8, pf:1514.94, pa:1579.56, scores:[158,100.08,110.6,117.82,158.32,66.32,152.6,100.42,90.64,89.32,137.7,105.46,127.66] },
+              "2021": { w:8, l:6, pf:1553.44, pa:1524.40, scores:[95.78,98.92,142.32,104.92,107.5,131.72,102.08,114.76,109.58,90.58,128.8,111.28,97.56,117.64] }, "2022": { w:6, l:8, pf:1604.16, pa:1622.86, scores:[133.32,115.44,126.74,135.58,143.78,106.66,119.62,100.58,130.78,128.28,125.18,130.38,122.4,99.04] }, "2023": { w:6, l:8, pf:1635.70, pa:1702.70, scores:[122.46,115.24,130.86,126.56,106.44,137.62,115.02,107.44,108.36,128.78,108.58,127.86,100.64,114.3] } },
+  "ScuubaSteeve": { "2018": { w:11, l:2, pf:1809.96, pa:1587.66, scores:[213.08,104.04,121.8,151.92,124.2,150.72,125.92,152.06,106.78,140.82,181.98,123.84,112.8] }, "2019": { w:5, l:8, pf:1481.96, pa:1664.00, scores:[138.82,91.74,150.96,106.7,110.26,113.84,95.74,106.98,143.46,143.84,93.98,99.26,86.38] }, "2020": { w:9, l:4, pf:1774.42, pa:1553.80, scores:[138.18,162.52,195.1,108.5,118.08,115.84,189.62,123.24,110.5,117.52,104.88,160.42,130.02] },
+              "2021": { w:7, l:7, pf:1654.06, pa:1625.20, scores:[144.6,105.46,113.18,146.84,178.28,121.08,115.28,91.98,117.04,88.68,121.54,113.8,105.32,90.98] }, "2022": { w:9, l:5, pf:1717.78, pa:1585.18, scores:[126.88,136.18,135.7,141.36,137.62,151.28,144.3,127.14,131.86,96.78,128.3,124.56,119.12,136.02] }, "2023": { w:9, l:5, pf:1650.16, pa:1574.50, scores:[115.64,138.88,115.2,127.52,123.84,100.42,130.1,131.16,97.6,112.6,108.28,117.1,126.44,101.52] } },
+  "mcpeach": { "2018": { w:10, l:3, pf:1787.52, pa:1569.34, scores:[123.16,142.18,109.54,113.46,136.88,97.12,117.14,116.58,139.46,191.62,178.76,175.68,145.94] }, "2019": { w:8, l:5, pf:1709.80, pa:1582.42, scores:[144.52,136.6,163.16,146.4,152.6,132.04,128.06,119.54,117.36,126.28,116.34,137.84,89.06] }, "2020": { w:8, l:5, pf:1707.10, pa:1420.54, scores:[121.2,176.54,177.2,121.72,133,114.02,113.6,99.46,124.72,113.1,131.52,160.4,120.62] },
+              "2021": { w:4, l:10, pf:1560.50, pa:1760.68, scores:[153.18,122.32,94.5,129.22,136.68,102.88,87.94,92.8,81.24,137.74,123.1,98.42,116.46,84.02] }, "2022": { w:5, l:9, pf:1564.12, pa:1684.72, scores:[100.64,110.76,126.28,91.04,100.5,105.18,109.44,96.68,129.58,108.22,108.96,134.2,107.76,135.88] }, "2023": { w:9, l:5, pf:1710.94, pa:1702.92, scores:[110.22,124.18,137.92,130.36,116.14,131.04,139.52,107.38,125.16,124.3,103.46,126.68,108.44,126.14] } },
+  "MikeYambor": { "2018": { w:4, l:9, pf:1535.54, pa:1626.60, scores:[129.26,114.92,166.44,93.48,133.2,110.9,117.86,90.4,103.2,115.1,123.52,118.38,118.88] }, "2019": { w:6, l:7, pf:1517.48, pa:1529.82, scores:[115.5,149.6,86.1,124.78,102.4,131.4,137.46,157.18,79.54,105.78,99.82,126.94,100.98] }, "2020": { w:5, l:8, pf:1465.58, pa:1549.52, scores:[89.76,112.14,145.2,101.8,77.56,116.24,145.36,90.74,121.6,89.28,136.56,135.5,103.84] },
+              "2021": { w:8, l:6, pf:1651.84, pa:1638.98, scores:[155.08,160.42,105.34,119.6,123.06,149,96.36,110.56,100.92,138.42,93.22,84.72,86.8,128.34] }, "2022": { w:8, l:6, pf:1641.96, pa:1581.62, scores:[143.7,131.42,98.96,134.46,115.98,103.64,108.22,114.36,115.38,112.26,110.72,124.28,102.56,125.02] }, "2023": { w:6, l:8, pf:1686.86, pa:1600.06, scores:[114.04,116.48,131.14,123.56,107.9,115.8,130.44,110.02,133.84,104.14,107.96,108.04,100.22,125.64] } },
+  "bfielding3": { "2018": { w:2, l:11, pf:1393.48, pa:1597.62, scores:[100.52,118.46,82.78,118.68,129.92,80.58,125.72,100.32,144.9,112.24,79.5,99.66,100.2] }, "2019": { w:7, l:6, pf:1577.32, pa:1563.06, scores:[112.62,105.86,126.8,143.98,108.92,107.62,136.06,121.6,147.24,100.12,100.82,120.06,145.62] }, "2020": { w:9, l:4, pf:1572.12, pa:1384.22, scores:[82.46,115.86,89.58,81.84,134.06,131.5,138.06,92.38,108.54,109.42,144.96,153.12,190.34] },
+              "2021": { w:8, l:5, t:1, pf:1746.76, pa:1610.98, scores:[132.26,100.82,121.52,118.66,144.18,136.54,147.16,120.5,97.66,116.72,96.98,146.98,127.1,139.68] }, "2022": { w:7, l:7, pf:1548.98, pa:1636.70, scores:[91.14,96.3,112.82,126.46,118.58,115.52,111.9,120.6,125.36,115.62,100.78,109.72,101.54,134.02] }, "2023": { w:5, l:9, pf:1573.16, pa:1716.14, scores:[110.16,113.12,101.46,134.16,97.74,117.9,131.12,113.26,121.4,120.48,104.14,116.88,129.06,130.58] } },
+  "jkwon9": { "2018": { w:4, l:9, pf:1695.48, pa:1716.10, scores:[106.24,124.8,140.1,138.3,126.28,143.8,149.5,127.04,163.24,164.92,126.02,108.46,76.78] }, "2019": { w:7, l:6, pf:1494.12, pa:1500.20, scores:[121.06,117.32,151.56,78.9,134.98,95.12,122.3,119.26,79.76,153.92,112.34,119.58,88.02] }, "2020": { w:7, l:6, pf:1506.56, pa:1537.90, scores:[132.78,123.1,112.44,133.62,100.52,113.08,118.48,76.16,83.3,141.46,143.74,129.48,98.4] },
+              "2021": { w:5, l:9, pf:1631.84, pa:1787.80, scores:[75.5,109.96,163.42,114.82,147.88,113,158.02,105.12,93.98,61.1,114.62,120,90.1,164.32] }, "2022": { w:5, l:9, pf:1764.76, pa:1785.02, scores:[111.08,91.92,115.74,126.84,118.48,117.32,96.84,127.74,108.38,116.62,120.78,112.38,115.62,123.42] }, "2023": { w:10, l:4, pf:1668.74, pa:1511.20, scores:[107.14,96.9,138.58,121.92,110.76,108.84,107.34,130.88,116.34,122.06,115.46,143.38,120.94,122.24] } },
+  "slipperynoodleboy": { "2018": { w:8, l:5, pf:1597.20, pa:1541.20, scores:[124.34,120.74,99.4,100.72,132.68,160.7,121.96,163.64,114.56,112.66,91.08,128.82,125.9] }, "2019": { w:9, l:4, pf:1490.38, pa:1468.68, scores:[105.06,125.08,102.88,135.98,65.24,156.44,100.52,81.9,136.32,143.32,124.28,117.46,95.9] }, "2020": { w:7, l:6, pf:1393.18, pa:1520.72, scores:[146.4,119.66,79.18,83.62,83.4,137.94,111.76,92.72,118.5,120.76,110.36,81.5,107.38] },
+              "2021": { w:9, l:5, pf:1673.56, pa:1618.64, scores:[115.56,129.64,129.08,142.56,122.04,117.28,88.34,123.1,101.3,81.9,110.88,113.04,158.42,140.42] }, "2022": { w:5, l:9, pf:1381.10, pa:1598.16, scores:[138.84,127.78,139.62,127,135.1,145.26,107.32,142.64,125.4,130.46,106.04,110.08,115.72,113.5] }, "2023": { w:5, l:9, pf:1606.24, pa:1724.56, scores:[106.66,125.08,147.72,126.92,116.54,120.54,117.04,113.28,128.64,138.82,101.64,115.46,100.2,110.2] } },
+  "swollenArm": { "2018": { w:6, l:7, pf:1541.52, pa:1526.36, scores:[117.26,128.86,107.36,99.88,82.92,127.26,135.44,171.26,96.62,113.14,157.78,118.02,85.72] }, "2019": { w:8, l:5, pf:1733.26, pa:1470.96, scores:[164.2,159.96,141.64,123.02,134.62,120.72,92.76,172.54,130.08,101.78,128.76,119.58,143.6] }, "2020": { w:2, l:11, pf:1430.32, pa:1671.84, scores:[112,113.78,98.8,181.84,108.74,101.62,90.62,102,126.88,94.94,88.82,114.9,95.38] },
+              "2021": { w:7, l:7, pf:1729.38, pa:1701.08, scores:[104.16,127.4,117.12,129.84,114.68,156.74,120.34,105.32,136.28,159.04,100.24,107.36,112.92,137.94] }, "2022": { w:8, l:6, pf:1636.86, pa:1594.94, scores:[132.16,102.02,120.22,111.44,124.82,118.98,92.08,108.12,138.48,120.46,107.9,112.62,133.8,113.76] }, "2023": { w:7, l:7, pf:1738.46, pa:1727.90, scores:[115.38,136.94,118.68,144.78,127.76,121.88,125.02,127.64,119.58,117.26,142.16,109.56,120.02,111.8] } }
+};;
+
+function isExcludedUser(displayName) {
+  if (!displayName) return false;
+  return EXCLUDED_USERS.some(u => displayName.toLowerCase() === u.toLowerCase());
+}
+
+function isExcludedRoster(rosterId, usersArr, rostersArr) {
+  // Check both current-season globals and a passed-in rosters/users pair
+  const rArr = rostersArr || rostersData;
+  const uArr = usersArr || usersData;
+  const roster = rArr.find(r => r.roster_id === rosterId);
+  if (!roster) return false;
+  const user = uArr.find(u => u.user_id === roster.owner_id);
+  return isExcludedUser(user?.display_name);
+}
+
+let leagueData = null;
+let rostersData = null;
+let usersData = null;
+let allMatchupsData = {};
+let currentWeek = 1;
+let maxWeek = 18;
+let commLoggedIn = false;
+let _allSeasonsCache = null; // cache so we only load all seasons once
+
+// ---- STORAGE ----
+function getPosts() {
+  try {
+    const raw = localStorage.getItem('dc_posts');
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+
+function savePosts(posts) {
+  try { localStorage.setItem('dc_posts', JSON.stringify(posts)); } catch(e) {}
+}
+
+// ---- TOAST ----
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ---- API ----
+async function api(path) {
+  const res = await fetch(BASE + path);
+  if (!res.ok) throw new Error('API error: ' + res.status);
+  return res.json();
+}
+
+// ---- INIT ----
+async function init() {
+  try {
+    [leagueData, rostersData, usersData] = await Promise.all([
+      api(`/league/${LEAGUE_ID}`),
+      api(`/league/${LEAGUE_ID}/rosters`),
+      api(`/league/${LEAGUE_ID}/users`)
+    ]);
+
+    const nflState = await api('/state/nfl');
+    currentWeek = nflState.week || 1;
+    if (nflState.season !== SEASON) {
+      // Off-season: nflState is already on next year — use last_scored_leg from league data
+      // so completed seasons still load all their matchup data
+      currentWeek = leagueData.settings?.last_scored_leg || 17;
+    }
+    maxWeek = leagueData.settings?.playoff_week_start
+      ? leagueData.settings.playoff_week_start + 3
+      : 17;
+
+    // Pre-load current week matchups
+    const wk = Math.max(1, Math.min(currentWeek, maxWeek));
+    await loadMatchupsForWeek(wk);
+
+    renderHome();
+    renderStandings('standings-card', true);
+    // Initialize scores tab — set current season as active, then load all seasons for dropdown
+    _scoresActiveSeason = { isCurrentSeason: true, leagueId: LEAGUE_ID, league: leagueData };
+    buildWeekSelector();
+    renderScoresForWeek(wk);
+    // Build season dropdown asynchronously (doesn't block initial render)
+    loadAllSeasons().then(seasons => {
+      buildSeasonSelector(seasons);
+      // Set _scoresActiveSeason to the current season object from cache
+      const cur = seasons.find(s => s.isCurrentSeason);
+      if (cur) _scoresActiveSeason = cur;
+    });
+    renderRecords();
+    renderHistory();
+    renderCommish();
+  } catch(e) {
+    console.error(e);
+    showError('home-standings-card', 'Failed to load league data. ' + e.message);
+    showError('standings-card', 'Failed to load standings. ' + e.message);
+  }
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = `<div class="error-msg">⚠ ${msg}</div>`;
+}
+
+// ---- HELPERS ----
+function getUserByRosterId(rosterId) {
+  const roster = rostersData.find(r => r.roster_id === rosterId);
+  if (!roster) return { display_name: 'Unknown', avatar: null };
+  const user = usersData.find(u => u.user_id === roster.owner_id);
+  return user || { display_name: 'Unknown', avatar: null };
+}
+
+function getTeamName(rosterId) {
+  const user = getUserByRosterId(rosterId);
+  return user.metadata?.team_name || user.display_name || `Team ${rosterId}`;
+}
+
+function getOwnerName(rosterId) {
+  const user = getUserByRosterId(rosterId);
+  return user.display_name || `Owner ${rosterId}`;
+}
+
+function avatarUrl(avatarId) {
+  if (!avatarId) return null;
+  return `https://sleepercdn.com/avatars/thumbs/${avatarId}`;
+}
+
+function avatarEl(rosterId, size = 44) {
+  const user = getUserByRosterId(rosterId);
+  if (user.avatar) {
+    return `<img src="${avatarUrl(user.avatar)}" style="width:${size}px;height:${size}px;border-radius:50%;border:2px solid var(--border2);object-fit:cover;" onerror="this.outerHTML='<div class=\'team-avatar\' style=\'width:${size}px;height:${size}px;\''>🏈</div>'">`;
+  }
+  return `<div class="team-avatar" style="width:${size}px;height:${size}px;">🏈</div>`;
+}
+
+function fmtPts(pts) {
+  if (pts == null || pts === 0) return '—';
+  return parseFloat(pts).toFixed(2);
+}
+
+function winPct(w, l, t) {
+  const total = (w || 0) + (l || 0) + (t || 0);
+  if (!total) return '.000';
+  return '.' + Math.round(((w || 0) / total) * 1000).toString().padStart(3, '0');
+}
+
+function formatDate(ts) {
+  return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// Sort rosters by standings (excluding banned users)
+function sortedRosters() {
+  return [...rostersData]
+    .filter(r => !isExcludedRoster(r.roster_id))
+    .sort((a, b) => {
+      const wa = a.settings?.wins || 0, wb = b.settings?.wins || 0;
+      const la = a.settings?.losses || 0, lb = b.settings?.losses || 0;
+      if (wb !== wa) return wb - wa;
+      const pa = a.settings?.fpts + (a.settings?.fpts_decimal || 0) / 100 || 0;
+      const pb = b.settings?.fpts + (b.settings?.fpts_decimal || 0) / 100 || 0;
+      return pb - pa;
+    });
+}
+
+function totalPts(roster) {
+  const fpts = roster.settings?.fpts || 0;
+  const dec = roster.settings?.fpts_decimal || 0;
+  return fpts + dec / 100;
+}
+
+function totalPtsAgainst(roster) {
+  const fpts = roster.settings?.fpts_against || 0;
+  const dec = roster.settings?.fpts_against_decimal || 0;
+  return fpts + dec / 100;
+}
+
+// ---- HOME ----
+function renderHome() {
+  // hero stats
+  const totalTeams = sortedRosters().length; // uses filtered list
+  const topRoster = sortedRosters()[0];
+  const topPts = sortedRosters().reduce((mx, r) => Math.max(mx, totalPts(r)), 0);
+
+  document.getElementById('hero-stats').innerHTML = `
+    <div class="hero-stat">
+      <div class="hero-stat-val">${totalTeams}</div>
+      <div class="hero-stat-lbl">Teams</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">${currentWeek}</div>
+      <div class="hero-stat-lbl">Current Week</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">${getTeamName(topRoster.roster_id).split(' ').slice(0,2).join(' ')}</div>
+      <div class="hero-stat-lbl">League Leader</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">${topPts.toFixed(0)}</div>
+      <div class="hero-stat-lbl">Top Points</div>
+    </div>
+  `;
+
+  // mini standings
+  renderStandings('home-standings-card', false, 6);
+
+  // latest scores
+  renderLatestScores();
+
+  // commissioner preview
+  renderCommishPreview();
+}
+
+function renderLatestScores() {
+  const wk = Math.max(1, Math.min(currentWeek, maxWeek));
+  const matchups = allMatchupsData[wk];
+  const wrap = document.getElementById('home-scores-wrap');
+  if (!matchups || !matchups.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="big-icon">📅</div>No scores yet</div>';
+    return;
+  }
+  wrap.innerHTML = buildMatchupCards(matchups, wk, 4);
+}
+
+// ---- STANDINGS ----
+
+// ── SPARKLINE (mini SVG line chart) ──────────────────────────────
+function buildSparkline(scores, width=72, height=22) {
+  if (!scores || scores.length < 2) return '';
+  const min = Math.min(...scores);
+  const max = Math.max(...scores);
+  const range = max - min || 1;
+  const pad = 2;
+  const pts = scores.map((s, i) => {
+    const x = pad + (i / (scores.length - 1)) * (width - pad * 2);
+    const y = pad + ((1 - (s - min) / range) * (height - pad * 2));
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const lastPt = pts.split(' ').pop().split(',');
+  const lastX = parseFloat(lastPt[0]);
+  const lastY = parseFloat(lastPt[1]);
+  const trend = scores[scores.length-1] >= scores[scores.length-2] ? '#27ae60' : '#c0392b';
+  return `<svg width="${width}" height="${height}" style="display:block;overflow:visible;">
+    <polyline points="${pts}" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1.2" stroke-linejoin="round"/>
+    <circle cx="${lastX}" cy="${lastY}" r="2.5" fill="${trend}"/>
+  </svg>`;
+}
+
+// Get per-roster weekly scores for current season from allMatchupsData
+function getRosterWeeklyScores(rosterId) {
+  const scores = [];
+  const playoffStart = leagueData?.settings?.playoff_week_start || 15;
+  for (let w = 1; w < playoffStart; w++) {
+    const matchups = allMatchupsData[w];
+    if (!matchups) break;
+    const entry = matchups.find(m => m.roster_id === rosterId);
+    if (entry) scores.push(entry.points || 0);
+  }
+  return scores;
+}
+
+function renderStandings(targetId, fullTable = true, limit = null) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  const sorted = sortedRosters();
+  const playoffSpots = leagueData.settings?.playoff_teams || 4;
+  const rows = (limit ? sorted.slice(0, limit) : sorted).map((roster, idx) => {
+    const globalIdx = sorted.indexOf(roster);
+    const w = roster.settings?.wins || 0;
+    const l = roster.settings?.losses || 0;
+    const t = roster.settings?.ties || 0;
+    const pts = totalPts(roster);
+    const ptsA = totalPtsAgainst(roster);
+    const streak = roster.metadata?.streak;
+    const rankClass = globalIdx === 0 ? 'gold' : globalIdx === 1 ? 'silver' : globalIdx === 2 ? 'bronze' : '';
+    const playoffBorderClass = globalIdx === playoffSpots ? 'playoff-line' : '';
+    let streakHtml = '';
+    if (streak) {
+      const sNum = parseInt(streak);
+      const sType = streak.includes('W') ? 'W' : 'L';
+      streakHtml = `<span class="streak-badge streak-${sType.toLowerCase()}">${Math.abs(sNum)}${sType}</span>`;
+    }
+    return `<tr class="${playoffBorderClass}">
+      <td class="rank-num ${rankClass}">${globalIdx + 1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          ${avatarEl(roster.roster_id, 32)}
+          <div>
+            <div class="team-name-cell">${getTeamName(roster.roster_id)}</div>
+            <div class="owner-name">${getOwnerName(roster.roster_id)}</div>
+          </div>
+        </div>
+      </td>
+      <td class="record">${w}-${l}${t > 0 ? '-' + t : ''}</td>
+      ${fullTable ? `<td class="win-pct">${winPct(w, l, t)}</td>` : ''}
+      <td class="pts" style="text-align:right;">${pts.toFixed(2)}</td>
+      ${fullTable ? `<td class="pts" style="text-align:right;color:var(--text3);">${ptsA.toFixed(2)}</td>` : ''}
+      ${fullTable ? `<td style="text-align:center;">${streakHtml}</td>` : ''}
+      ${fullTable ? `<td style="text-align:center;padding:0.5rem 0.75rem;">${buildSparkline(getRosterWeeklyScores(roster.roster_id))}</td>` : ''}
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `<table class="standings-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Team</th>
+        <th>W-L</th>
+        ${fullTable ? '<th class="right">PCT</th>' : ''}
+        <th class="right">PF</th>
+        ${fullTable ? '<th class="right">PA</th>' : ''}
+        ${fullTable ? '<th style="text-align:center;">STK</th>' : ''}
+        ${fullTable ? '<th style="text-align:center;">TREND</th>' : ''}
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>
+  ${fullTable ? `<div style="padding:0.5rem 1rem;font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">--- PLAYOFF LINE (Top ${playoffSpots})</div>` : ''}`;
+}
+
+// ---- SCORES / MATCHUPS ----
+async function loadMatchupsForWeek(week) {
+  if (!allMatchupsData[week]) {
+    try {
+      allMatchupsData[week] = await api(`/league/${LEAGUE_ID}/matchups/${week}`);
+    } catch(e) {
+      allMatchupsData[week] = [];
+    }
+  }
+}
+
+function buildMatchupCards(matchups, week, limit = null) {
+  if (!matchups || !matchups.length) return '<div class="empty-state"><div class="big-icon">📭</div>No matchups found</div>';
+
+  // Group by matchup_id, filtering out excluded users
+  const groups = {};
+  matchups
+    .filter(m => !isExcludedRoster(m.roster_id))
+    .forEach(m => {
+      if (!groups[m.matchup_id]) groups[m.matchup_id] = [];
+      groups[m.matchup_id].push(m);
+    });
+
+  let cards = '';
+  let count = 0;
+  for (const mid of Object.keys(groups)) {
+    if (limit && count >= limit) break;
+    const pair = groups[mid];
+    if (pair.length < 2) continue;
+    const [t1, t2] = pair;
+    const s1 = t1.points || 0;
+    const s2 = t2.points || 0;
+    const isComplete = week < currentWeek;
+    const isLive = week === currentWeek;
+    const w1 = isComplete && s1 > s2;
+    const w2 = isComplete && s2 > s1;
+    let statusHtml = '';
+    if (isComplete) statusHtml = `<div class="matchup-status status-final">Final</div>`;
+    else if (isLive) statusHtml = `<div class="matchup-status status-live">● Live</div>`;
+    else statusHtml = `<div class="matchup-status status-upcoming">Upcoming</div>`;
+
+    cards += `<div class="matchup-card">
+      <div class="matchup-week-label">Week ${week} — Matchup ${mid}</div>
+      <div class="matchup-teams">
+        <div class="matchup-team ${w1 ? 'winner' : ''}">
+          ${avatarEl(t1.roster_id, 44)}
+          <div class="team-score">${isComplete || isLive ? fmtPts(s1) : '—'}</div>
+          <div class="team-score-name">${getTeamName(t1.roster_id)}</div>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="matchup-team ${w2 ? 'winner' : ''}">
+          ${avatarEl(t2.roster_id, 44)}
+          <div class="team-score">${isComplete || isLive ? fmtPts(s2) : '—'}</div>
+          <div class="team-score-name">${getTeamName(t2.roster_id)}</div>
+        </div>
+      </div>
+      ${statusHtml}
+    </div>`;
+    count++;
+  }
+  return cards || '<div class="empty-state"><div class="big-icon">📭</div>No matchups</div>';
+}
+
+// Like buildMatchupCards but resolves names from a historical season object
+function buildMatchupCardsHistorical(matchups, week, season) {
+  if (!matchups || !matchups.length) return '<div class="empty-state"><div class="big-icon">📭</div>No matchups found</div>';
+
+  const rosters = season.rosters || [];
+  const users = season.users || [];
+
+  const isExcludedHist = (rosterId) => {
+    const r = rosters.find(r => r.roster_id === rosterId);
+    const u = users.find(u => u.user_id === r?.owner_id);
+    return isExcludedUser(u?.display_name);
+  };
+
+  const getHistName = (rosterId) => {
+    const r = rosters.find(r => r.roster_id === rosterId);
+    const u = users.find(u => u.user_id === r?.owner_id);
+    return u?.display_name || `Team ${rosterId}`;
+  };
+
+  const groups = {};
+  matchups
+    .filter(m => !isExcludedHist(m.roster_id))
+    .forEach(m => {
+      if (!groups[m.matchup_id]) groups[m.matchup_id] = [];
+      groups[m.matchup_id].push(m);
+    });
+
+  let cards = '';
+  for (const mid of Object.keys(groups)) {
+    const pair = groups[mid];
+    if (pair.length < 2) continue;
+    const [t1, t2] = pair;
+    const s1 = t1.points || 0;
+    const s2 = t2.points || 0;
+    const w1 = s1 > s2, w2 = s2 > s1;
+
+    cards += `<div class="matchup-card">
+      <div class="matchup-week-label">Week ${week} — ${season.season} Season</div>
+      <div class="matchup-teams">
+        <div class="matchup-team ${w1 ? 'winner' : ''}">
+          ${avatarEl(t1.roster_id, 44)}
+          <div class="team-score">${fmtPts(s1)}</div>
+          <div class="team-score-name">${getHistName(t1.roster_id)}</div>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="matchup-team ${w2 ? 'winner' : ''}">
+          ${avatarEl(t2.roster_id, 44)}
+          <div class="team-score">${fmtPts(s2)}</div>
+          <div class="team-score-name">${getHistName(t2.roster_id)}</div>
+        </div>
+      </div>
+      <div class="matchup-status status-final">Final</div>
+    </div>`;
+  }
+  return cards || '<div class="empty-state"><div class="big-icon">📭</div>No matchups</div>';
+}
+
+let _scoresActiveSeason = null; // season object currently shown in Scores tab
+
+function buildSeasonSelector(seasons) {
+  const el = document.getElementById('season-selector');
+  if (!el) return;
+  el.innerHTML = seasons.map(s =>
+    `<option value="${s.leagueId}"${s.isCurrentSeason ? ' selected' : ''}>${s.season} Season${s.isCurrentSeason ? ' (Current)' : ''}</option>`
+  ).join('');
+}
+
+async function onSeasonChange() {
+  const sel = document.getElementById('season-selector');
+  if (!sel) return;
+  const lid = sel.value;
+  const seasons = await loadAllSeasons();
+  const season = seasons.find(s => s.leagueId === lid);
+  if (!season) return;
+  _scoresActiveSeason = season;
+  const playoffStart = season.league?.settings?.playoff_week_start || 15;
+  const regEnd = playoffStart - 1;
+  buildWeekSelectorForSeason(season, regEnd);
+  // Jump to week 1 of the selected season
+  await selectWeekInSeason(season, 1);
+}
+
+function buildWeekSelectorForSeason(season, lastWeek) {
+  const el = document.getElementById('week-selector');
+  if (!el) return;
+  let html = '<span class="week-label">Week:</span>';
+  for (let w = 1; w <= lastWeek; w++) {
+    html += `<button onclick="selectWeekInSeason(_scoresActiveSeason, ${w})" id="wkbtn-${w}" class="${w === 1 ? 'active' : ''}">${w}</button>`;
+  }
+  el.innerHTML = html;
+}
+
+function buildWeekSelector() {
+  const el = document.getElementById('week-selector');
+  if (!el) return;
+  const wkNow = Math.max(1, Math.min(currentWeek, maxWeek));
+  const playoffStart = leagueData?.settings?.playoff_week_start || 15;
+  const regEnd = playoffStart - 1;
+  let html = '<span class="week-label">Week:</span>';
+  for (let w = 1; w <= regEnd; w++) {
+    html += `<button onclick="selectWeekInSeason(_scoresActiveSeason, ${w})" id="wkbtn-${w}" class="${w === wkNow ? 'active' : ''}">${w}</button>`;
+  }
+  el.innerHTML = html;
+}
+
+async function selectWeek(week) {
+  await selectWeekInSeason(_scoresActiveSeason, week);
+}
+
+async function selectWeekInSeason(season, week) {
+  // Update active button
+  document.querySelectorAll('#week-selector button').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById(`wkbtn-${week}`);
+  if (btn) btn.classList.add('active');
+  await renderScoresForWeek(week, season);
+}
+
+async function renderScoresForWeek(week, season) {
+  const grid = document.getElementById('scores-grid');
+  if (!grid) return;
+  grid.innerHTML = '<div class="skeleton-card" style="height:130px;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:130px;opacity:0.7;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:130px;opacity:0.45;"></div>';
+
+  // If no season passed or it's the current season, use current-season data
+  const isCurrentSeason = !season || season.isCurrentSeason;
+  if (isCurrentSeason) {
+    await loadMatchupsForWeek(week);
+    grid.innerHTML = buildMatchupCards(allMatchupsData[week], week, null, null);
+  } else {
+    // Use matchupsByWeek from the historical season object
+    const matchups = season.matchupsByWeek[week];
+    if (!matchups) {
+      grid.innerHTML = '<div class="empty-state"><div class="big-icon">📭</div>No matchup data for this week</div>';
+      return;
+    }
+    grid.innerHTML = buildMatchupCardsHistorical(matchups, week, season);
+  }
+}
+
+// ---- MULTI-SEASON DATA ----
+// Walk the previous_league_id chain to load all historical seasons.
+// For the CURRENT season we reuse already-loaded global data to avoid redundant fetches.
+async function loadAllSeasons() {
+  if (_allSeasonsCache) return _allSeasonsCache;
+  _allSeasonsCache = await _loadAllSeasonsImpl();
+  return _allSeasonsCache;
+}
+
+async function _loadAllSeasonsImpl() {
+  const seasons = [];
+  const visited = new Set();
+
+  // Seed first pass with already-loaded globals so we do not double-fetch current season
+  let lg = leagueData;
+  let ro = rostersData;
+  let us = usersData;
+  let lid = LEAGUE_ID;
+
+  while (lid && !visited.has(lid)) {
+    visited.add(lid);
+    try {
+      // For seasons beyond the first, fetch fresh data
+      if (lg === null) {
+        [lg, ro, us] = await Promise.all([
+          api(`/league/${lid}`),
+          api(`/league/${lid}/rosters`),
+          api(`/league/${lid}/users`)
+        ]);
+      }
+
+      // Always use the season year directly from the API -- never guess
+      const seasonYear = lg.season || String(parseInt(SEASON) - seasons.length);
+      const playoffStart = lg.settings?.playoff_week_start || 15;
+      const totalWeeks = playoffStart + 3;
+
+      // For the current season load up to currentWeek-1; but if the season is complete load all
+      const isCurrentSeason = lid === LEAGUE_ID;
+      const seasonComplete = lg.status === 'complete';
+      const weeksToLoad = (!isCurrentSeason || seasonComplete)
+        ? totalWeeks
+        : Math.max(0, Math.min(currentWeek - 1, totalWeeks));
+
+      const matchupsByWeek = {};
+      if (weeksToLoad > 0) {
+        const batchSize = 6;
+        for (let w = 1; w <= weeksToLoad; w += batchSize) {
+          const batch = [];
+          for (let bw = w; bw < w + batchSize && bw <= weeksToLoad; bw++) batch.push(bw);
+          const results = await Promise.all(batch.map(bw =>
+            fetch(`${BASE}/league/${lid}/matchups/${bw}`)
+              .then(r => r.ok ? r.json() : [])
+              .catch(() => [])
+          ));
+          batch.forEach((bw, idx) => { matchupsByWeek[bw] = results[idx] || []; });
+        }
+      }
+
+      seasons.unshift({
+        season: seasonYear,
+        leagueId: lid,
+        league: lg,
+        rosters: ro,
+        users: us,
+        matchupsByWeek,
+        isCurrentSeason
+      });
+
+      const prevLid = lg.previous_league_id;
+      // Reset for next iteration so we fetch fresh data for the previous season
+      lg = null; ro = null; us = null;
+      lid = prevLid || null;
+    } catch(e) {
+      console.warn('Failed to load season for league', lid, e);
+      break;
+    }
+  }
+  return seasons;
+}
+
+// Map owner_id -> canonical display name (use current season's name as canonical)
+function buildOwnerMap() {
+  const map = {}; // owner_id -> display_name
+  usersData.forEach(u => { map[u.user_id] = u.display_name; });
+  return map;
+}
+
+// For a given season, get display name by roster
+function getSeasonTeamName(roster, users) {
+  const user = users.find(u => u.user_id === roster.owner_id);
+  return user?.metadata?.team_name || user?.display_name || `Team ${roster.roster_id}`;
+}
+
+function getSeasonOwnerName(roster, users) {
+  const user = users.find(u => u.user_id === roster.owner_id);
+  return user?.display_name || roster._resolvedName || `Roster ${roster.roster_id}`;
+}
+
+// Build per-owner all-time stats across all seasons.
+// PF/PA come exclusively from roster settings (the authoritative Sleeper source).
+// Weekly matchup entries are used only for per-game high/low/avg calculations.
+function buildAllTimeStats(seasons) {
+  const stats = {};
+
+  // Pre-build a cross-season roster_id -> owner_id resolver.
+  // If a roster has no owner in one season, look it up from another season.
+  const rosterOwnerResolver = {}; // roster_id -> { ownerId, name }
+  seasons.forEach(s => {
+    s.rosters.forEach(r => {
+      if (r.owner_id) {
+        const user = s.users.find(u => u.user_id === r.owner_id);
+        rosterOwnerResolver[r.roster_id] = {
+          ownerId: r.owner_id,
+          name: user?.display_name || `Roster ${r.roster_id}`
+        };
+      }
+    });
+  });
+
+  seasons.forEach(s => {
+    // ---- Pass 1: accumulate W/L/PF/PA from roster settings ----
+    s.rosters.forEach(roster => {
+      // Resolve owner — use current owner_id, or fall back to cross-season lookup
+      let ownerId = roster.owner_id;
+      let resolvedName = null;
+      if (!ownerId) {
+        const resolved = rosterOwnerResolver[roster.roster_id];
+        if (resolved) { ownerId = resolved.ownerId; resolvedName = resolved.name; }
+        else return; // truly unresolvable orphan — skip
+      }
+      // Skip excluded users
+      const checkName = resolvedName || s.users.find(u => u.user_id === ownerId)?.display_name || '';
+      if (isExcludedUser(checkName)) return;
+      const name = resolvedName || getSeasonOwnerName(roster, s.users);
+      if (!stats[ownerId]) {
+        stats[ownerId] = {
+          name,
+          wins: 0, losses: 0, ties: 0,
+          pf: 0, pa: 0,
+          weeklyScores: [],
+          highScore: { pts: 0, season: null, week: null },
+          lowScore: { pts: 9999, season: null, week: null },
+          biggestWin: { diff: 0, oppName: '', season: null, week: null },
+          seasons: [],
+          gamesPlayed: 0
+        };
+      }
+      const st = stats[ownerId];
+      // Only update display name if this season has a real owner (not resolved from another season)
+      if (!resolvedName) st.name = name;
+
+      const w = roster.settings?.wins || 0;
+      const l = roster.settings?.losses || 0;
+      const t = roster.settings?.ties || 0;
+      st.wins += w;
+      st.losses += l;
+      st.ties += t;
+
+      // fpts is the integer part; fpts_decimal is the fractional cents (0-99)
+      // IMPORTANT: settings.fpts covers REGULAR SEASON only (weeks 1 to playoff_week_start-1)
+      // gamesPlayed = wins + losses + ties (Sleeper's own count of regular season games)
+      const fpts = (roster.settings?.fpts || 0) + (roster.settings?.fpts_decimal || 0) / 100;
+      const fpta = (roster.settings?.fpts_against || 0) + (roster.settings?.fpts_against_decimal || 0) / 100;
+      st.pf += fpts;
+      st.pa += fpta;
+      st.gamesPlayed += (w + l + t); // regular season games only — matches settings.fpts scope
+
+      st.seasons.push({ season: s.season, wins: w, losses: l, pf: fpts, pa: fpta });
+    });
+
+    // ---- Pass 2: scan weekly matchups for per-game records only ----
+    // (Do NOT add to pf/pa here — roster settings are already the source of truth)
+    s.rosters.forEach(roster => {
+      const ownerId = roster.owner_id || rosterOwnerResolver[roster.roster_id]?.ownerId;
+      if (!ownerId || !stats[ownerId]) return;
+      // Skip excluded users
+      if (!stats[ownerId]) return;
+      const st = stats[ownerId];
+      const rId = roster.roster_id;
+
+      // Pre-group matchups by matchup_id for this season's weeks
+      const weekGroups = {}; // week -> { matchup_id -> [entries] }
+      Object.entries(s.matchupsByWeek).forEach(([wk, matchups]) => {
+        const groups = {};
+        matchups.forEach(m => {
+          if (!groups[m.matchup_id]) groups[m.matchup_id] = [];
+          groups[m.matchup_id].push(m);
+        });
+        weekGroups[wk] = groups;
+      });
+
+      const regularSeasonEnd = (s.league?.settings?.playoff_week_start || 15) - 1;
+      Object.entries(s.matchupsByWeek).forEach(([wk, matchups]) => {
+        // Only use regular season weeks for per-game stats (matches scope of settings.fpts)
+        if (parseInt(wk) > regularSeasonEnd) return;
+        const entry = matchups.find(m => m.roster_id === rId);
+        if (!entry || entry.points == null || entry.points === 0) return;
+        const pts = entry.points;
+
+        st.weeklyScores.push(pts);
+        // Do NOT increment gamesPlayed here — it's already set from wins+losses above
+
+        if (pts > st.highScore.pts)
+          st.highScore = { pts, season: s.season, week: parseInt(wk) };
+        if (pts < st.lowScore.pts)
+          st.lowScore = { pts, season: s.season, week: parseInt(wk) };
+
+        // Biggest single-game win margin for this owner
+        const groups = weekGroups[wk] || {};
+        const pair = groups[entry.matchup_id];
+        if (pair && pair.length === 2) {
+          const opp = pair.find(m => m.roster_id !== rId);
+          if (opp && opp.points) {
+            const diff = pts - opp.points;
+            if (diff > 0 && diff > st.biggestWin.diff) {
+              const oppRoster = s.rosters.find(r => r.roster_id === opp.roster_id);
+              const oppName = oppRoster ? getSeasonOwnerName(oppRoster, s.users) : 'Unknown';
+              st.biggestWin = { diff, oppName, season: s.season, week: parseInt(wk) };
+            }
+          }
+        }
+      });
+    });
+  });
+
+  // ---- Merge ESPN historical data (2022-2023) ----
+  // ESPN_DATA is keyed by Sleeper username. We look up the owner by name match.
+  Object.entries(ESPN_DATA).forEach(([sleeperName, espnSeasons]) => {
+    // Find matching owner in stats by name
+    const ownerEntry = Object.entries(stats).find(([, st]) => st.name === sleeperName);
+    if (!ownerEntry) return;
+    const [, st] = ownerEntry;
+
+    Object.entries(espnSeasons).forEach(([yr, data]) => {
+      st.wins += data.w;
+      st.losses += data.l;
+      st.ties += (data.t || 0);
+      st.pf += data.pf;
+      st.pa += data.pa;
+      st.gamesPlayed += (data.w + data.l + (data.t || 0));
+      st.weeklyScores.push(...data.scores);
+      st.seasons.push({ season: yr, wins: data.w, losses: data.l, pf: data.pf, pa: data.pa });
+
+      // Update high/low score from ESPN weeks
+      data.scores.forEach((pts, i) => {
+        if (pts > st.highScore.pts) st.highScore = { pts, season: yr, week: i + 1 };
+        if (pts < st.lowScore.pts) st.lowScore = { pts, season: yr, week: i + 1 };
+      });
+    });
+  });
+
+  return stats;
+}
+
+// All-time records across all matchups
+function buildAllTimeMatchupRecords(seasons) {
+  let highScore = { pts: 0, ownerName: '', season: null, week: null };
+  let lowScore = { pts: 9999, ownerName: '', season: null, week: null };
+  let biggestWin = { diff: 0, winnerName: '', loserName: '', score1: 0, score2: 0, season: null, week: null };
+  let closestGame = { diff: 9999, winnerName: '', loserName: '', score1: 0, score2: 0, season: null, week: null };
+
+  seasons.forEach(s => {
+    const regularSeasonEnd = (s.league?.settings?.playoff_week_start || 15) - 1;
+    Object.entries(s.matchupsByWeek).forEach(([wk, matchups]) => {
+      if (parseInt(wk) > regularSeasonEnd) return; // skip playoff weeks
+      // Filter out excluded users from record calculations
+      const filteredMatchups = matchups.filter(m => {
+        const roster = s.rosters.find(r => r.roster_id === m.roster_id);
+        const user = s.users.find(u => u.user_id === roster?.owner_id);
+        return !isExcludedUser(user?.display_name);
+      });
+
+      const groups = {};
+      filteredMatchups.forEach(m => { if (!groups[m.matchup_id]) groups[m.matchup_id] = []; groups[m.matchup_id].push(m); });
+
+      filteredMatchups.forEach(m => {
+        const pts = m.points || 0;
+        const roster = s.rosters.find(r => r.roster_id === m.roster_id);
+        const ownerName = roster ? getSeasonOwnerName(roster, s.users) : 'Unknown';
+        if (pts > highScore.pts) highScore = { pts, ownerName, season: s.season, week: parseInt(wk) };
+        if (pts > 0 && pts < lowScore.pts) lowScore = { pts, ownerName, season: s.season, week: parseInt(wk) };
+      });
+
+      Object.values(groups).forEach(pair => {
+        if (pair.length < 2) return;
+        const [t1, t2] = pair;
+        const s1 = t1.points || 0, s2 = t2.points || 0;
+        if (!s1 || !s2) return;
+        const diff = Math.abs(s1 - s2);
+        const r1 = s.rosters.find(r => r.roster_id === t1.roster_id);
+        const r2 = s.rosters.find(r => r.roster_id === t2.roster_id);
+        const n1 = r1 ? getSeasonOwnerName(r1, s.users) : 'Unknown';
+        const n2 = r2 ? getSeasonOwnerName(r2, s.users) : 'Unknown';
+        const winner = s1 > s2 ? n1 : n2;
+        const loser = s1 > s2 ? n2 : n1;
+        const ws = Math.max(s1, s2), ls = Math.min(s1, s2);
+        if (diff > biggestWin.diff) biggestWin = { diff, winnerName: winner, loserName: loser, score1: ws, score2: ls, season: s.season, week: parseInt(wk) };
+        // Only count as a "closest game" if both teams scored meaningfully (>10 pts, not a forfeit)
+        if (diff < closestGame.diff && ws > 10 && ls > 10) closestGame = { diff, winnerName: winner, loserName: loser, score1: ws, score2: ls, season: s.season, week: parseInt(wk) };
+      });
+    });
+  });
+  // ---- Merge ESPN matchup records ----
+  ESPN_MATCHUPS.forEach(([season, week, home, homePts, away, awayPts]) => {
+    const pts1 = homePts, pts2 = awayPts;
+    const diff = Math.abs(pts1 - pts2);
+    const winner = pts1 > pts2 ? home : away;
+    const loser = pts1 > pts2 ? away : home;
+    const ws = Math.max(pts1, pts2), ls = Math.min(pts1, pts2);
+
+    if (pts1 > highScore.pts) highScore = { pts: pts1, ownerName: home, season, week };
+    if (pts2 > highScore.pts) highScore = { pts: pts2, ownerName: away, season, week };
+    if (pts1 > 0 && pts1 < lowScore.pts) lowScore = { pts: pts1, ownerName: home, season, week };
+    if (pts2 > 0 && pts2 < lowScore.pts) lowScore = { pts: pts2, ownerName: away, season, week };
+    if (diff > biggestWin.diff) biggestWin = { diff, winnerName: winner, loserName: loser, score1: ws, score2: ls, season, week };
+    if (diff < closestGame.diff && ws > 10 && ls > 10) closestGame = { diff, winnerName: winner, loserName: loser, score1: ws, score2: ls, season, week };
+  });
+
+  return { highScore, lowScore, biggestWin, closestGame };
+}
+
+// ---- RECORDS ----
+// ── GLOBAL HELPERS (used by both renderRecords and renderHistory) ──
+function winPctVal(st) {
+  const total = st.wins + st.losses + st.ties;
+  return total > 0 ? st.wins / total : 0;
+}
+
+function avgPtsOwner(st) {
+  return st.gamesPlayed > 0 ? st.pf / st.gamesPlayed : 0;
+}
+
+// Normalize a value to 0–100% within a dataset range, with a minimum bar width
+// minFloor = minimum % so even last place has a visible bar
+function scaledPct(val, allVals, minFloor = 35) {
+  const min = Math.min(...allVals);
+  const max = Math.max(...allVals);
+  if (max === min) return 95;
+  return minFloor + ((val - min) / (max - min)) * (95 - minFloor);
+}
+
+async function renderRecords() {
+  const el = document.getElementById('records-content');
+  el.innerHTML = '<div class="skeleton-card" style="height:180px;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:220px;opacity:0.75;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:160px;opacity:0.5;"></div>';
+  try {
+  const seasons = await loadAllSeasons();
+  const allTimeStats = buildAllTimeStats(seasons);
+  const matchupRecords = buildAllTimeMatchupRecords(seasons);
+
+  // Sort owners by wins
+  const owners = Object.entries(allTimeStats).sort((a, b) => b[1].wins - a[1].wins);
+  const topOwner = owners[0]?.[1];
+  const topPF = [...owners].sort((a, b) => b[1].pf - a[1].pf)[0]?.[1];
+  const currentSorted = sortedRosters();
+
+  el.innerHTML = `
+    <div class="grid-3" style="margin-bottom:1.5rem;">
+      <div class="stat-box">
+        <div class="stat-box-label">🏆 All-Time Win Leader</div>
+        <div class="stat-box-value" style="font-size:1.3rem;">${topOwner?.name || '—'}</div>
+        <div class="stat-box-sub">${topOwner?.wins || 0}W — ${topOwner?.losses || 0}L all-time</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">📈 All-Time Points Leader</div>
+        <div class="stat-box-value" style="font-size:1.3rem;">${topPF?.name || '—'}</div>
+        <div class="stat-box-sub">${topPF?.pf.toFixed(2) || 0} total points scored</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">🔥 Single Game Record</div>
+        <div class="stat-box-value">${matchupRecords.highScore.pts.toFixed(2)}</div>
+        <div class="stat-box-sub">${matchupRecords.highScore.ownerName} · ${matchupRecords.highScore.season} Wk ${matchupRecords.highScore.week}</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-header">📜 All-Time Matchup Records</div>
+      ${matchupRecords.highScore.ownerName ? `<div class="record-row">
+        <div class="record-label">🔥 Highest Score Ever</div>
+        <div class="record-holder">${matchupRecords.highScore.ownerName}<small>${matchupRecords.highScore.season} Season · Week ${matchupRecords.highScore.week}</small></div>
+        <div class="record-value">${matchupRecords.highScore.pts.toFixed(2)}</div>
+      </div>` : ''}
+      ${matchupRecords.lowScore.pts < 9999 ? `<div class="record-row">
+        <div class="record-label">🥶 Lowest Score Ever</div>
+        <div class="record-holder">${matchupRecords.lowScore.ownerName}<small>${matchupRecords.lowScore.season} Season · Week ${matchupRecords.lowScore.week}</small></div>
+        <div class="record-value">${matchupRecords.lowScore.pts.toFixed(2)}</div>
+      </div>` : ''}
+      ${matchupRecords.biggestWin.winnerName ? `<div class="record-row">
+        <div class="record-label">💥 Biggest Blowout</div>
+        <div class="record-holder">${matchupRecords.biggestWin.winnerName} def. ${matchupRecords.biggestWin.loserName}<small>${matchupRecords.biggestWin.score1.toFixed(2)} – ${matchupRecords.biggestWin.score2.toFixed(2)} · ${matchupRecords.biggestWin.season} Wk ${matchupRecords.biggestWin.week}</small></div>
+        <div class="record-value">+${matchupRecords.biggestWin.diff.toFixed(2)}</div>
+      </div>` : ''}
+      ${matchupRecords.closestGame.diff < 9999 ? `<div class="record-row">
+        <div class="record-label">😬 Closest Game</div>
+        <div class="record-holder">${matchupRecords.closestGame.winnerName} def. ${matchupRecords.closestGame.loserName}<small>${matchupRecords.closestGame.score1.toFixed(2)} – ${matchupRecords.closestGame.score2.toFixed(2)} · ${matchupRecords.closestGame.season} Wk ${matchupRecords.closestGame.week}</small></div>
+        <div class="record-value">${matchupRecords.closestGame.diff.toFixed(2)}</div>
+      </div>` : ''}
+      <div style="padding:0.5rem 1.25rem 0.75rem;font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
+        Includes ESPN 2018–2023 + Sleeper 2024–2025 · Regular season only
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-header">📊 2025 Season — Points Leaderboard</div>
+      <div style="padding:1rem 1.25rem;">
+        ${sortedRosters().sort((a,b) => totalPts(b)-totalPts(a)).map((r, i) => {
+          const _allSeasonPts = sortedRosters().map(rx => totalPts(rx));
+          const pct = scaledPct(totalPts(r), _allSeasonPts);
+          return `<div class="history-bar-wrap">
+            <div class="history-name">${i+1}. ${getTeamName(r.roster_id)}</div>
+            <div class="history-bar-track">
+              <div class="history-bar-fill" style="width:${pct}%">
+                <span class="history-bar-pct">${totalPts(r).toFixed(0)}</span>
+              </div>
+            </div>
+            <div class="history-wins">${r.settings?.wins||0}W-${r.settings?.losses||0}L</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">🏅 Individual All-Time Records</div>
+      ${owners.map(([ownerId, st]) => {
+        const avg = st.gamesPlayed > 0 ? (st.pf / st.gamesPlayed).toFixed(1) : '—';
+        const pct = (st.wins + st.losses) > 0 ? ((st.wins / (st.wins + st.losses)) * 100).toFixed(1) : '0.0';
+        return `<div class="record-row" style="flex-wrap:wrap;gap:0.5rem;">
+          <div class="record-label" style="flex:0 0 auto;">${st.name}</div>
+          <div class="record-holder" style="flex:1;min-width:200px;">
+            <small style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <span>Record: <strong style="color:var(--text)">${st.wins}-${st.losses}</strong></span>
+              <span>Win%: <strong style="color:var(--text)">${pct}%</strong></span>
+              <span>PF: <strong style="color:var(--text)">${st.pf.toFixed(1)}</strong></span>
+              <span>PA: <strong style="color:var(--text)">${st.pa.toFixed(1)}</strong></span>
+              <span>Avg/Wk: <strong style="color:var(--text)">${avg}</strong></span>
+              <span>Best: <strong style="color:var(--gold)">${st.highScore.pts.toFixed(2)}</strong></span>
+            </small>
+          </div>
+          <div class="record-value" style="font-size:1rem;">${pct}%</div>
+        </div>`;
+      }).join('')}
+    </div>
+
+
+    <div class="card" style="margin-top:1.5rem;">
+        <div class="card-header">🏆 Playoff History (All-Time)</div>
+        <div style="overflow-x:auto;">
+          <table class="standings-table" style="min-width:500px;">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Owner</th>
+                <th class="right" title="Playoff Appearances">Playoff Apps</th>
+                <th class="right" title="Championship Game Appearances">'Ship Apps</th>
+                <th class="right" title="Championships Won">'Ships Won</th>
+                <th class="right" title="Poop Bowl Losses (last place)">💩 Poop Bowl</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${[
+                { name: 'notchrishanson',    playoffs: 5, shipApps: 1, ships: 1, poop: 0 },
+                { name: 'gsteuter',          playoffs: 5, shipApps: 1, ships: 1, poop: 0 },
+                { name: 'ScuubaSteeve',      playoffs: 4, shipApps: 0, ships: 0, poop: 0 },
+                { name: 'swollenArm',        playoffs: 4, shipApps: 2, ships: 2, poop: 1 },
+                { name: 'mcpeach',           playoffs: 4, shipApps: 2, ships: 0, poop: 2 },
+                { name: 'CodyLenart9',       playoffs: 4, shipApps: 2, ships: 0, poop: 1 },
+                { name: 'bfielding3',        playoffs: 3, shipApps: 2, ships: 1, poop: 1 },
+                { name: 'slipperynoodleboy', playoffs: 3, shipApps: 0, ships: 0, poop: 0 },
+                { name: 'MikeYambor',        playoffs: 2, shipApps: 1, ships: 1, poop: 0 },
+                { name: 'jkwon9',            playoffs: 1, shipApps: 0, ships: 0, poop: 1 },
+              ].sort((a, b) => b.playoffs - a.playoffs || b.ships - a.ships || b.shipApps - a.shipApps).map((p, i) => {
+                const ownerEntry = [...owners].find(([k, v]) => k === p.name || v.name.toLowerCase().includes(p.name.toLowerCase()));
+                const displayName = ownerEntry ? ownerEntry[1].name : p.name;
+                return `<tr>
+                  <td class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</td>
+                  <td><div style="font-weight:600;">${displayName}</div></td>
+                  <td style="text-align:center;font-family:'Barlow Condensed';font-size:1.05rem;font-weight:700;color:${p.playoffs>=4?'var(--gold)':p.playoffs>=2?'var(--text1)':'var(--text3)'};">${p.playoffs}</td>
+                  <td style="text-align:center;font-family:'Barlow Condensed';font-size:1.05rem;font-weight:700;color:${p.shipApps>=2?'var(--gold)':p.shipApps===1?'var(--text1)':'var(--text3)'};">${p.shipApps}</td>
+                  <td style="text-align:center;font-family:'Barlow Condensed';font-size:1.1rem;font-weight:700;color:${p.ships>0?'var(--gold)':'var(--text3)'};">${p.ships > 0 ? '🏆'.repeat(p.ships) : '—'}</td>
+                  <td style="text-align:center;font-family:'Barlow Condensed';font-size:1.05rem;font-weight:700;color:${p.poop>0?'var(--red)':'var(--text3)'};">${p.poop > 0 ? '💩'.repeat(p.poop) : '—'}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  `;
+  } catch(e) {
+    console.error('renderRecords error:', e);
+    el.innerHTML = `<div class="error-msg">⚠ Failed to load Records: ${e.message}</div>`;
+  }
+}
+
+// ---- HISTORY ----
+async function renderHistory() {
+  const el = document.getElementById('history-content');
+  el.innerHTML = '<div class="skeleton-card" style="height:56px;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:320px;opacity:0.8;margin-bottom:1rem;"></div><div class="skeleton-card" style="height:180px;opacity:0.55;"></div>';
+
+  const seasons = await loadAllSeasons();
+  const allTimeStats = buildAllTimeStats(seasons);
+  const matchupRecords = buildAllTimeMatchupRecords(seasons);
+
+  // Debug: log loaded seasons and per-owner totals to browser console
+  console.log('[DC] Seasons loaded:', seasons.map(s => ({
+    season: s.season,
+    leagueId: s.leagueId,
+    weeksLoaded: Object.keys(s.matchupsByWeek).length,
+    rosters: s.rosters.length
+  })));
+  Object.entries(allTimeStats).forEach(([oid, st]) => {
+    console.log(`[DC] ${st.name}: W${st.wins}-L${st.losses} PF=${st.pf.toFixed(2)} PA=${st.pa.toFixed(2)} games=${st.gamesPlayed}`);
+  });
+
+  const sleeperSeasonLabels = seasons.map(s => s.season);
+  const espnSeasonLabels = Object.values(ESPN_DATA)[0] ? Object.keys(Object.values(ESPN_DATA)[0]).sort() : [];
+  const seasonLabels = [...espnSeasonLabels.filter(y => !sleeperSeasonLabels.includes(y)), ...sleeperSeasonLabels];
+  const owners = Object.entries(allTimeStats).sort((a, b) => b[1].wins - a[1].wins);
+
+  // Win % per owner
+  // winPctVal is defined globally below
+
+  // Per-season stats per owner
+  function ownerSeasonStat(ownerId, season, field) {
+    const st = allTimeStats[ownerId];
+    if (!st) return null;
+    return st.seasons.find(s => s.season === season)?.[field] ?? null;
+  }
+
+  // scaledPct is defined globally below
+
+const maxPF = Math.max(...owners.map(([, st]) => st.pf));
+  const maxPA = Math.max(...owners.map(([, st]) => st.pa));
+  const maxWins = Math.max(...owners.map(([, st]) => st.wins));
+  const maxAvgPts = Math.max(...owners.map(([, st]) => st.gamesPlayed > 0 ? st.pf / st.gamesPlayed : 0));
+
+  // avgPtsOwner is defined globally below
+
+  function stdDevOwner(st) {
+    const arr = st.weeklyScores;
+    if (arr.length < 2) return 0;
+    const mean = arr.reduce((s, v) => s + v, 0) / arr.length;
+    const variance = arr.reduce((s, v) => s + (v - mean) ** 2, 0) / arr.length;
+    return Math.sqrt(variance);
+  }
+
+  const maxStdDev = Math.max(...owners.map(([, st]) => stdDevOwner(st)));
+
+  el.innerHTML = `
+    <div class="tabs" id="history-tabs">
+      <button class="tab-btn active" onclick="switchHistTab(this,'htab-franchise')">Franchise Rankings</button>
+      <button class="tab-btn" onclick="switchHistTab(this,'htab-seasons')">Season by Season</button>
+      <button class="tab-btn" onclick="switchHistTab(this,'htab-scoring')">Scoring Trends</button>
+      <button class="tab-btn" onclick="switchHistTab(this,'htab-headtohead')">Head-to-Head</button>
+    </div>
+
+    <!-- FRANCHISE RANKINGS -->
+    <div id="htab-franchise" class="tab-content active">
+      <div style="margin-bottom:1rem;padding:0.6rem 1rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:0.75rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
+        ALL-TIME DATA · ESPN (2018–2023) + SLEEPER (${sleeperSeasonLabels.join(', ')}) COMBINED
+      </div>
+
+      <div class="grid-2" style="margin-bottom:1.5rem;">
+        <div class="card">
+          <div class="card-header">🏆 All-Time Win % Ranking</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => winPctVal(b[1]) - winPctVal(a[1])).map(([, st], i) => {
+              const _allWP = owners.map(([,s]) => winPctVal(s));
+              const pct = scaledPct(winPctVal(st), _allWP);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%">
+                    <span class="history-bar-pct">${pct.toFixed(1)}%</span>
+                  </div>
+                </div>
+                <div class="history-wins">${st.wins}W-${st.losses}L</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">📈 All-Time Points For</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => b[1].pf - a[1].pf).map(([, st], i) => {
+              const _allPF = owners.map(([,s]) => s.pf);
+              const pct = scaledPct(st.pf, _allPF);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%">
+                    <span class="history-bar-pct">${st.pf.toFixed(0)}</span>
+                  </div>
+                </div>
+                <div class="history-wins">${avgPtsOwner(st).toFixed(1)}/wk</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">🛡️ All-Time Points Against</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => b[1].pa - a[1].pa).map(([, st], i) => {
+              const _allPA = owners.map(([,s]) => s.pa);
+              const pct = scaledPct(st.pa, _allPA);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%; background:linear-gradient(90deg,var(--red),#e74c3c)">
+                    <span class="history-bar-pct">${st.pa.toFixed(0)}</span>
+                  </div>
+                </div>
+                <div class="history-wins">${(st.pf - st.pa > 0 ? '+' : '')}${(st.pf - st.pa).toFixed(0)}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">🎯 Avg Points Per Week (All-Time)</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => avgPtsOwner(b[1]) - avgPtsOwner(a[1])).map(([, st], i) => {
+              const avg = avgPtsOwner(st);
+              const _allAvg = owners.map(([,s]) => avgPtsOwner(s));
+              const pct = scaledPct(avg, _allAvg);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%">
+                    <span class="history-bar-pct">${avg.toFixed(1)}</span>
+                  </div>
+                </div>
+                <div class="history-wins">${st.gamesPlayed} wks</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📋 Complete All-Time Franchise Stats Table</div>
+        <div style="overflow-x:auto;">
+          <table class="standings-table franchise-stats-table" style="min-width:700px;">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Owner</th>
+                <th>W-L-T</th>
+                <th class="right">Win%</th>
+                <th class="right">PF</th>
+                <th class="right">PA</th>
+                <th class="right">PF-PA</th>
+                <th class="right">Avg/Wk</th>
+                <th class="right">Best Wk</th>
+                <th class="right">Worst Wk</th>
+                <th class="right">Games</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${[...owners].sort((a,b) => { const wpDiff = winPctVal(b[1]) - winPctVal(a[1]); return wpDiff !== 0 ? wpDiff : b[1].pf - a[1].pf; }).map(([, st], i) => {
+                const wp = (winPctVal(st) * 100).toFixed(1);
+                const diff = st.pf - st.pa;
+                const avg = avgPtsOwner(st).toFixed(1);
+                const best = st.highScore.pts > 0 ? st.highScore.pts.toFixed(2) : '—';
+                const worst = st.lowScore.pts < 9999 ? st.lowScore.pts.toFixed(2) : '—';
+                const diffColor = diff > 0 ? 'var(--green)' : diff < 0 ? 'var(--red)' : 'var(--text3)';
+                return `<tr>
+                  <td class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</td>
+                  <td><div style="font-weight:600;">${st.name}</div></td>
+                  <td class="record">${st.wins}-${st.losses}${st.ties>0?'-'+st.ties:''}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';font-weight:700;color:${parseFloat(wp)>=50?'var(--green)':'var(--red)'};">${wp}%</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';">${st.pf.toFixed(2)}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';color:var(--text3);">${st.pa.toFixed(2)}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';font-weight:700;color:${diffColor};">${diff>0?'+':''}${diff.toFixed(2)}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';">${avg}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';color:var(--gold);">${best}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';color:var(--red);">${worst}</td>
+                  <td style="text-align:right;font-family:'Barlow Condensed';color:var(--text3);">${st.gamesPlayed}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- SEASON BY SEASON -->
+    <div id="htab-seasons" class="tab-content">
+      ${seasonLabels.map(yr => {
+        const seasonData = seasons.find(s => s.season === yr);
+        const isESPN = !seasonData && espnSeasonLabels.includes(yr);
+
+        // Build rows for this season
+        let rows = [];
+        if (seasonData) {
+          // Sleeper season
+          rows = [...seasonData.rosters].filter(r => {
+            const user = seasonData.users.find(u => u.user_id === r.owner_id);
+            return !isExcludedUser(user?.display_name);
+          }).map(r => {
+            const w = r.settings?.wins || 0, l = r.settings?.losses || 0;
+            const pf = (r.settings?.fpts || 0) + (r.settings?.fpts_decimal || 0) / 100;
+            const pa = (r.settings?.fpts_against || 0) + (r.settings?.fpts_against_decimal || 0) / 100;
+            return { name: getSeasonOwnerName(r, seasonData.users), teamName: getSeasonTeamName(r, seasonData.users), w, l, pf, pa };
+          });
+        } else if (isESPN) {
+          // ESPN season
+          rows = Object.entries(ESPN_DATA)
+            .filter(([, d]) => d[yr])
+            .map(([sleeperName, d]) => {
+              const s = d[yr];
+              return { name: sleeperName, teamName: '—', w: s.w, l: s.l, pf: s.pf, pa: s.pa };
+            });
+        }
+        rows.sort((a, b) => b.w !== a.w ? b.w - a.w : b.pf - a.pf);
+
+        return `<div style="margin-bottom:2rem;">
+          <div style="border-left:3px solid var(--gold);padding-left:1rem;margin-bottom:1rem;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:var(--gold);">${yr} Season${isESPN ? ' <span style="font-size:0.9rem;color:var(--text3);letter-spacing:1px;">ESPN</span>' : ''}</div>
+          </div>
+          <div class="card">
+            <table class="standings-table">
+              <thead>
+                <tr>
+                  <th>#</th><th>Owner</th><th>W-L</th>
+                  <th class="right">Win%</th><th class="right">PF</th><th class="right">PA</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map((row, i) => {
+                  const wp = (row.w + row.l) > 0 ? ((row.w / (row.w + row.l)) * 100).toFixed(1) : '0.0';
+                  return `<tr>
+                    <td class="rank-num ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i===0?'🏆':i===1?'🥈':i===2?'🥉':(i+1)}</td>
+                    <td style="font-weight:600;">${row.name}</td>
+                    <td class="record">${row.w}-${row.l}</td>
+                    <td style="text-align:right;font-family:'Barlow Condensed';color:${parseFloat(wp)>=50?'var(--green)':'var(--red)'};">${wp}%</td>
+                    <td style="text-align:right;font-family:'Barlow Condensed';">${row.pf.toFixed(2)}</td>
+                    <td style="text-align:right;font-family:'Barlow Condensed';color:var(--text3);">${row.pa.toFixed(2)}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- SCORING TRENDS -->
+    <div id="htab-scoring" class="tab-content">
+      <div class="grid-2" style="margin-bottom:1.5rem;">
+        <div class="card">
+          <div class="card-header">🎯 Scoring Consistency (Std Dev — lower = more consistent)</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => stdDevOwner(a[1]) - stdDevOwner(b[1])).map(([, st], i) => {
+              const sd = stdDevOwner(st);
+              const _allSD = owners.map(([,s]) => stdDevOwner(s));
+              const pct = scaledPct(sd, _allSD);
+              const color = pct < 35 ? '#27ae60,#2ecc71' : pct < 65 ? 'var(--gold),var(--gold2)' : 'var(--red),#e74c3c';
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${color})">
+                    <span class="history-bar-pct">${sd.toFixed(1)}</span>
+                  </div>
+                </div>
+                <div class="history-wins">avg ${avgPtsOwner(st).toFixed(1)}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">📊 PF vs PA Differential (All-Time)</div>
+          <div style="padding:1rem 1.25rem;">
+            ${[...owners].sort((a,b) => (b[1].pf - b[1].pa) - (a[1].pf - a[1].pa)).map(([, st], i) => {
+              const diff = st.pf - st.pa;
+              const maxDiff = Math.max(...owners.map(([,s]) => Math.abs(s.pf - s.pa)));
+              const _allDiff = owners.map(([,s]) => Math.abs(s.pf - s.pa));
+              const pct = scaledPct(Math.abs(diff), _allDiff);
+              return `<div class="history-bar-wrap">
+                <div class="history-name">${i+1}. ${st.name}</div>
+                <div class="history-bar-track">
+                  <div class="history-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${diff>=0?'var(--green),#2ecc71':'var(--red),#e74c3c'})">
+                    <span class="history-bar-pct">${diff>0?'+':''}${diff.toFixed(0)}</span>
+                  </div>
+                </div>
+                <div class="history-wins" style="color:${diff>=0?'var(--green)':'var(--red)'};">${diff>0?'↑':'↓'}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📅 Season-by-Season Points For</div>
+        <div style="overflow-x:auto;">
+          <table class="standings-table" style="min-width:500px;">
+            <thead>
+              <tr>
+                <th>Owner</th>
+                ${seasonLabels.map(yr => `<th class="right">${yr}</th>`).join('')}
+                <th class="right">All-Time</th>
+                <th class="right">Avg/Wk</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${[...owners].sort((a,b) => b[1].pf - a[1].pf).map(([ownerId, st]) => `<tr>
+                <td style="font-weight:600;">${st.name}</td>
+                ${seasonLabels.map(yr => {
+                  const sv = st.seasons.find(s => s.season === yr);
+                  const val = sv ? sv.pf.toFixed(1) : '—';
+                  const maxSeasonPF = Math.max(...owners.map(([,o]) => o.seasons.find(s=>s.season===yr)?.pf || 0));
+                  const isTop = sv && sv.pf === maxSeasonPF;
+                  return `<td style="text-align:right;font-family:'Barlow Condensed';font-size:0.85rem;color:${isTop?'var(--gold)':'var(--text2)'};">${val}</td>`;
+                }).join('')}
+                <td style="text-align:right;font-family:'Barlow Condensed';font-weight:700;">${st.pf.toFixed(1)}</td>
+                <td style="text-align:right;font-family:'Barlow Condensed';color:var(--text3);">${avgPtsOwner(st).toFixed(1)}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEAD TO HEAD -->
+    <div id="htab-headtohead" class="tab-content">
+      <div class="card">
+        <div class="card-header">⚔️ Head-to-Head All-Time Records (Across All Seasons)</div>
+        <div id="h2h-loading" style="padding:1.5rem;text-align:center;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">Building matchup matrix...</div>
+      </div>
+    </div>
+  `;
+
+  // Build H2H matrix
+  buildH2HMatrix(seasons, owners);
+}
+
+function buildH2HMatrix(seasons, owners) {
+  // h2h[ownerA][ownerB] = { wins, losses, ties }
+  const h2h = {};
+  owners.forEach(([oid]) => {
+    h2h[oid] = {};
+    owners.forEach(([oid2]) => { if (oid !== oid2) h2h[oid][oid2] = { wins: 0, losses: 0, ties: 0 }; });
+  });
+
+  // Build cross-season resolver so orphan rosters (null owner_id) are still attributed correctly
+  const rosterOwnerResolver = {};
+  seasons.forEach(s => {
+    s.rosters.forEach(r => {
+      if (r.owner_id) {
+        const user = s.users.find(u => u.user_id === r.owner_id);
+        if (!isExcludedUser(user?.display_name)) {
+          rosterOwnerResolver[r.roster_id] = r.owner_id;
+        }
+      }
+    });
+  });
+
+  seasons.forEach(s => {
+    const uMap = {};
+    s.users.forEach(u => uMap[u.user_id] = u.display_name);
+
+    // Map rosterId -> ownerId for this season — resolve orphans via cross-season lookup
+    const rosterOwner = {};
+    s.rosters.forEach(r => {
+      const oid = r.owner_id || rosterOwnerResolver[r.roster_id];
+      if (!oid) return;
+      const name = r.owner_id ? (uMap[r.owner_id] || '') : '';
+      // Only skip if we know the name and it's excluded; resolved orphans keep their original name
+      if (r.owner_id && isExcludedUser(name)) return;
+      if (!h2h[oid]) return; // not in the owners list — skip
+      rosterOwner[r.roster_id] = oid;
+    });
+
+    const playoffStart = s.league?.settings?.playoff_week_start || 15;
+    Object.entries(s.matchupsByWeek).forEach(([wk, matchups]) => {
+      // H2H only counts regular season matchups (not playoffs)
+      if (parseInt(wk) >= playoffStart) return;
+      const groups = {};
+      matchups.forEach(m => { if (!groups[m.matchup_id]) groups[m.matchup_id] = []; groups[m.matchup_id].push(m); });
+      Object.values(groups).forEach(pair => {
+        if (pair.length < 2) return;
+        const [t1, t2] = pair;
+        const o1 = rosterOwner[t1.roster_id], o2 = rosterOwner[t2.roster_id];
+        if (!o1 || !o2 || o1 === o2) return;
+        const s1 = t1.points || 0, s2 = t2.points || 0;
+        if (!s1 && !s2) return;
+        if (s1 > s2) { if (h2h[o1]?.[o2]) { h2h[o1][o2].wins++; h2h[o2][o1].losses++; } }
+        else if (s2 > s1) { if (h2h[o2]?.[o1]) { h2h[o2][o1].wins++; h2h[o1][o2].losses++; } }
+        else { if (h2h[o1]?.[o2]) { h2h[o1][o2].ties++; h2h[o2][o1].ties++; } } // tie
+      });
+    });
+  });
+
+  // ---- Merge ESPN H2H matchups ----
+  // ESPN_MATCHUPS uses display_name strings but h2h is keyed by Sleeper user_id (UUID).
+  // Build a displayName -> ownerId reverse map from the owners list.
+  const nameToOwnerId = {};
+  owners.forEach(([oid, st]) => {
+    // Map the display name (lowercased for safety) back to the owner UUID
+    nameToOwnerId[st.name.toLowerCase()] = oid;
+  });
+
+  // Also build from ESPN_DATA keys (which are Sleeper display_names) -> ownerId via owners
+  const espnNameToOwnerId = {};
+  owners.forEach(([oid, st]) => {
+    espnNameToOwnerId[st.name] = oid;
+  });
+
+  ESPN_MATCHUPS.forEach(([season, week, home, homePts, away, awayPts]) => {
+    // Resolve ESPN display names to Sleeper owner IDs
+    const homeId = espnNameToOwnerId[home] || nameToOwnerId[home.toLowerCase()];
+    const awayId = espnNameToOwnerId[away] || nameToOwnerId[away.toLowerCase()];
+    if (!homeId || !awayId) return; // couldn't resolve — skip
+    if (!h2h[homeId] || !h2h[awayId]) return;
+    if (homePts > awayPts) { h2h[homeId][awayId].wins++; h2h[awayId][homeId].losses++; }
+    else if (awayPts > homePts) { h2h[awayId][homeId].wins++; h2h[homeId][awayId].losses++; }
+    else { h2h[homeId][awayId].ties++; h2h[awayId][homeId].ties++; } // tie
+  });
+
+  const el = document.getElementById('h2h-loading');
+  if (!el) return;
+
+  // Build matrix table
+  let html = `<div style="overflow-x:auto;"><table class="standings-table" style="min-width:600px;">
+    <thead><tr>
+      <th>vs →</th>
+      ${owners.map(([,st]) => `<th style="text-align:center;max-width:80px;overflow:hidden;text-overflow:ellipsis;font-size:0.65rem;">${st.name.split(' ')[0]}</th>`).join('')}
+      <th class="right">Overall</th>
+    </tr></thead>
+    <tbody>
+    ${owners.map(([oid, st]) => {
+      const totalW = owners.reduce((s, [oid2]) => oid !== oid2 ? s + (h2h[oid]?.[oid2]?.wins || 0) : s, 0);
+      const totalL = owners.reduce((s, [oid2]) => oid !== oid2 ? s + (h2h[oid]?.[oid2]?.losses || 0) : s, 0);
+      const totalT = owners.reduce((s, [oid2]) => oid !== oid2 ? s + (h2h[oid]?.[oid2]?.ties || 0) : s, 0);
+      return `<tr>
+        <td style="font-weight:600;font-size:0.85rem;white-space:nowrap;">${st.name}</td>
+        ${owners.map(([oid2, st2]) => {
+          if (oid === oid2) return `<td style="background:var(--bg3);text-align:center;color:var(--text3);">—</td>`;
+          const r = h2h[oid]?.[oid2];
+          if (!r) return `<td style="text-align:center;color:var(--text3);">—</td>`;
+          const total = r.wins + r.losses + r.ties;
+          const wpct = total > 0 ? (r.wins + r.ties * 0.5) / total : 0;
+          const bg = wpct > 0.6 ? 'rgba(39,174,96,0.08)' : wpct < 0.4 ? 'rgba(192,57,43,0.08)' : 'transparent';
+          const color = r.wins > r.losses ? 'var(--green)' : r.wins < r.losses ? 'var(--red)' : 'var(--text2)';
+          const label = r.ties > 0 ? `${r.wins}-${r.losses}-${r.ties}` : `${r.wins}-${r.losses}`;
+          return `<td style="text-align:center;background:${bg};font-family:'Barlow Condensed';font-size:0.85rem;font-weight:700;color:${color};">${label}</td>`;
+        }).join('')}
+        <td style="text-align:right;font-family:'Barlow Condensed';font-weight:700;font-size:0.95rem;color:${totalW>=totalL?'var(--green)':'var(--red)'};">${totalW}-${totalL}${totalT > 0 ? `-${totalT}` : ''}</td>
+      </tr>`;
+    }).join('')}
+    </tbody></table></div>
+    <div style="padding:0.75rem 1.25rem;font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
+      Green = winning record · Red = losing record · Read row left-to-right (e.g. row "Alice" shows Alice's record against each opponent) · Includes all seasons: ESPN 2018–2023 + Sleeper 2024–2025 · Regular season only
+    </div>`;
+
+  el.outerHTML = html;
+}
+
+function switchHistTab(btn, tabId) {
+  document.querySelectorAll('#history-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#history-content .tab-content').forEach(t => t.classList.remove('active'));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+}
+
+function switchTab(btn, tabId) {
+  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const tabContents = btn.closest('div').parentElement.querySelectorAll('.tab-content');
+  tabContents.forEach(t => t.classList.remove('active'));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+}
+
+// ---- COMMISSIONER ----
+function renderCommishPreview() {
+  const posts = getPosts().slice(0, 2);
+  const el = document.getElementById('commissioner-preview');
+  if (!el) return;
+  if (!posts.length) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="card-header" style="background:var(--bg3);border:1px solid var(--border);border-bottom:none;border-radius:6px 6px 0 0;padding:.6rem 1.25rem;">Commissioner's Corner</div>
+    ${posts.map(p => `<div class="post-card" style="border-radius:${posts.indexOf(p)===posts.length-1?'0 0 6px 6px':'0'}; border-top:none;">
+      <div class="post-body" style="padding:0.75rem 1.25rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <span class="post-type-badge badge-${p.type}">${p.type}</span>
+            <strong style="margin-left:0.5rem;font-size:0.9rem;">${p.title}</strong>
+          </div>
+          <span style="font-size:0.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;flex-shrink:0;margin-left:1rem;">${formatDate(p.ts)}</span>
+        </div>
+        <p style="margin-top:0.4rem;font-size:0.85rem;">${p.body.substring(0, 120)}${p.body.length > 120 ? '...' : ''}</p>
+      </div>
+    </div>`).join('')}`;
+}
+
+function renderCommish() {
+  const el = document.getElementById('commish-content');
+  const posts = getPosts();
+
+  let postsHtml = posts.length
+    ? posts.map(p => `
+        <div class="post-card">
+          <div class="post-header">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <span class="post-type-badge badge-${p.type}">${p.type}</span>
+              <span style="font-size:0.85rem;font-weight:600;">${p.title}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <span class="post-date">${formatDate(p.ts)}</span>
+              ${commLoggedIn ? `<button class="delete-btn" onclick="deletePost('${p.id}')">✕ Delete</button>` : ''}
+            </div>
+          </div>
+          <div class="post-body">
+            <p>${p.body.replace(/\n/g, '<br>')}</p>
+          </div>
+        </div>`)
+      .join('')
+    : `<div class="empty-state"><div class="big-icon">📋</div>No posts yet. Commissioner can add announcements below.</div>`;
+
+  let commPanel = '';
+  if (!commLoggedIn) {
+    commPanel = `
+      <div class="comm-login">
+        <h2>Commissioner Login</h2>
+        <p>Enter password to post</p>
+        <div class="form-row">
+          <input type="password" id="comm-pass-input" placeholder="Password" onkeydown="if(event.key==='Enter')commLogin()">
+        </div>
+        <button class="btn" onclick="commLogin()">Enter</button>
+        <div id="comm-pass-err" style="color:var(--red);font-size:0.8rem;margin-top:0.75rem;"></div>
+      </div>`;
+  } else {
+    commPanel = `
+      <div class="comm-panel">
+        <div class="flex-between" style="margin-bottom:1rem;">
+          <h3>📣 Post a Message</h3>
+          <button class="btn-outline" onclick="commLogout()">Logout</button>
+        </div>
+        <div class="form-row-inline">
+          <div class="form-row">
+            <label class="form-label">Post Type</label>
+            <select id="post-type">
+              <option value="announcement">Announcement</option>
+              <option value="trash">Trash Talk</option>
+              <option value="fine">Fine</option>
+              <option value="news">News</option>
+            </select>
+          </div>
+          <div class="form-row" style="flex:3;">
+            <label class="form-label">Title</label>
+            <input type="text" id="post-title" placeholder="Post title...">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Message</label>
+          <textarea id="post-body" placeholder="Write your message..."></textarea>
+        </div>
+        <button class="btn" onclick="submitPost()">📤 Post to League Board</button>
+      </div>`;
+  }
+
+  el.innerHTML = commPanel + `<div id="posts-list">${postsHtml}</div>`;
+}
+
+function commLogin() {
+  const val = document.getElementById('comm-pass-input').value;
+  if (val === COMM_PASS) {
+    commLoggedIn = true;
+    toast('✓ Welcome back, Commissioner!');
+    renderCommish();
+  } else {
+    document.getElementById('comm-pass-err').textContent = 'Incorrect password.';
+  }
+}
+
+function commLogout() {
+  commLoggedIn = false;
+  renderCommish();
+}
+
+function submitPost() {
+  const title = document.getElementById('post-title').value.trim();
+  const body = document.getElementById('post-body').value.trim();
+  const type = document.getElementById('post-type').value;
+  if (!title || !body) { toast('⚠ Please fill in title and message.'); return; }
+  const posts = getPosts();
+  posts.unshift({ id: Date.now().toString(), title, body, type, ts: Date.now() });
+  savePosts(posts);
+  toast('✓ Post published!');
+  renderCommish();
+  renderCommishPreview();
+}
+
+function deletePost(id) {
+  if (!confirm('Delete this post?')) return;
+  const posts = getPosts().filter(p => p.id !== id);
+  savePosts(posts);
+  toast('Post deleted.');
+  renderCommish();
+  renderCommishPreview();
+}
+
+// ---- NAV ----
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  // Update desktop nav
+  document.querySelectorAll('nav.desktop-nav button').forEach(b => b.classList.remove('active'));
+  const desktopBtn = document.querySelector(`nav.desktop-nav button[onclick="showSection('${name}')"]`);
+  if (desktopBtn) desktopBtn.classList.add('active');
+  // Update bottom nav
+  document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+  const bnavBtn = document.getElementById(`bnav-${name}`);
+  if (bnavBtn) bnavBtn.classList.add('active');
+
+  document.getElementById(`section-${name}`).classList.add('active');
+  window.location.hash = name;
+
+  // Scroll to top of content
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (name === 'standings') renderStandings('standings-card', true);
+  if (name === 'commish') renderCommish();
+
+  // Trigger card animations for newly visible section
+  setTimeout(initCardAnimations, 100);
+  setTimeout(initBarAnimations, 200);
+}
+
+// ── HASH ROUTING ──────────────────────────────────────────────────
+function initHashRouting() {
+  const hash = window.location.hash.replace('#', '');
+  const valid = ['home','standings','scores','records','history','commish'];
+  if (hash && valid.includes(hash)) {
+    // Simulate click without scroll
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav.desktop-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+    const desktopBtn = document.querySelector(`nav.desktop-nav button[onclick="showSection('${hash}')"]`);
+    if (desktopBtn) desktopBtn.classList.add('active');
+    const bnavBtn = document.getElementById(`bnav-${hash}`);
+    if (bnavBtn) bnavBtn.classList.add('active');
+    document.getElementById(`section-${hash}`).classList.add('active');
+    if (hash === 'standings') renderStandings('standings-card', true);
+    if (hash === 'commish') renderCommish();
+  }
+}
+
+// ── CARD ENTRANCE ANIMATIONS (IntersectionObserver) ───────────────
+function initCardAnimations() {
+  if (!('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.card:not(.card-animate), .stat-box:not(.card-animate), .matchup-card:not(.card-animate)').forEach(el => {
+    el.classList.add('card-animate');
+    observer.observe(el);
+  });
+}
+
+// ── BAR CHART ENTRANCE ANIMATIONS ────────────────────────────────
+function initBarAnimations() {
+  // Store target widths as data attributes so they survive resets
+  document.querySelectorAll('.history-bar-fill').forEach(fill => {
+    if (!fill.dataset.targetWidth) {
+      const w = fill.style.width || '50%';
+      fill.dataset.targetWidth = w;
+      fill.style.width = '0%';
+    }
+  });
+
+  if (!('IntersectionObserver' in window)) {
+    // Fallback: just show all bars immediately
+    document.querySelectorAll('.history-bar-fill').forEach(fill => {
+      fill.style.width = fill.dataset.targetWidth || '50%';
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fills = entry.target.querySelectorAll('.history-bar-fill');
+        fills.forEach((fill, i) => {
+          const target = fill.dataset.targetWidth || '50%';
+          fill.style.setProperty('--bar-target-width', target);
+          fill.style.width = '0%';
+          setTimeout(() => fill.classList.add('animated'), i * 60);
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.card').forEach(card => {
+    if (card.querySelector('.history-bar-fill')) observer.observe(card);
+  });
+}
+
+// ── SKELETON LOADERS ─────────────────────────────────────────────
+function skeletonTable(rows = 8, cols = 6) {
+  const colWidths = ['30px','1fr','80px','60px','70px','70px'];
+  let html = '<div style="overflow:hidden;border-radius:0 0 6px 6px;">';
+  // Header skeleton
+  html += '<div class="skeleton-row" style="height:36px;margin-bottom:1px;"></div>';
+  for (let i = 0; i < rows; i++) {
+    html += `<div class="skeleton-row" style="height:50px;opacity:${1 - i * 0.08};"></div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function skeletonCards(n = 5) {
+  return Array(n).fill(0).map((_, i) =>
+    `<div class="skeleton-card" style="opacity:${1 - i * 0.12};"></div>`
+  ).join('');
+}
+
+// ── TABLE SEARCH FILTER ───────────────────────────────────────────
+function addTableSearch(containerId, tableSelector) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  // Don't add twice
+  if (container.querySelector('.table-search')) return;
+
+  const header = container.querySelector('.card-header');
+  if (!header) return;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = '🔍 Filter...';
+  input.className = 'table-search';
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    const table = container.querySelector(tableSelector || 'table');
+    if (!table) return;
+    table.querySelectorAll('tbody tr').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = q === '' || text.includes(q) ? '' : 'none';
+    });
+  });
+  header.appendChild(input);
+}
+
+// ── H2H WRAPPER UPGRADE (sticky col + scroll + tooltip) ──────────
+function upgradeH2HTable() {
+  // Correct tab id is htab-headtohead
+  const h2hTab = document.getElementById('htab-headtohead');
+  if (!h2hTab) return;
+  const table = h2hTab.querySelector('table');
+  if (!table) return;
+  if (table.closest('.h2h-scroll-wrap')) return; // already upgraded
+
+  // Add h2h-table class
+  table.classList.add('h2h-table');
+
+  // Add sticky class to first cell in every row
+  table.querySelectorAll('tr').forEach(row => {
+    const first = row.cells[0];
+    if (first) first.classList.add('h2h-name-col');
+  });
+
+  // Add tooltips to data cells (hover/tap)
+  const headerCells = Array.from(table.querySelectorAll('thead tr th'));
+  table.querySelectorAll('tbody tr').forEach(row => {
+    const rowName = row.cells[0]?.textContent?.trim();
+    Array.from(row.cells).forEach((cell, ci) => {
+      if (ci === 0) return; // skip name col
+      const colName = headerCells[ci]?.textContent?.trim();
+      const val = cell.textContent.trim();
+      if (!rowName || !colName || rowName === colName || val === '—' || val === '') return;
+      cell.classList.add('h2h-cell');
+      // Parse W-L
+      const parts = val.split('-');
+      const w = parseInt(parts[0]) || 0;
+      const l = parseInt(parts[1]) || 0;
+      const tip = document.createElement('div');
+      tip.className = 'h2h-tip';
+      tip.textContent = `${rowName} beat ${colName} ${w}×, lost ${l}×`;
+      cell.appendChild(tip);
+    });
+  });
+
+  // Wrap table in horizontal scroll container
+  const wrapper = document.createElement('div');
+  wrapper.className = 'h2h-scroll-wrap';
+  table.parentNode.insertBefore(wrapper, table);
+  wrapper.appendChild(table);
+}
+
+// ── PULL-TO-REFRESH (scores page) ────────────────────────────────
+function initPullToRefresh() {
+  let startY = 0, pulling = false;
+  const indicator = document.createElement('div');
+  indicator.id = 'ptr-indicator';
+  indicator.style.cssText = `
+    position:fixed;top:64px;left:50%;transform:translateX(-50%) translateY(-70px);
+    background:var(--bg3);border:1px solid var(--gold);color:var(--gold);
+    padding:8px 20px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;
+    font-size:0.8rem;letter-spacing:1px;z-index:150;transition:transform 0.25s ease;
+    pointer-events:none;white-space:nowrap;
+  `;
+  indicator.textContent = '↓ Pull to refresh';
+  document.body.appendChild(indicator);
+
+  document.addEventListener('touchstart', e => {
+    if (window.scrollY === 0) { startY = e.touches[0].clientY; pulling = true; }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (!pulling) return;
+    const dy = e.touches[0].clientY - startY;
+    const scoresActive = document.getElementById('section-scores')?.classList.contains('active');
+    if (dy > 20 && scoresActive) {
+      const travel = Math.min(dy - 20, 52);
+      indicator.style.transform = `translateX(-50%) translateY(${travel}px)`;
+      indicator.textContent = dy > 80 ? '↑ Release to refresh' : '↓ Pull to refresh';
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    if (!pulling) return;
+    pulling = false;
+    const dy = (e.changedTouches[0]?.clientY || 0) - startY;
+    indicator.style.transform = 'translateX(-50%) translateY(-70px)';
+    indicator.textContent = '↓ Pull to refresh';
+    const scoresActive = document.getElementById('section-scores')?.classList.contains('active');
+    if (dy > 80 && scoresActive) {
+      indicator.textContent = '↻ Refreshing...';
+      indicator.style.transform = 'translateX(-50%) translateY(8px)';
+      // Re-render current week
+      const activeWeekBtn = document.querySelector('.week-selector button.active');
+      const week = activeWeekBtn ? parseInt(activeWeekBtn.textContent) : null;
+      const refreshDone = week
+        ? renderScoresForWeek(week, _scoresActiveSeason)
+        : Promise.resolve();
+      refreshDone.finally(() => {
+        setTimeout(() => {
+          indicator.textContent = '↓ Pull to refresh';
+          indicator.style.transform = 'translateX(-50%) translateY(-70px)';
+        }, 700);
+      });
+    }
+  });
+}
+
+
+// ── SORTABLE TABLES ──────────────────────────────────────────────
+function makeTableSortable(table) {
+  if (!table || table.dataset.sortable) return;
+  table.dataset.sortable = '1';
+
+  const headers = table.querySelectorAll('thead th');
+  let sortCol = -1, sortDir = 1;
+
+  headers.forEach((th, colIdx) => {
+    // Skip rank (#) column, sparkline/trend column, and streak column
+    const text = th.textContent.trim();
+    if (text === '#' || text === 'TREND' || text === 'STK') return;
+
+    th.classList.add('sortable');
+
+    th.addEventListener('click', () => {
+      // Toggle direction if same col, else start desc
+      if (sortCol === colIdx) {
+        sortDir = -sortDir;
+      } else {
+        sortCol = colIdx;
+        sortDir = -1; // default: descending first
+      }
+
+      // Update header indicators
+      headers.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+      th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+
+      const tbody = table.querySelector('tbody');
+      if (!tbody) return;
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+
+      rows.sort((a, b) => {
+        const aCell = a.cells[colIdx];
+        const bCell = b.cells[colIdx];
+        if (!aCell || !bCell) return 0;
+
+        // Get raw text, strip % signs, commas, trophy emojis
+        const rawA = aCell.textContent.replace(/[,%🏆🥈🥉]/g, '').trim();
+        const rawB = bCell.textContent.replace(/[,%🏆🥈🥉]/g, '').trim();
+
+        // Handle W-L-T and W-L records (sort by wins)
+        const wlA = rawA.match(/^(\d+)-(\d+)/);
+        const wlB = rawB.match(/^(\d+)-(\d+)/);
+        if (wlA && wlB) {
+          const winsA = parseInt(wlA[1]);
+          const winsB = parseInt(wlB[1]);
+          if (winsA !== winsB) return (winsA - winsB) * sortDir;
+          // tiebreak by losses (fewer = better)
+          return (parseInt(wlB[2]) - parseInt(wlA[2])) * sortDir;
+        }
+
+        // Em dash / missing data always goes last
+        if (rawA === '—' || rawA === '') return 1;
+        if (rawB === '—' || rawB === '') return -1;
+
+        // Try numeric
+        const numA = parseFloat(rawA.replace(/[^0-9.-]/g, ''));
+        const numB = parseFloat(rawB.replace(/[^0-9.-]/g, ''));
+        if (!isNaN(numA) && !isNaN(numB)) return (numA - numB) * sortDir;
+
+        // Fallback: string compare
+        return rawA.localeCompare(rawB) * sortDir;
+      });
+
+      rows.forEach(r => tbody.appendChild(r));
+    });
+  });
+}
+
+// Wire up all standings-table and h2h-table instances
+function initSortableTables() {
+  document.querySelectorAll('table.standings-table, table.h2h-table').forEach(t => {
+    makeTableSortable(t);
+  });
+}
+
+// ── BOOT ─────────────────────────────────────────────────────────
+init();
+initHashRouting();
+initPullToRefresh();
+
+// MutationObserver — throttled, watches for dynamically rendered content
+let _moTimer = null;
+const _uiObserver = new MutationObserver(() => {
+  clearTimeout(_moTimer);
+  _moTimer = setTimeout(() => {
+    initCardAnimations();
+    initBarAnimations();
+    upgradeH2HTable();
+    initSortableTables();
+    // Add search filter to standings card
+    addTableSearch('standings-card');
+    // Add search to franchise stats table in history
+    const histEl = document.getElementById('history-content');
+    if (histEl) {
+      histEl.querySelectorAll('.card').forEach(card => {
+        if (card.querySelector('.table-search')) return; // already has it
+        const hdr = card.querySelector('.card-header');
+        if (!hdr || !hdr.textContent.includes('Franchise')) return;
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.placeholder = '🔍 Filter...';
+        inp.className = 'table-search';
+        inp.addEventListener('input', () => {
+          const q = inp.value.toLowerCase();
+          card.querySelectorAll('tbody tr').forEach(r => {
+            r.style.display = !q || r.textContent.toLowerCase().includes(q) ? '' : 'none';
+          });
+        });
+        hdr.appendChild(inp);
+      });
+    }
+  }, 120);
+});
+_uiObserver.observe(document.body, { childList: true, subtree: true });
+
+</script>
+</body>
+</html>
